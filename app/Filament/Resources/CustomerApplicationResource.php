@@ -17,6 +17,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Database\Eloquent\Model;
 
 class CustomerApplicationResource extends Resource
 {
@@ -65,21 +66,45 @@ class CustomerApplicationResource extends Resource
                                                             ->numeric()
                                                             ->live()
                                                             ->afterStateUpdated(
-                                                                function(Forms\Get $get, Forms\Set $set){
-                                                                    $_term = $get('unit_term');
-                                                                    $_unit_srp = $get('unit_srp');
-                                                                    if($_term > 1){
-                                                                        $quotient = number_format((float)$_unit_srp/$_term, 2, '.', '');
-                                                                        $set('unit_amort_fin', $quotient);
-                                                                        $set('unit_monthly_amort', $quotient);
-                                                                    }
-                                                                }
+                                                                                function(Forms\Get $get, Forms\Set $set){
+                                                                                $_term = $get('unit_term');
+                                                                                $_unit_srp = $get('unit_srp');
+                                                                                if($_term > 1){
+                                                                                        $quotient = number_format((float)$_unit_srp/$_term, 2, '.', '');
+                                                                                        $set('unit_amort_fin', $quotient);
+                                                                                        $set('unit_monthly_amort', $quotient);
+                                                                                }
+                                                                        }
                                                             ),
-                                                    Forms\Components\TextInput::make('unit_ttl_dp')->required(true)->label('TTL DP:')->numeric()->columnSpan(1),
-                                                    Forms\Components\TextInput::make('unit_monthly_amort')->required(true)->label('Monthly Amorthization:')->numeric(),
-                                                    Forms\Components\Select::make('unit_type')->required()->options(['New','Repeat',]),
-                                                    Forms\Components\TextInput::make('unit_amort_fin')->required(true)->label('Amorthization Fin:'),
-                                                    Forms\Components\Select::make('unit_mode_of_payment')->required(true)->label('Mode of Payment:')->options(['Office','Field','Bank',])->columnSpan(2),
+                                                    Forms\Components\TextInput::make('unit_ttl_dp')->required(true)->label('TTL DP:')
+                                                                ->numeric()
+                                                                ->columnSpan(1)
+                                                                ->live()
+                                                                ->afterStateUpdated(
+                                                                        function(Forms\Get $get, Forms\Set $set){
+                                                                                $dp = $get('unit_ttl_dp');
+                                                                                $_term = $get('unit_term');
+                                                                                $_unit_srp = $get('unit_srp');
+                                                                                if($_term > 1){
+                                                                                        $quotient = number_format((float)((float)$_unit_srp - (float)$dp)/$_term, 2, '.', '');
+                                                                                        $set('unit_amort_fin', $quotient);
+                                                                                }
+                                                                        }
+                                                                ),
+                                                    Forms\Components\TextInput::make('unit_monthly_amort')->required(true)
+                                                                ->label('Monthly Amorthization:')
+                                                                ->numeric(),
+                                                    Forms\Components\Select::make('unit_type')
+                                                                ->required()
+                                                                ->options(['New','Repeat',]),
+                                                    Forms\Components\TextInput::make('unit_amort_fin')
+                                                                ->required(true)
+                                                                ->label('Amorthization Fin:'),
+                                                    Forms\Components\Select::make('unit_mode_of_payment')
+                                                                ->required(true)
+                                                                ->label('Mode of Payment:')
+                                                                ->options(['Office','Field','Bank',])
+                                                                ->columnSpan(2),
                                 ]),
                             ]),
                     //End of Unit Information
@@ -171,18 +196,19 @@ class CustomerApplicationResource extends Resource
 
                     // Spouse Information
                     Forms\Components\Fieldset::make("Spouse Information")
-                            ->columns(2)
-                            ->columnSpan(1)
-                            ->schema([
-                                Forms\Components\TextInput::make('spouse_firstname')->label('Surname:')->columnSpan(1)->required(true),
-                                Forms\Components\TextInput::make('spouse_middlename')->label('Middle Name:')->columnSpan(1),
-                                Forms\Components\TextInput::make('spouse_lastname')->label('Last Name:')->columnSpan(1)->required(true),
-                                Forms\Components\DatePicker::make('spouse_birthday')->label('Birthday:')->columnSpan(1)->required(true),
-                                Forms\Components\TextInput::make('spouse_present_address')->label('Present Address:')->required(true),
-                                Forms\Components\Textarea::make('spouse_provincial_address')->label('Provincial Address:')->columnSpan(1),
-                                Forms\Components\Textarea::make('spouse_telephone')->label('Telephone:')->columnSpan(1),
-
-                            ])->hidden(fn (Forms\Get $get): bool => ! $get('applicant_civil_status') == "Married"),
+							->hidden(fn (Forms\Get $get): bool => ! $get('applicant_civil_status') == "Married")
+							->columns(2)
+							->columnSpan(1)
+							->schema([
+									Forms\Components\TextInput::make('spouse_firstname')->label('Surname:')
+											->columnSpan(1)->required(true),
+											Forms\Components\TextInput::make('spouse_middlename')->label('Middle Name:')->columnSpan(1),
+											Forms\Components\TextInput::make('spouse_lastname')->label('Last Name:')->columnSpan(1)->required(true),
+											Forms\Components\DatePicker::make('spouse_birthday')->label('Birthday:')->columnSpan(1)->required(true),
+											Forms\Components\TextInput::make('spouse_present_address')->label('Present Address:')->required(true),
+											Forms\Components\Textarea::make('spouse_provincial_address')->label('Provincial Address:')->columnSpan(1),
+											Forms\Components\Textarea::make('spouse_telephone')->label('Telephone:')->columnSpan(1),
+							]),
                     // End of Applicant Information
                     
                     //Section 3: Dependents and Financial References
@@ -370,25 +396,29 @@ class CustomerApplicationResource extends Resource
                             ])->columns(2)->columnSpan(1),
 
 
-                            Forms\Components\Section::make("Spouse's Monthly Salary")->schema([
-                                Forms\Components\TextInput::make("spouses_basic_monthly_salary")->label("Basic Monthly Salary:")
-                                        ->columnSpan(2)
-                                        ->default(0)
-                                        ->numeric(),
-                                Forms\Components\TextInput::make("spouse_allowance_commision")->label("Allowance Commision:")->numeric()
-                                        ->columnSpan(1)
-                                        ->default(0)
-                                        ->numeric(),
-                                Forms\Components\TextInput::make("spouse_deductions")->label("Deductions:")->numeric()
-                                        ->columnSpan(1)
-                                        ->default(0)
-                                        ->numeric(),
-                                Forms\Components\TextInput::make("spouse_net_monthly_income")->label("Net Monthly Income:")->numeric()
-                                        ->columnSpan(2)
-                                        ->disabled()
-                                        ->default(0)
-                                        ->numeric(),
-                            ])->columns(2)->columnSpan(1),
+                            Forms\Components\Section::make("Spouse's Monthly Salary")
+									->columns(2)
+									->columnSpan(1)
+									->hidden(fn (Forms\Get $get): bool => ! $get('applicant_civil_status') == "Married")
+									->schema([
+											Forms\Components\TextInput::make("spouses_basic_monthly_salary")->label("Basic Monthly Salary:")
+													->columnSpan(2)
+													->default(0)
+													->numeric(),
+											Forms\Components\TextInput::make("spouse_allowance_commision")->label("Allowance Commision:")->numeric()
+													->columnSpan(1)
+													->default(0)
+													->numeric(),
+											Forms\Components\TextInput::make("spouse_deductions")->label("Deductions:")->numeric()
+													->columnSpan(1)
+													->default(0)
+													->numeric(),
+											Forms\Components\TextInput::make("spouse_net_monthly_income")->label("Net Monthly Income:")->numeric()
+													->columnSpan(2)
+													->disabled()
+													->default(0)
+													->numeric(),
+									]),
 
                             Forms\Components\TextInput::make("other_income")->label("Other Income:")->numeric()
                                     ->columnSpan(1)
@@ -550,10 +580,11 @@ class CustomerApplicationResource extends Resource
                                                 ]),
 
                     InfoLists\Components\FieldSet::make('Unit Information')->schema([
-                        InfoLists\Components\TextEntry::make('units.unit_model')->label('Unit Model'),
-                        InfoLists\Components\TextEntry::make('unit_term')->label('Unit Term'),
-                        InfoLists\Components\TextEntry::make('unit_monthly_amort')->label('Monthly Amortization')->money(),                     
-                        InfoLists\Components\TextEntry::make('unit_srp')->label('Unit Price')->money(),   
+                                InfoLists\Components\TextEntry::make('units.unit_model')->label('Unit Model'),
+                                InfoLists\Components\TextEntry::make('unit_term')->label('Unit Term'),
+                                InfoLists\Components\TextEntry::make('unit_ttl_dp')->label('Downpayment')->money('php'),   
+                                InfoLists\Components\TextEntry::make('unit_amort_fin')->label('Monthly Amortization')->money('php'),                     
+                                InfoLists\Components\TextEntry::make('unit_srp')->label('Unit Price')->money('php'),   
                     ])->columns(4)->columnSpan(2),
 
                     InfoLists\Components\FieldSet::make('Applicant Information')->schema([
@@ -566,9 +597,9 @@ class CustomerApplicationResource extends Resource
                     ])->columns(6)->columnSpan(4),
 
                     InfoLists\Components\FieldSet::make("Applicant's Income")->schema([
-                        InfoLists\Components\TextEntry::make('gross_monthly_income')->label("Gross Monthly Income:")->color('success')->money(),
-                        InfoLists\Components\TextEntry::make('total_expenses')->label("Total Expenses:")->color('danger')->money(),
-                        InfoLists\Components\TextEntry::make('net_monthly_income')->label("Net Monthly Income:")->color('success')->money(),
+                        InfoLists\Components\TextEntry::make('gross_monthly_income')->label("Gross Monthly Income:")->color('success')->money('php'),
+                        InfoLists\Components\TextEntry::make('total_expenses')->label("Total Expenses:")->color('danger')->money('php'),
+                        InfoLists\Components\TextEntry::make('net_monthly_income')->label("Net Monthly Income:")->color('success')->money('php'),
                     ])->columns(3)->columnSpan(4),
 
                 ]),
@@ -612,6 +643,8 @@ class CustomerApplicationResource extends Resource
                         ->label("Date Created:")
                         ->dateTime('d-M-Y'),
             ])
+            ->defaultSort('created_at', 'desc')
+            ->paginated(false)
             ->filters([
                 Tables\Filters\SelectFilter::make('application_status')
                         ->options([

@@ -45,6 +45,7 @@ return new class extends Migration
             $table->string('applicant_telephone')->nullable();
 
 
+            //Financials
             $table->double('applicants_basic_monthly_salary')->nullable();
             $table->double('applicants_allowance_commission')->nullable();
             $table->double('applicants_deductions')->nullable();
