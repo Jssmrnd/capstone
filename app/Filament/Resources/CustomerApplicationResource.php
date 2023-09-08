@@ -137,17 +137,17 @@ class CustomerApplicationResource extends Resource
                                     Forms\Components\Select::make('applicant_civil_status')
                                             ->label('Civil Status')
                                             ->live()
-                                            ->columnSpan(2)
+                                            ->columnSpan(3)
                                             ->required(true)
                                             ->options(['Single', 'Married', 'Separated', 'Widow']),
                                     Forms\Components\Textarea::make('applicant_present_address')
                                             ->label('Present Address:')
-                                            ->columnSpan(3)->required(true),
+                                            ->columnSpan(1)->required(true),
                                     Forms\Components\Textarea::make('applicant_previous_address')
                                             ->label('Previous Address:')
-                                            ->columnSpan(3),
+                                            ->columnSpan(1),
                                     Forms\Components\Textarea::make('applicant_provincial_address')
-                                            ->label('Provincial Address:')->columnSpan(3),
+                                            ->label('Provincial Address:')->columnSpan(1),
                                     Forms\Components\TextInput::make('applicant_lived_there')
                                             ->label('Lived There:'),
                                     Forms\Components\Select::make('applicant_house')
@@ -179,17 +179,18 @@ class CustomerApplicationResource extends Resource
     
                                     
                                     Forms\Components\Fieldset::make("Previous Employer")
+											->columns(3)
                                             ->columnSpan(3)
                                             ->schema([
                                                 Forms\Components\TextArea::make('applicant_previous_employer')
                                                         ->label('Employer:')
-                                                        ->columnSpan(2),
+                                                        ->columnSpan(1),
                                                 Forms\Components\TextArea::make('applicant_previous_employer_position')
                                                         ->label('Position:')
-                                                        ->columnSpan(2),
-                                                Forms\Components\TextInput::make('applicant_how_long_prev_job_or_business')
+                                                        ->columnSpan(1),
+                                                Forms\Components\TextArea::make('applicant_how_long_prev_job_or_business')
                                                         ->label('How Long:')
-                                                        ->columnSpan(2),
+                                                        ->columnSpan(1),
                                             ]),
                             ]),
                     // End of Applicant Information
@@ -364,193 +365,198 @@ class CustomerApplicationResource extends Resource
 
                     
                 //Statement of monthly income
-                Forms\Components\Section::make('Statment of Monthly Income')->schema([
+                Forms\Components\Section::make('Statment of Monthly Income')
+						->columns(2)
+						->schema([
 
-                    Forms\Components\Group::make()->columnSpan(2)->schema([
-
-                        Forms\Components\Section::make('Income')->schema([
-
-                            Forms\Components\Section::make("Applicant's Income")->schema([
-                                Forms\Components\TextInput::make("applicants_basic_monthly_salary")->label("Basic Monthly Salary:")
-                                ->minLength(4)
-                                ->maxLength(7)
-                                ->columnSpan(2)
-                                ->required()
-                                ->default(0)
-                                ->numeric(),
-                                Forms\Components\TextInput::make("applicants_allowance_commission")->label("Allowance Commision:")->numeric()
-                                ->columnSpan(1)
-                                ->required()
-                                ->default(0)
-                                ->numeric(),
-                                Forms\Components\TextInput::make("applicants_deductions")->label("Deductions:")->numeric()
-                                ->columnSpan(1)
-                                ->required()
-                                ->default(0)
-                                ->numeric(),
-                                Forms\Components\TextInput::make("applicants_net_monthly_income")->label("Net Monthly Income:")->numeric()
-                                ->columnSpan(2)
-                                ->disabled()
-                                ->default(0)
-                                ->numeric(),
-                            ])->columns(2)->columnSpan(1),
-
-
-                            Forms\Components\Section::make("Spouse's Monthly Salary")
-									->columns(2)
-									->columnSpan(1)
-									->hidden(fn (Forms\Get $get): bool => ! $get('applicant_civil_status') == "Married")
-									->schema([
-											Forms\Components\TextInput::make("spouses_basic_monthly_salary")->label("Basic Monthly Salary:")
-													->columnSpan(2)
-													->default(0)
-													->numeric(),
-											Forms\Components\TextInput::make("spouse_allowance_commision")->label("Allowance Commision:")->numeric()
-													->columnSpan(1)
-													->default(0)
-													->numeric(),
-											Forms\Components\TextInput::make("spouse_deductions")->label("Deductions:")->numeric()
-													->columnSpan(1)
-													->default(0)
-													->numeric(),
-											Forms\Components\TextInput::make("spouse_net_monthly_income")->label("Net Monthly Income:")->numeric()
-													->columnSpan(2)
-													->disabled()
-													->default(0)
-													->numeric(),
-									]),
-
-                            Forms\Components\TextInput::make("other_income")->label("Other Income:")->numeric()
-                                    ->columnSpan(1)
-                                    ->default(0)
-                                    ->default(0),
-
-                            Forms\Components\TextInput::make("gross_monthly_income")->label("Gross Monthly Income:")->numeric()->columnSpan(1)
-                                    ->numeric()
-                                    ->columnSpan(1)
-                                    ->default(0)
-                                    ->disabled()
-                                    ->prefix('Total:'),
-
-                            Forms\Components\Actions::make([
-                                Forms\Components\Actions\Action::make('Calculate Income')
-                                ->icon('heroicon-m-calculator')
-                                ->action(function (Forms\Set $set, Forms\Get $get){
-    
-                                    //Net Monthly income (Applicant) = Basic Monthly Salary + Allowance commission - Deduction
-                                    $applicants_net_monthly_income = (double)$get('applicants_basic_monthly_salary') 
-                                                                    + (double)$get('applicants_allowance_commission') - 
-                                                                    (double)$get('applicants_deductions');
-
-                                    //Net Monthly income (Spouse) = Basic Monthly Salary (Spouse) + Allowance commission (Spouse) - Deduction (Spouse)
-                                    $spouses_net_monthly_income = (double)$get('spouses_basic_monthly_salary') 
-                                                                + (double)$get('spouse_allowance_commision') 
-                                                                - (double)$get('spouse_deductions');
-
-                                    $other_income = (float)$get('other_income');
-
-                                    $gross_monthly_income = $applicants_net_monthly_income + $spouses_net_monthly_income + $other_income;
-
-                                    $set('spouse_net_monthly_income', $spouses_net_monthly_income);
-                                    $set('applicants_net_monthly_income', $applicants_net_monthly_income);
-                                    $set('gross_monthly_income', $gross_monthly_income);
-    
-                                }),
-                            ])->columnSpan(2),
-
-                        ])->columns(2)->columnSpan(2),
-
-                    ])->columns(2),
+								Forms\Components\Group::make()
+										->columns(2)
+										->columnSpan(2)
+										->schema([
+												Forms\Components\Section::make('Income')
+														->columns(2)
+														->columnSpan(2)
+														->schema([
+																Forms\Components\Section::make("Applicant's Income")
+																		->columns(2)
+																		->columnSpan(1)
+																		->schema([
+																				Forms\Components\TextInput::make("applicants_basic_monthly_salary")->label("Basic Monthly Salary:")
+																						->minLength(4)
+																						->maxLength(7)
+																						->columnSpan(2)
+																						->required()
+																						->default(0)
+																						->numeric(),
+																				Forms\Components\TextInput::make("applicants_allowance_commission")->label("Allowance Commision:")->numeric()
+																						->columnSpan(1)
+																						->required()
+																						->default(0)
+																						->numeric(),
+																				Forms\Components\TextInput::make("applicants_deductions")->label("Deductions:")->numeric()
+																						->columnSpan(1)
+																						->required()
+																						->default(0)
+																						->numeric(),
+																				Forms\Components\TextInput::make("applicants_net_monthly_income")->label("Net Monthly Income:")->numeric()
+																						->columnSpan(2)
+																						->disabled()
+																						->default(0)
+																						->numeric(),
+																		]),
 
 
-                    Forms\Components\Group::make()->columnSpan(1)->schema([
-                        Forms\Components\Section::make("Expenses")
-                                ->columns(2)
-                                ->columnSpan(1)
-                                ->schema([
-                                        Forms\Components\TextInput::make("living_expenses")->label("Living Expenses:")->numeric()
-                                        ->numeric()
-                                        ->default(0)
-                                        ->columnSpan(1),
-                                        Forms\Components\TextInput::make("education")->label("Education:")->columnSpan(1)->numeric()
-                                        ->numeric()
-                                        ->default(0)
-                                        ->columnSpan(1),
-                                        Forms\Components\TextInput::make("transportation")->label("Transportation:")->numeric()
-                                        ->numeric()
-                                        ->default(0)
-                                        ->columnSpan(1),
-                                        Forms\Components\TextInput::make("rental")->label("Rental:")->numeric()
-                                        ->numeric()
-                                        ->default(0)
-                                        ->columnSpan(1),
-                                        Forms\Components\TextInput::make("utilities")->label("Utilities:")->numeric()
-                                        ->numeric()
-                                        ->default(0)
-                                        ->columnSpan(1),
-                                        Forms\Components\TextInput::make("monthly_amortization")->label("Monthly Amortization:")->numeric()
-                                        ->numeric()
-                                        ->default(0)
-                                        ->columnSpan(1),
-                                        Forms\Components\TextInput::make("other_expenses")->label("Other Expenses:")->numeric()
-                                        ->numeric()
-                                        ->default(0)
-                                        ->columnSpan(1),
+																Forms\Components\Section::make("Spouse's Monthly Salary")
+																		->columns(2)
+																		->columnSpan(1)
+																		->disabled(fn (Forms\Get $get): bool => ! $get('applicant_civil_status') == "Married")
+																		->schema([
+																				Forms\Components\TextInput::make("spouses_basic_monthly_salary")->label("Basic Monthly Salary:")
+																						->columnSpan(2)
+																						->default(0)
+																						->numeric(),
+																				Forms\Components\TextInput::make("spouse_allowance_commision")->label("Allowance Commision:")->numeric()
+																						->columnSpan(1)
+																						->default(0)
+																						->numeric(),
+																				Forms\Components\TextInput::make("spouse_deductions")->label("Deductions:")->numeric()
+																						->columnSpan(1)
+																						->default(0)
+																						->numeric(),
+																				Forms\Components\TextInput::make("spouse_net_monthly_income")->label("Net Monthly Income:")->numeric()
+																						->columnSpan(2)
+																						->disabled()
+																						->default(0)
+																						->numeric(),
+															]),
 
-                                        Forms\Components\TextInput::make("total_expenses")->label("Total Expenses:")->numeric()->columnSpan(1)
-                                        ->numeric()
-                                        ->required()
-                                        ->disabled()
-                                        ->default(0)
-                                        ->prefix('Total:')
-                                        ->columnSpan(1),
+													Forms\Components\TextInput::make("other_income")->label("Other Income:")->numeric()
+															->columnSpan(1)
+															->default(0)
+															->default(0),
 
-                                        Forms\Components\Actions::make([
-                                            Forms\Components\Actions\Action::make('Calculate Expenses')
-                                            ->icon('heroicon-m-calculator')
-                                            ->action(function (Forms\Set $set, Forms\Get $get){
-                    
-                                                $total_expenses = (double)$get('living_expenses') + (double)$get('education') 
-                                                                + (double)$get('transportation') + (double)$get('rental')
-                                                                + (double)$get('utilities') + (double)$get('monthly_amortization')
-                                                                + (double)$get('other_expenses');
-                    
-                                                $set('total_expenses', $total_expenses);
-                    
-                                            }),
-                                        ])->fullWidth()->columnSpan(2),
-                        ]),
+													Forms\Components\TextInput::make("gross_monthly_income")->label("Gross Monthly Income:")->numeric()->columnSpan(1)
+															->numeric()
+															->columnSpan(1)
+															->default(0)
+															->disabled()
+															->prefix('Total:'),
+
+													Forms\Components\Actions::make([
+															Forms\Components\Actions\Action::make('Calculate Income')
+																	->icon('heroicon-m-calculator')
+																	->action(function (Forms\Set $set, Forms\Get $get){
+										
+																		//Net Monthly income (Applicant) = Basic Monthly Salary + Allowance commission - Deduction
+																		$applicants_net_monthly_income = (double)$get('applicants_basic_monthly_salary') 
+																										+ (double)$get('applicants_allowance_commission') - 
+																										(double)$get('applicants_deductions');
+
+																		//Net Monthly income (Spouse) = Basic Monthly Salary (Spouse) + Allowance commission (Spouse) - Deduction (Spouse)
+																		$spouses_net_monthly_income = (double)$get('spouses_basic_monthly_salary') 
+																									+ (double)$get('spouse_allowance_commision') 
+																									- (double)$get('spouse_deductions');
+
+																		$other_income = (float)$get('other_income');
+
+																		$gross_monthly_income = $applicants_net_monthly_income + $spouses_net_monthly_income + $other_income;
+
+																		$set('spouse_net_monthly_income', $spouses_net_monthly_income);
+																		$set('applicants_net_monthly_income', $applicants_net_monthly_income);
+																		$set('gross_monthly_income', $gross_monthly_income);
+							
+														}),
+													])->columnSpan(2),
+
+												])->columns(2)->columnSpan(2),
+
+								])->columns(2),
 
 
-                    Forms\Components\Group::make()
-                            ->columns(2)
-                            ->schema([
-                                Forms\Components\Section::make("Net Monthly Income:")
-                                        ->columns(2)
-                                        ->schema([
-                                            Forms\Components\TextInput::make("net_monthly_income")->label("Net Monthly Income:")->numeric()->columnSpan(2)
-                                            ->columnSpan(2)
-                                            ->required()
-                                            ->disabled()
-                                            ->prefix('Total:')
-                                            ->numeric(),
-                                        ]),
-                            ]),
-                        //End Statement of monthly income
-        
-                        Forms\Components\Actions::make([
-                            Forms\Components\Actions\Action::make('Calculate Net Monthly Income')
-                            ->icon('heroicon-m-calculator')
-                            ->action(function (Forms\Set $set, Forms\Get $get){
-                                $net_monthly_income = (double)$get('gross_monthly_income') - (double)$get('total_expenses');
-                                $set('net_monthly_income', $net_monthly_income);
-        
-                            }),
-                        ])->columns(2)->columnSpan(1),
+								Forms\Components\Section::make("Expenses")
+										->columns(2)
+										->columnSpan(1)
+										->schema([
+												Forms\Components\TextInput::make("living_expenses")->label("Living Expenses:")->numeric()
+												->numeric()
+												->default(0)
+												->columnSpan(1),
+												Forms\Components\TextInput::make("education")->label("Education:")->columnSpan(1)->numeric()
+												->numeric()
+												->default(0)
+												->columnSpan(1),
+												Forms\Components\TextInput::make("transportation")->label("Transportation:")->numeric()
+												->numeric()
+												->default(0)
+												->columnSpan(1),
+												Forms\Components\TextInput::make("rental")->label("Rental:")->numeric()
+												->numeric()
+												->default(0)
+												->columnSpan(1),
+												Forms\Components\TextInput::make("utilities")->label("Utilities:")->numeric()
+												->numeric()
+												->default(0)
+												->columnSpan(1),
+												Forms\Components\TextInput::make("monthly_amortization")->label("Monthly Amortization:")->numeric()
+												->numeric()
+												->default(0)
+												->columnSpan(1),
+												Forms\Components\TextInput::make("other_expenses")->label("Other Expenses:")->numeric()
+												->numeric()
+												->default(0)
+												->columnSpan(1),
 
-                    ]),
+												Forms\Components\TextInput::make("total_expenses")->label("Total Expenses:")->numeric()->columnSpan(1)
+												->numeric()
+												->required()
+												->disabled()
+												->default(0)
+												->prefix('Total:')
+												->columnSpan(1),
 
-                ])->columns(2),
+												Forms\Components\Actions::make([
+														Forms\Components\Actions\Action::make('Calculate Expenses')
+														->icon('heroicon-m-calculator')
+														->action(function (Forms\Set $set, Forms\Get $get){
+								
+															$total_expenses = (double)$get('living_expenses') + (double)$get('education') 
+																			+ (double)$get('transportation') + (double)$get('rental')
+																			+ (double)$get('utilities') + (double)$get('monthly_amortization')
+																			+ (double)$get('other_expenses');
+								
+															$set('total_expenses', $total_expenses);
+								
+														}),
+													])->columnSpan(2),
+								]),
+
+
+								Forms\Components\Section::make("Net Monthly Income:")
+										->columnSpan(1)
+										->columns(2)
+										->schema([
+												Forms\Components\TextInput::make("net_monthly_income")->label("Net Monthly Income:")->numeric()->columnSpan(2)
+														->columnSpan(2)
+														->required()
+														->disabled()
+														->prefix('Total:')
+														->numeric(),
+
+												Forms\Components\Actions::make([
+														Forms\Components\Actions\Action::make('Calculate Net Monthly Income')
+														->icon('heroicon-m-calculator')
+														->action(
+																function (Forms\Set $set, Forms\Get $get){
+																		$net_monthly_income = (double)$get('gross_monthly_income') - (double)$get('total_expenses');
+																		$set('net_monthly_income', $net_monthly_income);
+									
+														}),
+													])->columns(2)->columnSpan(2),
+
+										]),
+									//End Statement of monthly income
+
+								]),
 
 
         ]);
