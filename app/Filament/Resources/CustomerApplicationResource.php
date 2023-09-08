@@ -251,24 +251,24 @@ class CustomerApplicationResource extends Resource
                                     ]),
 
                                     Forms\Components\Repeater::make('credit_references')
-                                    ->columnSpan(1)
-                                    ->columns(2)
-                                    ->label('Applicant\'s Credit References')
-                                    ->collapsible(true)
-                                    ->schema([
-                                        Forms\Components\Select::make('credit_type')
-                                        ->options([
-                                            'creditor' => 'Creditor',
-                                            'credit_card' => 'Credit Card',
-                                        ])
-                                        ->live()
-                                        ->afterStateUpdated(fn (Forms\Components\Select $component)
-                                        => $component
-                                            ->getContainer()
-                                            ->getComponent('creditCardDynamicTypeFields')
-                                            ->getChildComponentContainer()
-                                            ->fill()
-                                        ),
+											->columnSpan(1)
+											->columns(2)
+											->label('Applicant\'s Credit References')
+											->collapsible(true)
+											->schema([
+													Forms\Components\Select::make('credit_type')
+													->options([
+														'creditor' => 'Creditor',
+														'credit_card' => 'Credit Card',
+													])
+													->live()
+													->afterStateUpdated(fn (Forms\Components\Select $component)
+													=> $component
+														->getContainer()
+														->getComponent('creditCardDynamicTypeFields')
+														->getChildComponentContainer()
+														->fill()
+												),
                         
                     
                                     Forms\Components\Grid::make(3)

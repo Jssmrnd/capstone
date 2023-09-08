@@ -77,7 +77,8 @@ return new class extends Migration
             $table->integer('applicant_school_year_graduated')->nullable();
 
             //Bank
-            $table->string('bank_references')->nullable();
+            $table->json('bank_references')->nullable();
+            $table->json('credit_references')->nullable();
 
 
             //Financials

@@ -80,6 +80,7 @@ class CustomerApplication extends Model
 
         //Bank
         'bank_references',
+        'credit_references',
 
         //Financials
         'applicants_basic_monthly_salary',
@@ -131,6 +132,7 @@ class CustomerApplication extends Model
         'properties' => 'json',
         'personal_references' => 'json',
         'bank_references' => 'json',
+        'credit_references' => 'json',
     ];
 
     public function payments():HasMany{
