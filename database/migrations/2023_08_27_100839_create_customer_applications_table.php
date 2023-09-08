@@ -105,10 +105,7 @@ return new class extends Migration
             $table->double('spouse_net_monthly_income')->nullable();
 
             // Personal References
-            $table->string('personal_references_name')->nullable();
-            $table->text('personal_references_address')->nullable();
-            $table->string('personal_references_relationship')->nullable();
-            $table->string('personal_references_telephone')->nullable();
+            $table->json('personal_references')->nullable();
 
             $table->json('properties')->nullable();
             $table->double('other_income')->nullable();
