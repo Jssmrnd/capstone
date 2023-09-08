@@ -14,9 +14,9 @@ class CustomerApplication extends Model
     use HasFactory;
 
     protected $fillable = [
+
         'application_status',
         'application_is_new',
-
 
         //Unit
         'unit_id',
@@ -79,11 +79,7 @@ class CustomerApplication extends Model
         'applicant_school_year_graduated',
 
         //Bank
-        'bank_acc_type',
-        'bank_branch',
-        'bank_acc_number',
-        'bank_acc_date_opened',
-        'bank_acc_avg_bal',
+        'bank_references',
 
         //Financials
         'applicants_basic_monthly_salary',
@@ -134,6 +130,7 @@ class CustomerApplication extends Model
     protected $casts = [
         'properties' => 'json',
         'personal_references' => 'json',
+        'bank_references' => 'json',
     ];
 
     public function payments():HasMany{

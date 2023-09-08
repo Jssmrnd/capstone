@@ -77,11 +77,7 @@ return new class extends Migration
             $table->integer('applicant_school_year_graduated')->nullable();
 
             //Bank
-            $table->string('bank_acc_type')->nullable();
-            $table->string('bank_branch')->nullable();
-            $table->string('bank_acc_number')->nullable();
-            $table->date('bank_acc_date_opened')->nullable();
-            $table->decimal('bank_acc_avg_bal', 10, 2)->nullable();
+            $table->string('bank_references')->nullable();
 
 
             //Financials
