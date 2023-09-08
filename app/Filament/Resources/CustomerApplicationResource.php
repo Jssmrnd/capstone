@@ -18,6 +18,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Database\Eloquent\Model;
+use Filament\Support\Enums\Alignment;
 
 class CustomerApplicationResource extends Resource
 {
@@ -34,7 +35,7 @@ class CustomerApplicationResource extends Resource
                             ->columns(4)
                             ->columnSpan(2)
                             ->schema([
-                                    Forms\Components\Select::make('units.unit_model')
+                                    Forms\Components\Select::make('id')
                                             ->columnSpan(4)
                                             ->label('Unit Model')
                                             ->relationship('units', 'unit_model')
@@ -43,7 +44,7 @@ class CustomerApplicationResource extends Resource
                                             ->live()
                                             ->afterStateUpdated(
                                                     function(Forms\Get $get, Forms\Set $set){
-                                                        $unit_price = Models\Unit::where('id', $get('unit_id'))->get()->first()->unit_srp;
+                                                        $unit_price = Models\Unit::find($get('id'))->unit_srp;
                                                         $set('unit_srp', $unit_price);
                                                     }
                                     ),
@@ -51,20 +52,21 @@ class CustomerApplicationResource extends Resource
                                             ->columnSpan(4)
                                             ->columns(2)
                                             ->live()
-                                            ->disabled(fn (Forms\Get $get): bool => ! $get('unit_id'))
+                                            ->disabled(fn (Forms\Get $get): bool => ! $get('id'))
                                             ->schema([
                                                     Forms\Components\TextInput::make('unit_srp')
-                                                                ->columnSpan(1)
-                                                                ->required(true)
-                                                                ->label('Selling Retail Price:')
-                                                                ->numeric(),
+															->columnSpan(1)
+															->required(true)
+															->label('Selling Retail Price:')
+															->numeric(),
                                                     Forms\Components\TextInput::make('unit_term')
                                                             ->columnSpan(1)
+															->minValue(0)
                                                             ->required(true)
                                                             ->label('Term:')
                                                             ->minValue(1)
                                                             ->numeric()
-                                                            ->live()
+                                                            ->live(500)
                                                             ->afterStateUpdated(
                                                                                 function(Forms\Get $get, Forms\Set $set){
                                                                                 $_term = $get('unit_term');
@@ -78,14 +80,15 @@ class CustomerApplicationResource extends Resource
                                                             ),
                                                     Forms\Components\TextInput::make('unit_ttl_dp')->required(true)->label('TTL DP:')
                                                                 ->numeric()
+																->minValue(0)
                                                                 ->columnSpan(1)
-                                                                ->live()
+                                                                ->live(500)
                                                                 ->afterStateUpdated(
                                                                         function(Forms\Get $get, Forms\Set $set){
                                                                                 $dp = $get('unit_ttl_dp');
                                                                                 $_term = $get('unit_term');
                                                                                 $_unit_srp = $get('unit_srp');
-                                                                                if($_term > 1){
+                                                                                if($_term > 1 || $get('unit_ttl_dp' <= $get('unit_srp'))){
                                                                                         $quotient = number_format((float)((float)$_unit_srp - (float)$dp)/$_term, 2, '.', '');
                                                                                         $set('unit_amort_fin', $quotient);
                                                                                 }
@@ -93,11 +96,13 @@ class CustomerApplicationResource extends Resource
                                                                 ),
                                                     Forms\Components\TextInput::make('unit_monthly_amort')->required(true)
                                                                 ->label('Monthly Amorthization:')
+																->minValue(0)
                                                                 ->numeric(),
                                                     Forms\Components\Select::make('unit_type')
                                                                 ->required()
                                                                 ->options(['New','Repeat',]),
                                                     Forms\Components\TextInput::make('unit_amort_fin')
+																->minValue(0)
                                                                 ->required(true)
                                                                 ->label('Amorthization Fin:'),
                                                     Forms\Components\Select::make('unit_mode_of_payment')
@@ -127,6 +132,8 @@ class CustomerApplicationResource extends Resource
                                             ->required(true),
                                     Forms\Components\DatePicker::make('applicant_birthday')
                                             ->label('Birthday:')
+											->minDate(now()->subYears(150))
+											->maxDate(now())
                                             ->columnSpan(1)
                                             ->required(true),
                                     Forms\Components\TextInput::make('applicant_telephone')
@@ -466,7 +473,7 @@ class CustomerApplicationResource extends Resource
 																		$set('gross_monthly_income', $gross_monthly_income);
 							
 														}),
-													])->columnSpan(2),
+													])->alignment(Alignment::Center)->columnSpan(2),
 
 												])->columns(2)->columnSpan(2),
 
@@ -527,7 +534,7 @@ class CustomerApplicationResource extends Resource
 															$set('total_expenses', $total_expenses);
 								
 														}),
-													])->columnSpan(2),
+													])->alignment(Alignment::Center)->columnSpan(2),
 								]),
 
 
@@ -551,7 +558,7 @@ class CustomerApplicationResource extends Resource
 																		$set('net_monthly_income', $net_monthly_income);
 									
 														}),
-													])->columns(2)->columnSpan(2),
+													])->alignment(Alignment::Center)->columns(2)->columnSpan(2),
 
 										]),
 									//End Statement of monthly income
