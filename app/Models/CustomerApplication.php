@@ -97,10 +97,7 @@ class CustomerApplication extends Model
         'spouse_net_monthly_income',
 
         //Personal References
-        'personal_references_name',
-        'personal_references_address',
-        'personal_references_relationship',
-        'personal_references_telephone',
+        'personal_references',
 
         //Personal & Real Estate Properties
         'properties',
@@ -136,6 +133,7 @@ class CustomerApplication extends Model
 
     protected $casts = [
         'properties' => 'json',
+        'personal_references' => 'json',
     ];
 
     public function payments():HasMany{
