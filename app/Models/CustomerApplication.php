@@ -49,6 +49,12 @@ class CustomerApplication extends Model
         'applicant_present_business_employer',
         'applicant_position',
         'applicant_how_long_job_or_business',
+        'applicant_business_address',
+        'applicant_nature_of_business',
+        'applicant_previous_employer',
+        'applicant_previous_employer_position',
+        'applicant_how_long_prev_job_or_business',
+
         
         //Spouse Information
         'spouse_firstname',
