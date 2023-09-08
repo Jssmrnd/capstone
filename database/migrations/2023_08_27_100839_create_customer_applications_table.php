@@ -44,6 +44,35 @@ return new class extends Migration
             $table->string('applicant_valid_id')->nullable();
             $table->string('applicant_telephone')->nullable();
 
+            //Spouse Information
+            $table->string('spouse_firstname')->nullable();
+            $table->string('spouse_middlename')->nullable();
+            $table->string('spouse_lastname')->nullable();
+            $table->date('spouse_birthday')->nullable();
+            $table->text('spouse_present_address')->nullable();
+            $table->text('spouse_provincial_address')->nullable();
+            $table->string('spouse_telephone')->nullable();
+
+            //Spouse Employer
+            $table->string('spouse_employer')->nullable();
+            $table->string('spouse_position')->nullable();
+            $table->string('spouse_how_long_job_business')->nullable();
+            $table->text('spouse_business_address')->nullable();
+            $table->string('spouse_nature_of_business')->nullable();
+
+            //Educational Attainment
+            $table->string('applicant_course')->nullable();
+            $table->integer('applicant_course_number_of_yrs')->nullable();
+            $table->string('applicant_school')->nullable();
+            $table->integer('applicant_school_year_graduated')->nullable();
+
+            //Bank
+            $table->string('bank_acc_type')->nullable();
+            $table->string('bank_branch')->nullable();
+            $table->string('bank_acc_number')->nullable();
+            $table->date('bank_acc_date_opened')->nullable();
+            $table->decimal('bank_acc_avg_bal', 10, 2)->nullable();
+
 
             //Financials
             $table->double('applicants_basic_monthly_salary')->nullable();
@@ -55,6 +84,12 @@ return new class extends Migration
             $table->double('spouse_allowance_commision')->nullable();
             $table->double('spouse_deductions')->nullable();
             $table->double('spouse_net_monthly_income')->nullable();
+
+            // Personal References
+            $table->string('personal_references_name')->nullable();
+            $table->text('personal_references_address')->nullable();
+            $table->string('personal_references_relationship')->nullable();
+            $table->string('personal_references_telephone')->nullable();
 
             $table->json('properties')->nullable();
             $table->double('other_income')->nullable();
