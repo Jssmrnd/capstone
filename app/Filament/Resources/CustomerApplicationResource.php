@@ -395,19 +395,18 @@ class CustomerApplicationResource extends Resource
 																						->required()
 																						->default(0)
 																						->numeric(),
-																				Forms\Components\TextInput::make("applicants_allowance_commission")->label("Allowance Commision:")->numeric()
+																				Forms\Components\TextInput::make("applicants_allowance_commission")->label("Allowance Commision:")
 																						->columnSpan(1)
 																						->required()
 																						->default(0)
 																						->numeric(),
-																				Forms\Components\TextInput::make("applicants_deductions")->label("Deductions:")->numeric()
+																				Forms\Components\TextInput::make("applicants_deductions")->label("Deductions:")
 																						->columnSpan(1)
 																						->required()
 																						->default(0)
 																						->numeric(),
-																				Forms\Components\TextInput::make("applicants_net_monthly_income")->label("Net Monthly Income:")->numeric()
+																				Forms\Components\TextInput::make("applicants_net_monthly_income")->label("Net Monthly Income:")
 																						->columnSpan(2)
-																						->disabled()
 																						->default(0)
 																						->numeric(),
 																		]),
@@ -432,7 +431,6 @@ class CustomerApplicationResource extends Resource
 																						->numeric(),
 																				Forms\Components\TextInput::make("spouse_net_monthly_income")->label("Net Monthly Income:")->numeric()
 																						->columnSpan(2)
-																						->disabled()
 																						->default(0)
 																						->numeric(),
 															]),
@@ -446,7 +444,6 @@ class CustomerApplicationResource extends Resource
 															->numeric()
 															->columnSpan(1)
 															->default(0)
-															->disabled()
 															->prefix('Total:'),
 
 													Forms\Components\Actions::make([
@@ -516,7 +513,6 @@ class CustomerApplicationResource extends Resource
 												Forms\Components\TextInput::make("total_expenses")->label("Total Expenses:")->numeric()->columnSpan(1)
 												->numeric()
 												->required()
-												->disabled()
 												->default(0)
 												->prefix('Total:')
 												->columnSpan(1),
@@ -545,7 +541,6 @@ class CustomerApplicationResource extends Resource
 												Forms\Components\TextInput::make("net_monthly_income")->label("Net Monthly Income:")->numeric()->columnSpan(2)
 														->columnSpan(2)
 														->required()
-														->disabled()
 														->prefix('Total:')
 														->numeric(),
 
