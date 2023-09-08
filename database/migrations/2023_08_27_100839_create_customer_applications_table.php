@@ -44,6 +44,16 @@ return new class extends Migration
             $table->string('applicant_valid_id')->nullable();
             $table->string('applicant_telephone')->nullable();
 
+            //Applcant Employment
+            $table->string('applicant_present_business_employer')->nullable();
+            $table->string('applicant_position')->nullable();
+            $table->string('applicant_how_long_job_or_business')->nullable();
+            $table->text('applicant_business_address')->nullable();
+            $table->string('applicant_nature_of_business')->nullable();
+            $table->string('applicant_previous_employer')->nullable();
+            $table->string('applicant_previous_employer_position')->nullable();
+            $table->string('applicant_how_long_prev_job_or_business')->nullable();
+
             //Spouse Information
             $table->string('spouse_firstname')->nullable();
             $table->string('spouse_middlename')->nullable();
@@ -79,6 +89,15 @@ return new class extends Migration
             $table->double('applicants_allowance_commission')->nullable();
             $table->double('applicants_deductions')->nullable();
             $table->double('applicants_net_monthly_income')->nullable();
+
+            //Expenses
+            $table->double('living_expenses')->nullable();
+            $table->double('education')->nullable();
+            $table->double('transportation')->nullable();
+            $table->double('rental')->nullable();
+            $table->double('utilities')->nullable();
+            $table->double('monthly_amortization')->nullable();
+            $table->double('other_expenses')->nullable();
 
             $table->double('spouses_basic_monthly_salary')->nullable();
             $table->double('spouse_allowance_commision')->nullable();

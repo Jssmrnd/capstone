@@ -44,6 +44,11 @@ class CustomerApplication extends Model
         'applicant_house',
         'applicant_valid_id',
         'applicant_telephone',
+
+        //Applicant Employment
+        'applicant_present_business_employer',
+        'applicant_position',
+        'applicant_how_long_job_or_business',
         
         //Spouse Information
         'spouse_firstname',
