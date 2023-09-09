@@ -228,7 +228,7 @@ class CustomerApplicationResource extends Resource
                                     Forms\Components\DatePicker::make("dependent_school"),
                                     Forms\Components\TextInput::make("dependent_monthly_tuition"),
                                 ]),
-                    ]),
+                        ]),
 
 
 
