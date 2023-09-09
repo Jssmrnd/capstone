@@ -147,7 +147,7 @@ class CustomerApplicationResource extends Resource
                                             ->live()
                                             ->columnSpan(3)
                                             ->required(true)
-                                            ->options(['Single', 'Married', 'Separated', 'Widow']),
+                                            ->options(['single'=> 'Single', 'married' => 'Married', 'separated' => 'Separated', 'widow' => 'Widow']),
                                     Forms\Components\Textarea::make('applicant_present_address')
                                             ->label('Present Address:')
                                             ->columnSpan(1)->required(true),
@@ -161,7 +161,7 @@ class CustomerApplicationResource extends Resource
                                             ->label('Lived There:'),
                                     Forms\Components\Select::make('applicant_house')
                                             ->label('House:')
-                                            ->options(['Owned', 'Rented', 'w/ parents']),
+                                            ->options(['owned' => 'Owned', 'rented' => 'Rented', 'w/ parents' => 'W/ parents']),
 
                                     Forms\Components\Fieldset::make("Present Employer")
                                             ->columns(2)
@@ -231,7 +231,7 @@ class CustomerApplicationResource extends Resource
 
                     // Spouse Information
                     Forms\Components\Fieldset::make("Spouse Information")
-							->hidden(fn (Forms\Get $get): bool => ! $get('applicant_civil_status') == "Married")
+							->hidden(fn (Forms\Get $get): bool => $get('applicant_civil_status') != "married")
 							->columns(3)
 							->columnSpan(2)
 							->schema([
