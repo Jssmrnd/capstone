@@ -54,6 +54,12 @@ return new class extends Migration
             $table->string('applicant_previous_employer_position')->nullable();
             $table->string('applicant_how_long_prev_job_or_business')->nullable();
 
+            //Educational Attainment
+            $table->json('educational_attainment')->nullable();
+
+            //Dependents
+            $table->json('dependents')->nullable();
+
             //Spouse Information
             $table->string('spouse_firstname')->nullable();
             $table->string('spouse_middlename')->nullable();
@@ -79,7 +85,6 @@ return new class extends Migration
             //Bank
             $table->json('bank_references')->nullable();
             $table->json('credit_references')->nullable();
-
 
             //Financials
             $table->double('applicants_basic_monthly_salary')->nullable();

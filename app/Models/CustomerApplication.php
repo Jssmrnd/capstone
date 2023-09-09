@@ -73,10 +73,10 @@ class CustomerApplication extends Model
         'spouse_nature_of_business',
 
         //Educational Attainment
-        'applicant_course',
-        'applicant_course_number_of_yrs',
-        'applicant_school',
-        'applicant_school_year_graduated',
+        'educational_attainment',
+
+        //Dependents
+        'dependents',
 
         //Bank
         'bank_references',
@@ -135,10 +135,12 @@ class CustomerApplication extends Model
     ];
 
     protected $casts = [
-        'properties' => 'json',
-        'personal_references' => 'json',
-        'bank_references' => 'json',
-        'credit_references' => 'json',
+        'properties'                => 'json',
+        'personal_references'       => 'json',
+        'bank_references'           => 'json',
+        'credit_references'         => 'json',
+        'educational_attainment'    => 'json',
+        'dependents'                => 'json',
     ];
 
     public function payments():HasMany{

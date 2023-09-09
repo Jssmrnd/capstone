@@ -207,28 +207,28 @@ class CustomerApplicationResource extends Resource
 
                     Forms\Components\Fieldset::make("Educational Attainment")
                             ->schema([
-                                Forms\Components\Repeater::make("educational_attainments")
-                                        ->schema([
-                                            Forms\Components\TextInput::make("course"),
-                                            Forms\Components\TextInput::make("no_years")
-                                                    ->suffix("year(s)"),
-                                            Forms\Components\TextInput::make("school"),
-                                            Forms\Components\DatePicker::make("year_grad"),
-                                        ]),
+                                    Forms\Components\Repeater::make("educational_attainments")
+                                            ->schema([
+                                                Forms\Components\TextInput::make("course"),
+                                                Forms\Components\TextInput::make("no_years")
+                                                        ->suffix("year(s)"),
+                                                Forms\Components\TextInput::make("school"),
+                                                Forms\Components\DatePicker::make("year_grad"),
+                                            ]),
                             ]),
 
                             
                     Forms\Components\Fieldset::make("Dependents")
-                    ->schema([
-                        Forms\Components\Repeater::make("dependents")
-                                ->schema([
-                                    Forms\Components\TextInput::make("dependent_name"),
-                                    Forms\Components\DatePicker::make("dependent_birthdate"),
-                                    Forms\Components\TextInput::make("dependent_age"),
-                                    Forms\Components\DatePicker::make("dependent_school"),
-                                    Forms\Components\TextInput::make("dependent_monthly_tuition"),
-                                ]),
-                        ]),
+                            ->schema([
+                                    Forms\Components\Repeater::make("dependents")
+                                            ->schema([
+                                                Forms\Components\TextInput::make("dependent_name"),
+                                                Forms\Components\DatePicker::make("dependent_birthdate"),
+                                                Forms\Components\TextInput::make("dependent_age"),
+                                                Forms\Components\DatePicker::make("dependent_school"),
+                                                Forms\Components\TextInput::make("dependent_monthly_tuition"),
+                                            ]),
+                            ]),
 
 
 
