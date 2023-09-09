@@ -314,11 +314,12 @@ class CustomerApplicationResource extends Resource
 
                                     Forms\Components\Repeater::make('credit_references')
                                                 ->columnSpan(1)
-                                                ->columns(2)
+                                                ->columns(3)
                                                 ->label('Applicant\'s Credit References')
                                                 ->collapsible(true)
                                                 ->schema([
                                                         Forms\Components\Select::make('credit_type')
+                                                        ->columnSpan(3)
                                                         ->options([
                                                                 'creditor' => 'Creditor',
                                                                 'credit_card' => 'Credit Card',
@@ -333,20 +334,21 @@ class CustomerApplicationResource extends Resource
                                                         ),
                         
                     
-                                    Forms\Components\Grid::make(3)
+                                    Forms\Components\Grid::make(4)
+                                            ->columnSpan(4)
+                                            ->columns(4)
                                             ->key('creditCardDynamicTypeFields')
-                                            ->columnSpan(1)
                                             ->schema(fn (Forms\Get $get): array => match ($get('credit_type')) {
                                                     'creditor' => [
                                                             Forms\Components\TextInput::make('creditor')
-                                                            ->columnSpan(3),
+                                                            ->columnSpan(4),
                                                             Forms\Components\TextInput::make('term')
-                                                            ->columnSpan(1),
+                                                            ->columnSpan(2),
                                                             Forms\Components\TextInput::make('present_balance')
                                                             ->columnSpan(2)
                                                             ->numeric(),
                                                             Forms\Components\TextInput::make('principal')
-                                                            ->columnSpan(1),
+                                                            ->columnSpan(2),
                                                             Forms\Components\TextInput::make('monthly_amorthization')
                                                             ->columnSpan(2)
                                                             ->numeric(),
@@ -600,11 +602,11 @@ class CustomerApplicationResource extends Resource
 										->columnSpan(1)
 										->columns(2)
 										->schema([
-												Forms\Components\TextInput::make("net_monthly_income")->label("Net Monthly Income:")->numeric()->columnSpan(2)
-														->columnSpan(2)
+												Forms\Components\TextInput::make("net_monthly_income")->label("Net Monthly Income:")
+                                                        ->numeric()
+                                                        ->columnSpan(2)
 														->required()
-														->prefix('Total:')
-														->numeric(),
+														->prefix('Total:'),
 
 												Forms\Components\Actions::make([
 														Forms\Components\Actions\Action::make('Calculate Net Monthly Income')
@@ -633,43 +635,58 @@ class CustomerApplicationResource extends Resource
 
                 InfoLists\Components\Section::make('Customer Application')->schema([
 
-                                InfoLists\Components\FieldSet::make('Applicant Information')
-                                                ->schema([
-                                                                InfoLists\Components\TextEntry::make('application_status')
-                                                                                ->label('Application Status')
-                                                                                ->badge(),
-                                                                InfoLists\Components\TextEntry::make('created_at')
-                                                                                ->dateTime('M d Y')
-                                                                                ->label('Date Created')
-                                                                                ->badge(),
-                                                                InfoLists\Components\TextEntry::make('due_date')
-                                                                                ->dateTime('M d Y')
-                                                                                ->label('Upcoming Due')
-                                                                                ->badge()
-                                                                                ->color('danger'),
-                                                ]),
+                        InfoLists\Components\FieldSet::make('Applicant Information')
+                                ->schema([
+                                        InfoLists\Components\TextEntry::make('application_status')
+                                                ->label('Application Status')
+                                                ->badge(),
+                                        InfoLists\Components\TextEntry::make('created_at')
+                                                ->dateTime('M d Y')
+                                                ->label('Date Created')
+                                                ->badge(),
+                                        InfoLists\Components\TextEntry::make('due_date')
+                                                ->dateTime('M d Y')
+                                                ->label('Upcoming Due')
+                                                ->badge()
+                                                ->color('danger'),
+                                ]),
 
-                    InfoLists\Components\FieldSet::make('Unit Information')->schema([
-                                InfoLists\Components\TextEntry::make('units.unit_model')->label('Unit Model'),
-                                InfoLists\Components\TextEntry::make('unit_term')->label('Unit Term'),
-                                InfoLists\Components\TextEntry::make('unit_ttl_dp')->label('Downpayment')->money('php'),   
-                                InfoLists\Components\TextEntry::make('unit_amort_fin')->label('Monthly Amortization')->money('php'),                     
-                                InfoLists\Components\TextEntry::make('unit_srp')->label('Unit Price')->money('php'),   
-                    ])->columns(4)->columnSpan(2),
+                        InfoLists\Components\FieldSet::make('Unit Information')
+                                ->columns(4)
+                                ->columnSpan(2)
+                                ->schema([
+                                    InfoLists\Components\TextEntry::make('units.unit_model')->label('Unit Model'),
+                                    InfoLists\Components\TextEntry::make('unit_term')->label('Unit Term'),
+                                    InfoLists\Components\TextEntry::make('unit_ttl_dp')->label('Downpayment')->money('php'),   
+                                    InfoLists\Components\TextEntry::make('unit_amort_fin')->label('Monthly Amortization')->money('php'),                     
+                                    InfoLists\Components\TextEntry::make('unit_srp')->label('Unit Price')->money('php'),   
+                        ]),
 
-                    InfoLists\Components\FieldSet::make('Applicant Information')->schema([
-                        InfoLists\Components\TextEntry::make('applicant_surname')->label('First Name:'),
-                        InfoLists\Components\TextEntry::make('applicant_lastname')->label('Last Name:'),
-                        InfoLists\Components\TextEntry::make('applicant_valid_id')->label('Provided ID:'),
-                        InfoLists\Components\TextEntry::make('applicant_house')->label('House:'),  
-                        InfoLists\Components\TextEntry::make('applicant_present_address')->label('Present Address:'),
-                        InfoLists\Components\TextEntry::make('applicant_telephone')->label('Contacts:'),       
-                    ])->columns(6)->columnSpan(4),
+                    InfoLists\Components\FieldSet::make('Applicant Information')
+                            ->columns(6)
+                            ->columnSpan(4)
+                            ->schema([
+                                InfoLists\Components\TextEntry::make('applicant_surname')->label('First Name:'),
+                                InfoLists\Components\TextEntry::make('applicant_lastname')->label('Last Name:'),
+                                InfoLists\Components\TextEntry::make('applicant_valid_id')->label('Provided ID:'),
+                                InfoLists\Components\TextEntry::make('applicant_house')->label('House:'),  
+                                InfoLists\Components\TextEntry::make('applicant_present_address')->label('Present Address:'),
+                                InfoLists\Components\TextEntry::make('applicant_telephone')->label('Contacts:'),       
+                    ]),
 
                     InfoLists\Components\FieldSet::make("Applicant's Income")->schema([
-                        InfoLists\Components\TextEntry::make('gross_monthly_income')->label("Gross Monthly Income:")->color('success')->money('php'),
-                        InfoLists\Components\TextEntry::make('total_expenses')->label("Total Expenses:")->color('danger')->money('php'),
-                        InfoLists\Components\TextEntry::make('net_monthly_income')->label("Net Monthly Income:")->color('success')->money('php'),
+                            InfoLists\Components\TextEntry::make('gross_monthly_income')
+                                    ->label("Gross Monthly Income:")
+                                    ->color('success')
+                                    ->money('php'),
+                            InfoLists\Components\TextEntry::make('total_expenses')
+                                    ->label("Total Expenses:")
+                                    ->color('danger')
+                                    ->money('php'),
+                            InfoLists\Components\TextEntry::make('net_monthly_income')
+                                    ->label("Net Monthly Income:")
+                                    ->color('success')
+                                    ->money('php'),
                     ])->columns(3)->columnSpan(4),
 
                 ]),
