@@ -35,7 +35,7 @@ class CustomerApplicationResource extends Resource
                             ->columns(4)
                             ->columnSpan(2)
                             ->schema([
-                                    Forms\Components\Select::make('id')
+                                    Forms\Components\Select::make('units.unit_model')
                                             ->columnSpan(4)
                                             ->label('Unit Model')
                                             ->relationship('units', 'unit_model')
@@ -44,7 +44,7 @@ class CustomerApplicationResource extends Resource
                                             ->live()
                                             ->afterStateUpdated(
                                                     function(Forms\Get $get, Forms\Set $set){
-                                                        $unit_price = Models\Unit::find($get('id'))->unit_srp;
+                                                        $unit_price = Models\Unit::find("units.id")->unit_srp;
                                                         $set('unit_srp', $unit_price);
                                                     }
                                     ),
@@ -68,15 +68,15 @@ class CustomerApplicationResource extends Resource
                                                             ->numeric()
                                                             ->live(500)
                                                             ->afterStateUpdated(
-                                                                                function(Forms\Get $get, Forms\Set $set){
-                                                                                $_term = $get('unit_term');
-                                                                                $_unit_srp = $get('unit_srp');
-                                                                                if($_term > 1){
-                                                                                        $quotient = number_format((float)$_unit_srp/$_term, 2, '.', '');
-                                                                                        $set('unit_amort_fin', $quotient);
-                                                                                        $set('unit_monthly_amort', $quotient);
-                                                                                }
-                                                                        }
+                                                                    function(Forms\Get $get, Forms\Set $set){
+                                                                    $_term = $get('unit_term');
+                                                                    $_unit_srp = $get('unit_srp');
+                                                                    if($_term > 1){
+                                                                            $quotient = number_format((float)$_unit_srp/$_term, 2, '.', '');
+                                                                            $set('unit_amort_fin', $quotient);
+                                                                            $set('unit_monthly_amort', $quotient);
+                                                                    }
+                                                                }
                                                             ),
                                                     Forms\Components\TextInput::make('unit_ttl_dp')->required(true)->label('TTL DP:')
                                                                 ->numeric()
@@ -91,6 +91,7 @@ class CustomerApplicationResource extends Resource
                                                                                 if($_term > 1 || $get('unit_ttl_dp' <= $get('unit_srp'))){
                                                                                         $quotient = number_format((float)((float)$_unit_srp - (float)$dp)/$_term, 2, '.', '');
                                                                                         $set('unit_amort_fin', $quotient);
+                                                                                        $set('monthly_amortization', $quotient);
                                                                                 }
                                                                         }
                                                                 ),
@@ -150,12 +151,13 @@ class CustomerApplicationResource extends Resource
                                     Forms\Components\Textarea::make('applicant_present_address')
                                             ->label('Present Address:')
                                             ->columnSpan(1)->required(true),
-                                    Forms\Components\Textarea::make('applicant_previous_address')
+                                    Forms\Components\Textarea::make('appWWWlicant_previous_address')
                                             ->label('Previous Address:')
                                             ->columnSpan(1),
                                     Forms\Components\Textarea::make('applicant_provincial_address')
                                             ->label('Provincial Address:')->columnSpan(1),
                                     Forms\Components\TextInput::make('applicant_lived_there')
+                                            ->suffix('years')
                                             ->label('Lived There:'),
                                     Forms\Components\Select::make('applicant_house')
                                             ->label('House:')
@@ -251,24 +253,24 @@ class CustomerApplicationResource extends Resource
                                     ]),
 
                                     Forms\Components\Repeater::make('credit_references')
-											->columnSpan(1)
-											->columns(2)
-											->label('Applicant\'s Credit References')
-											->collapsible(true)
-											->schema([
-													Forms\Components\Select::make('credit_type')
-													->options([
-														'creditor' => 'Creditor',
-														'credit_card' => 'Credit Card',
-													])
-													->live()
-													->afterStateUpdated(fn (Forms\Components\Select $component)
-													=> $component
-														->getContainer()
-														->getComponent('creditCardDynamicTypeFields')
-														->getChildComponentContainer()
-														->fill()
-												),
+                                                ->columnSpan(1)
+                                                ->columns(2)
+                                                ->label('Applicant\'s Credit References')
+                                                ->collapsible(true)
+                                                ->schema([
+                                                        Forms\Components\Select::make('credit_type')
+                                                        ->options([
+                                                                'creditor' => 'Creditor',
+                                                                'credit_card' => 'Credit Card',
+                                                        ])
+                                                        ->live()
+                                                        ->afterStateUpdated(fn (Forms\Components\Select $component)
+                                                        => $component
+                                                                ->getContainer()
+                                                                ->getComponent('creditCardDynamicTypeFields')
+                                                                ->getChildComponentContainer()
+                                                                ->fill()
+                                                        ),
                         
                     
                                     Forms\Components\Grid::make(3)
