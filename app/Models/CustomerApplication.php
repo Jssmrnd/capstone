@@ -106,7 +106,6 @@ class CustomerApplication extends Model
         'applicants_net_monthly_income',
 
 
-
         //Spouse's Income
         'spouses_basic_monthly_salary',
         'spouse_allowance_commision',
@@ -120,6 +119,13 @@ class CustomerApplication extends Model
         'gross_monthly_income',
 
         //Total Expenses
+        'living_expenses',
+        'education',
+        'transportation',
+        'rental',
+        'utilities',
+        'monthly_amortization',
+        'other_expenses',
         'total_expenses',
 
         //Net Income
