@@ -44,7 +44,7 @@ class CustomerApplicationResource extends Resource
                                             ->live()
                                             ->afterStateUpdated(
                                                     function(Forms\Get $get, Forms\Set $set){
-                                                        $unit_price = Models\Unit::find("units.id")->unit_srp;
+                                                        $unit_price = Models\Unit::find($get("units.unit_model"))->unit_srp;
                                                         $set('unit_srp', $unit_price);
                                                     }
                                     ),
@@ -52,7 +52,7 @@ class CustomerApplicationResource extends Resource
                                             ->columnSpan(4)
                                             ->columns(2)
                                             ->live()
-                                            ->disabled(fn (Forms\Get $get): bool => ! $get('id'))
+                                            ->disabled(fn (Forms\Get $get): bool => ! $get('units.unit_model'))
                                             ->schema([
                                                     Forms\Components\TextInput::make('unit_srp')
                                                             ->columnSpan(1)
@@ -207,7 +207,7 @@ class CustomerApplicationResource extends Resource
 
                     Forms\Components\Fieldset::make("Educational Attainment")
                             ->schema([
-                                    Forms\Components\Repeater::make("educational_attainments")
+                                    Forms\Components\Repeater::make("educational_attainment")
                                             ->schema([
                                                 Forms\Components\TextInput::make("course"),
                                                 Forms\Components\TextInput::make("no_years")
