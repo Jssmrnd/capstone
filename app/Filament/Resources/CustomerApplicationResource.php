@@ -55,13 +55,13 @@ class CustomerApplicationResource extends Resource
                                             ->disabled(fn (Forms\Get $get): bool => ! $get('id'))
                                             ->schema([
                                                     Forms\Components\TextInput::make('unit_srp')
-															->columnSpan(1)
-															->required(true)
-															->label('Selling Retail Price:')
-															->numeric(),
+                                                            ->columnSpan(1)
+                                                            ->required(true)
+                                                            ->label('Selling Retail Price:')
+                                                            ->numeric(),
                                                     Forms\Components\TextInput::make('unit_term')
                                                             ->columnSpan(1)
-															->minValue(0)
+                                                            ->minValue(0)
                                                             ->required(true)
                                                             ->label('Term:')
                                                             ->minValue(1)
@@ -203,6 +203,34 @@ class CustomerApplicationResource extends Resource
                                             ]),
                             ]),
                     // End of Applicant Information
+
+
+                    Forms\Components\Fieldset::make("Educational Attainment")
+                            ->schema([
+                                Forms\Components\Repeater::make("educational_attainments")
+                                        ->schema([
+                                            Forms\Components\TextInput::make("course"),
+                                            Forms\Components\TextInput::make("no_years")
+                                                    ->suffix("year(s)"),
+                                            Forms\Components\TextInput::make("school"),
+                                            Forms\Components\DatePicker::make("year_grad"),
+                                        ]),
+                            ]),
+
+                            
+                    Forms\Components\Fieldset::make("Dependents")
+                    ->schema([
+                        Forms\Components\Repeater::make("dependents")
+                                ->schema([
+                                    Forms\Components\TextInput::make("dependent_name"),
+                                    Forms\Components\DatePicker::make("dependent_birthdate"),
+                                    Forms\Components\TextInput::make("dependent_age"),
+                                    Forms\Components\DatePicker::make("dependent_school"),
+                                    Forms\Components\TextInput::make("dependent_monthly_tuition"),
+                                ]),
+                    ]),
+
+
 
                     // Spouse Information
                     Forms\Components\Fieldset::make("Spouse Information")
