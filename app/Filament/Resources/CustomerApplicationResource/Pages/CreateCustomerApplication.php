@@ -13,7 +13,6 @@ class CreateCustomerApplication extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['application_is_new'] = false;
-    
         return $data;
     }
 

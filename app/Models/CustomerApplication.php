@@ -20,7 +20,6 @@ class CustomerApplication extends Model
 
         //Unit
         'unit_id',
-        'unit_model',
         'unit_term',
         'unit_monthly_amort',
         'unit_ttl_dp',

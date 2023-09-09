@@ -35,7 +35,7 @@ class CustomerApplicationResource extends Resource
                             ->columns(4)
                             ->columnSpan(2)
                             ->schema([
-                                    Forms\Components\Select::make('units.unit_model')
+                                    Forms\Components\Select::make('unit_id')
                                             ->columnSpan(4)
                                             ->label('Unit Model')
                                             ->relationship('units', 'unit_model')
@@ -44,7 +44,7 @@ class CustomerApplicationResource extends Resource
                                             ->live()
                                             ->afterStateUpdated(
                                                     function(Forms\Get $get, Forms\Set $set){
-                                                        $unit_price = Models\Unit::find($get("units.unit_model"))->unit_srp;
+                                                        $unit_price = Models\Unit::find($get("unit_id"))->unit_srp;
                                                         $set('unit_srp', $unit_price);
                                                     }
                                     ),
@@ -52,7 +52,7 @@ class CustomerApplicationResource extends Resource
                                             ->columnSpan(4)
                                             ->columns(2)
                                             ->live()
-                                            ->disabled(fn (Forms\Get $get): bool => ! $get('units.unit_model'))
+                                            ->disabled(fn (Forms\Get $get): bool => ! $get('unit_id'))
                                             ->schema([
                                                     Forms\Components\TextInput::make('unit_srp')
                                                             ->columnSpan(1)
@@ -151,7 +151,7 @@ class CustomerApplicationResource extends Resource
                                     Forms\Components\Textarea::make('applicant_present_address')
                                             ->label('Present Address:')
                                             ->columnSpan(1)->required(true),
-                                    Forms\Components\Textarea::make('appWWWlicant_previous_address')
+                                    Forms\Components\Textarea::make('applicant_previous_address')
                                             ->label('Previous Address:')
                                             ->columnSpan(1),
                                     Forms\Components\Textarea::make('applicant_provincial_address')
@@ -182,9 +182,12 @@ class CustomerApplicationResource extends Resource
                                             ->columnSpan(1)
                                             ->columns(1)
                                             ->schema([
-                                                    Forms\Components\TextArea::make('applicant_business_address')->label('Address:')->columnSpan(1),
-                                                    Forms\Components\TextInput::make('applicant_nature_of_business')->label('Nature of Business:'),
-                                    ]),
+                                                    Forms\Components\TextArea::make('applicant_business_address')
+                                                            ->label('Address:')
+                                                            ->columnSpan(1),
+                                                    Forms\Components\TextInput::make('applicant_nature_of_business')
+                                                            ->label('Nature of Business:'),
+                                            ]),
     
                                     
                                     Forms\Components\Fieldset::make("Previous Employer")
@@ -209,17 +212,12 @@ class CustomerApplicationResource extends Resource
                             ->schema([
                                     Forms\Components\Repeater::make("educational_attainment")
                                             ->schema([
-                                                Forms\Components\TextInput::make("course"),
-                                                Forms\Components\TextInput::make("no_years")
-                                                        ->suffix("year(s)"),
-                                                Forms\Components\TextInput::make("school"),
-                                                Forms\Components\DatePicker::make("year_grad"),
+                                                    Forms\Components\TextInput::make("course"),
+                                                    Forms\Components\TextInput::make("no_years")
+                                                            ->suffix("year(s)"),
+                                                    Forms\Components\TextInput::make("school"),
+                                                    Forms\Components\DatePicker::make("year_grad"),
                                             ]),
-                            ]),
-
-                            
-                    Forms\Components\Fieldset::make("Dependents")
-                            ->schema([
                                     Forms\Components\Repeater::make("dependents")
                                             ->schema([
                                                 Forms\Components\TextInput::make("dependent_name"),
@@ -231,21 +229,55 @@ class CustomerApplicationResource extends Resource
                             ]),
 
 
-
                     // Spouse Information
                     Forms\Components\Fieldset::make("Spouse Information")
 							->hidden(fn (Forms\Get $get): bool => ! $get('applicant_civil_status') == "Married")
-							->columns(2)
-							->columnSpan(1)
+							->columns(3)
+							->columnSpan(2)
 							->schema([
 									Forms\Components\TextInput::make('spouse_firstname')->label('Surname:')
 											->columnSpan(1)->required(true),
-											Forms\Components\TextInput::make('spouse_middlename')->label('Middle Name:')->columnSpan(1),
-											Forms\Components\TextInput::make('spouse_lastname')->label('Last Name:')->columnSpan(1)->required(true),
-											Forms\Components\DatePicker::make('spouse_birthday')->label('Birthday:')->columnSpan(1)->required(true),
-											Forms\Components\TextInput::make('spouse_present_address')->label('Present Address:')->required(true),
-											Forms\Components\Textarea::make('spouse_provincial_address')->label('Provincial Address:')->columnSpan(1),
-											Forms\Components\Textarea::make('spouse_telephone')->label('Telephone:')->columnSpan(1),
+                                    Forms\Components\TextInput::make('spouse_middlename')
+                                            ->label('Middle Name:')
+                                            ->columnSpan(1),
+                                    Forms\Components\TextInput::make('spouse_lastname')
+                                            ->label('Last Name:')
+                                            ->columnSpan(1)
+                                            ->required(true),
+                                    Forms\Components\DatePicker::make('spouse_birthday')
+                                            ->label('Birthday:')
+                                            ->columnSpan(1)
+                                            ->required(true),
+                                    Forms\Components\TextInput::make('spouse_present_address')
+                                            ->label('Present Address:')
+                                            ->required(true),
+                                    Forms\Components\Textarea::make('spouse_provincial_address')
+                                            ->label('Provincial Address:')
+                                            ->columnSpan(1),
+                                    Forms\Components\Textarea::make('spouse_telephone')
+                                            ->label('Telephone:')
+                                            ->columnSpan(1),
+                                    Forms\Components\Fieldset::make("Present Employer")
+                                            ->columns(2)
+                                            ->columnSpan(2)
+                                            ->schema([
+                                                    Forms\Components\TextArea::make('spouse_employer')
+                                                            ->label('Business Employer:')
+                                                            ->columnSpan(2),
+                                                    Forms\Components\TextInput::make('spouse_position')
+                                                            ->label('Position:')
+                                                            ->columnSpan(1),
+                                                    Forms\Components\TextInput::make('spouse_how_long_job_business')
+                                                            ->label('How long:')
+                                                            ->columnSpan(1),
+                                            ]),
+                                    Forms\Components\Fieldset::make("Business")
+                                            ->columnSpan(1)
+                                            ->columns(1)
+                                            ->schema([
+                                                    Forms\Components\TextArea::make('spouse_business_address')->label('Address:')->columnSpan(1),
+                                                    Forms\Components\TextInput::make('spouse_nature_of_business')->label('Nature of Business:'),
+                                            ]),
 							]),
                     // End of Applicant Information
                     

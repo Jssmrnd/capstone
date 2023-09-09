@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('customer_applications', function (Blueprint $table) {
 
             $table->id();
+            $table->string("due_date")->nullable();
             $table->string('application_status')->default('pending');
             $table->boolean('application_is_new')->default(true);
             $table->boolean('is_application_approved')->default(false);
@@ -67,13 +68,12 @@ return new class extends Migration
             $table->date('spouse_birthday')->nullable();
             $table->text('spouse_present_address')->nullable();
             $table->text('spouse_provincial_address')->nullable();
-            $table->string('spouse_telephone')->nullable();
 
             //Spouse Employer
             $table->string('spouse_employer')->nullable();
             $table->string('spouse_position')->nullable();
             $table->string('spouse_how_long_job_business')->nullable();
-            $table->text('spouse_business_address')->nullable();
+            $table->string('spouse_business_address')->nullable();
             $table->string('spouse_nature_of_business')->nullable();
 
             //Educational Attainment

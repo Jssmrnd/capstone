@@ -22,7 +22,6 @@ class EditCustomerApplication extends EditRecord
     protected function mutateFormDataBeforeSave(array $data): array
     {
         $data['application_is_new'] = false;
-        
         return $data;
     }
 
