@@ -18,12 +18,17 @@ class RefProvince extends Model
         'provCode,'
     ];
 
+    public function branches():HasMany
+    {
+        return $this->hasMany(Branch::class, 'provCode', 'provCode');
+    }
+
     public function refRegions():BelongsTo{
         return $this->belongsTo(RefRegion::class, 'regCode', 'regCode');
     }
 
     public function refMunicipality():HasMany{
-        return $this->hasMany(RefMunicipality::class);
+        return $this->hasMany(RefMunicipality::class, 'provCode', 'provCode');
     }
 
 }

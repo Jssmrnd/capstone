@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class RefBarangay extends Model
 {
@@ -14,24 +15,27 @@ class RefBarangay extends Model
     use HasFactory;
 
     protected $fillable = [
-        'psgcCode',
-        'brgyDesc',
+        'brgyCode',
         'regCode',
         'provCode',
         'citymunCode',
     ];
 
+    public function branches():HasMany
+    {
+        return $this->hasMany(Branch::class, 'brgyCode', 'brgyCode');
+    }
     
-    public function region():BelongsTo{
+    public function refRegion():BelongsTo{
         return $this->belongsTo(RefRegion::class, 'regCode', 'regCode');
     }
 
-    public function province():BelongsTo{
+    public function refProvince():BelongsTo{
         return $this->belongsTo(RefProvince::class, 'provCode', 'provCode');
     }
 
-    public function municipality():BelongsTo{
-        return $this->belongsTo(RefProvince::class, 'citymunCode', 'citymunCode');
+    public function refMunicipality():BelongsTo{
+        return $this->belongsTo(RefMunicipality::class, 'citymunCode', 'citymunCode');
     }
 
 

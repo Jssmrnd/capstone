@@ -19,15 +19,20 @@ class RefMunicipality extends Model
         'citymunCode',
     ];
 
-    public function region():BelongsTo{
+    public function branches():HasMany
+    {
+        return $this->hasMany(Branch::class, 'citymunCode', 'citymunCode');
+    }
+
+    public function refRegion():BelongsTo{
         return $this->belongsTo(RefRegion::class);
     }
 
-    public function province():BelongsTo{
+    public function refProvince():BelongsTo{
         return $this->belongsTo(RefProvince::class, 'provCode', 'provCode');
     }
 
-    public function barangay():HasMany{
+    public function refBarangay():HasMany{
         return $this->hasMany(RefBarangay::class, 'citymunCode', 'citymunCode');
     }
 

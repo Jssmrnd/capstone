@@ -38,7 +38,7 @@ class BranchResource extends Resource
                                         ->columnSpan(1)
                                         ->searchable()
                                         ->preload()
-                                        ->relationship('region', 'regDesc')
+                                        ->relationship('refRegions', 'regDesc')
                                         ->live()
                                         ->label("Region"),
                 
@@ -46,7 +46,7 @@ class BranchResource extends Resource
                                         ->columnSpan(1)
                                         ->preload()
                                         ->searchable()
-                                        ->relationship('province', 'provDesc')
+                                        ->relationship('refProvinces', 'provDesc')
                                         ->label("Province")
                                         ->live()
                                         ->options(
@@ -64,7 +64,7 @@ class BranchResource extends Resource
                                         ->columnSpan(1)
                                         ->preload()
                                         ->searchable()
-                                        ->relationship('municipality', 'citymunDesc')
+                                        ->relationship('refMunicipalities', 'citymunDesc')
                                         ->label("Municipality")
                                         ->live()
                                         ->options(
@@ -82,7 +82,7 @@ class BranchResource extends Resource
                                         ->columnSpan(1)
                                         ->preload()
                                         ->searchable()
-                                        ->relationship('barangay', 'brgyDesc')
+                                        ->relationship('refBarangays', 'brgyDesc')
                                         ->label("Barangay")
                                         ->live()
                                         ->options(
@@ -111,10 +111,19 @@ class BranchResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make("id")
-                        ->label("ID"),
-                Tables\Columns\TextColumn::make("branch_address")
-                        ->label("Address"),
+                Tables\Columns\TextColumn::make("refRegions.regDesc")
+                        ->wrap()
+                        ->label("Region"),
+                Tables\Columns\TextColumn::make("refProvinces.provDesc")
+                        ->label("Province"),
+                Tables\Columns\TextColumn::make("refMunicipalities.citymunDesc")
+                        ->label("Municipality"),  
+                Tables\Columns\TextColumn::make("refBarangays.brgyDesc")
+                        ->label("Barangay"),
+                Tables\Columns\TextColumn::make("branch_street")
+                        ->label("Street"),
+                Tables\Columns\TextColumn::make("branch_building_number")
+                        ->label("Building Number"),
                 Tables\Columns\TextColumn::make("created_at")
                         ->label("Date Created")
                         ->dateTime('d-M-Y'),

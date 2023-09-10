@@ -17,10 +17,10 @@ return new class extends Migration
     {
         Schema::create('branches', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('regCode')->nullable();
-            $table->foreignId('provCode')->nullable();
-            $table->foreignId('citymunCode')->nullable();
-            $table->foreignId('brgyDesc')->nullable();
+            $table->string('brgyCode')->nullable();
+            $table->string('regCode')->nullable();
+            $table->string('provCode')->nullable();
+            $table->string('citymunCode')->nullable();
             $table->string('branch_street')->nullable();
             $table->string('branch_building_number')->nullable();
             $table->timestamps();

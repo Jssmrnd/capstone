@@ -27,8 +27,10 @@ class UserResource extends Resource
                     ->label("Name")
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Select::make('branch_id')
-                    ->relationship('branch', 'branch_address')
+                Forms\Components\Select::make('branch')
+                    ->searchable()
+                    ->preload()
+                    ->relationship('branch', 'id')
                     ->label("Branch")
                     ->required(),
                 Forms\Components\Toggle::make('is_admin')->label("Admin"),
@@ -62,7 +64,7 @@ class UserResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime(),
-                Tables\Columns\TextColumn::make('branch.branch_address')
+                Tables\Columns\TextColumn::make('branch.id')
                     ->searchable(),
             ])
             ->filters([
