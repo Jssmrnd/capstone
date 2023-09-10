@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\RefRegion;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('branches', function (Blueprint $table) {
+        Schema::create('ref_regions', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(RefRegion::class);
-            $table->string('branch_address');
-            $table->timestamps();
+            $table->string('psgcCode')->nullable();
+            $table->string('regDesc');
+            $table->string('regCode')->nullable();
         });
     }
 
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('branches');
+        Schema::dropIfExists('ref_regions');
     }
 };

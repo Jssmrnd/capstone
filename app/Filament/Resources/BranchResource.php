@@ -26,6 +26,15 @@ class BranchResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\Select::make("ref_region_id")
+                        ->relationship('regions', 'regDesc')
+                        ->label("Region"),
+                Forms\Components\Select::make("ref_region_id")
+                        ->relationship('regions', 'regDesc')
+                        ->label("Region"),
+                Forms\Components\Select::make("ref_region_id")
+                        ->relationship('regions', 'regDesc')
+                        ->label("Region"),
                 Forms\Components\TextInput::make("branch_address")
                         ->label("Address"),
             ]);
