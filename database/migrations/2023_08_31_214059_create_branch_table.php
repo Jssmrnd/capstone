@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\RefBarangay;
+use App\Models\RefMunicipality;
+use App\Models\RefProvince;
 use App\Models\RefRegion;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -14,8 +17,11 @@ return new class extends Migration
     {
         Schema::create('branches', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(RefRegion::class);
-            $table->string('branch_address');
+            $table->foreignIdFor(RefRegion::class)->nullable();
+            $table->foreignIdFor(RefProvince::class)->nullable();
+            $table->foreignIdFor(RefMunicipality::class)->nullable();
+            $table->foreignIdFor(RefBarangay::class)->nullable();
+            $table->string('branch_address')->nullable();
             $table->timestamps();
         });
     }

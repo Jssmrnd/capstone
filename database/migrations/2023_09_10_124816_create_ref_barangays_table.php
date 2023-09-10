@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ref_regions', function (Blueprint $table) {
+        Schema::create('ref_barangays', function (Blueprint $table) {
             $table->id();
-            $table->string('region_name')->nullable();
+            
         });
     }
 
@@ -22,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ref_regions');
+        Schema::dropIfExists('ref_barangays');
     }
 };

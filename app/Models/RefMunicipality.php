@@ -5,19 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Branch extends Model
+class RefMunicipality extends Model
 {
-
     use HasFactory;
 
-    public $fillable = [
+    protected $fillable = [
+        'municipality_name',
         'ref_region_id',
         'ref_province_id',
-        'ref_municipality_id',
-        'ref_barangay_id',
-        'branch_address',
     ];
 
     public function region():BelongsTo{
@@ -28,12 +24,5 @@ class Branch extends Model
         return $this->belongsTo(RefProvince::class);
     }
 
-    public function municipality():BelongsTo{
-        return $this->belongsTo(RefMunicipality::class);
-    }
-
-    public function users(): HasMany{
-        return $this->hasMany(User::class);
-    }
 
 }

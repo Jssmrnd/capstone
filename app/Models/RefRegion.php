@@ -16,10 +16,16 @@ class RefRegion extends Model
         'regCode',
     ];
 
-    public function branch():HasMany{
 
+    public function branch():HasMany
+    {
         return $this->hasMany(Branch::class);
+    }
 
+
+    public function province():HasMany
+    {
+        return $this->hasMany(RefProvince::class, 'regCode', 'regCode');
     }
 
 }
