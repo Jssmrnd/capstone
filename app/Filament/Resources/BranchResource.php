@@ -111,6 +111,9 @@ class BranchResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make("id")
+                        ->wrap()
+                        ->label("ID"),
                 Tables\Columns\TextColumn::make("refRegions.regDesc")
                         ->wrap()
                         ->label("Region"),
