@@ -12,12 +12,14 @@ class RefProvince extends Model
     use HasFactory;
 
     protected $fillable = [
-        'province_name',
-        'ref_region_id',
+        'psgcCode',
+        'provDesc',
+        'regCode',
+        'provCode,'
     ];
 
     public function refRegions():BelongsTo{
-        return $this->belongsTo(RefRegion::class);
+        return $this->belongsTo(RefRegion::class, 'regCode', 'regCode');
     }
 
     public function refMunicipality():HasMany{

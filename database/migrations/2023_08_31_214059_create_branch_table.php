@@ -17,11 +17,12 @@ return new class extends Migration
     {
         Schema::create('branches', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(RefRegion::class)->nullable();
-            $table->foreignIdFor(RefProvince::class)->nullable();
-            $table->foreignIdFor(RefMunicipality::class)->nullable();
-            $table->foreignIdFor(RefBarangay::class)->nullable();
-            $table->string('branch_address')->nullable();
+            $table->foreignId('regCode')->nullable();
+            $table->foreignId('provCode')->nullable();
+            $table->foreignId('citymunCode')->nullable();
+            $table->foreignId('brgyDesc')->nullable();
+            $table->string('branch_street')->nullable();
+            $table->string('branch_building_number')->nullable();
             $table->timestamps();
         });
     }

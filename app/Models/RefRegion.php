@@ -23,7 +23,7 @@ class RefRegion extends Model
     }
 
 
-    public function province():HasMany
+    public function refProvince():HasMany
     {
         return $this->hasMany(RefProvince::class, 'regCode', 'regCode');
     }

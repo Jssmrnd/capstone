@@ -14,8 +14,10 @@ return new class extends Migration
     {
         Schema::create('ref_provinces', function (Blueprint $table) {
             $table->id();
-            $table->string('province_name');
-            $table->foreignIdFor(RefRegion::class);
+            $table->string('psgcCode')->nullable();
+            $table->string('provDesc')->nullable();
+            $table->string('regCode')->nullable();
+            $table->string('provCode')->nullable();
         });
     }
 

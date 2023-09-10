@@ -16,9 +16,11 @@ return new class extends Migration
     {
         Schema::create('ref_municipalities', function (Blueprint $table) {
             $table->id();
-            $table->string('municipality_name');
-            $table->foreignIdFor(RefRegion::class);
-            $table->foreignIdFor(RefProvince::class);
+            $table->string('psgcCode')->nullable();
+            $table->string('citymunDesc')->nullable();
+            $table->string('regDesc')->nullable();
+            $table->string('provCode')->nullable();
+            $table->string('citymunCode')->nullable();
         });
     }
 

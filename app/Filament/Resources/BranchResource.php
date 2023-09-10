@@ -6,6 +6,7 @@ use App\Filament\Resources\BanchResource\RelationManagers\UserRelationManager;
 use App\Filament\Resources\BranchResource\Pages;
 use App\Filament\Resources\BranchResource\RelationManagers;
 use App\Models\Branch;
+use App\Models\RefBarangay;
 use App\Models\RefMunicipality;
 use App\Models\RefProvince;
 use App\Models\RefRegion;
@@ -29,57 +30,80 @@ class BranchResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make("ref_region_id")
-                        ->relationship('region', 'region_name')
-                        ->live()
-                        ->label("Region"),
-        
-                Forms\Components\Select::make('ref_province_id')
-                        ->relationship('province', 'province_name')
-                        ->label("Province")
-                        ->live()
-                        ->options(
-                            function (Forms\Get $get){
-                                return RefProvince::query()
-                                    ->where('ref_region_id', $get('ref_region_id'))
-                                    ->get()
-                                    ->mapWithKeys(function (RefProvince $province) {
-                                        return [$province->id => $province->province_name];
-                                    });
-                            }
-                        ),
-                Forms\Components\Select::make("ref_municipality_id")
-                        ->relationship('municipality', 'municipality_name')
-                        ->label("Municpality")
-                        ->live()
-                        ->options(
-                            function (Forms\Get $get){
-                                return RefMunicipality::query()
-                                    ->where('ref_province_id', $get('ref_province_id'))
-                                    ->get()
-                                    ->mapWithKeys(function (RefMunicipality $municipality) {
-                                        return [$municipality->id => $municipality->municipality_name];
-                                    });
-                            }
-                        ),
 
-                Forms\Components\Select::make("ref_municipality_id")
-                        ->relationship('municipality', 'municipality_name')
-                        ->label("Municpality")
-                        ->live()
-                        ->options(
-                            function (Forms\Get $get){
-                                return RefMunicipality::query()
-                                    ->where('ref_province_id', $get('ref_province_id'))
-                                    ->get()
-                                    ->mapWithKeys(function (RefMunicipality $municipality) {
-                                        return [$municipality->id => $municipality->municipality_name];
-                                    });
-                            }
-                        ),
-                Forms\Components\TextInput::make("branch_address")
-                        ->live()
-                        ->label("Address"),
+                Forms\Components\Fieldset::make('Address')
+                        ->columns(3)
+                        ->schema([
+                                Forms\Components\Select::make("regCode")
+                                        ->columnSpan(1)
+                                        ->searchable()
+                                        ->preload()
+                                        ->relationship('region', 'regDesc')
+                                        ->live()
+                                        ->label("Region"),
+                
+                                Forms\Components\Select::make('provCode')
+                                        ->columnSpan(1)
+                                        ->preload()
+                                        ->searchable()
+                                        ->relationship('province', 'provDesc')
+                                        ->label("Province")
+                                        ->live()
+                                        ->options(
+                                                function (Forms\Get $get){
+                                                        return RefProvince::query()
+                                                            ->where('regCode', $get('regCode'))
+                                                            ->get()
+                                                            ->mapWithKeys(function (RefProvince $province) {
+                                                                return [$province->provCode => $province->provDesc];
+                                                            });
+                                                }
+                                        ),
+
+                                Forms\Components\Select::make('citymunCode')
+                                        ->columnSpan(1)
+                                        ->preload()
+                                        ->searchable()
+                                        ->relationship('municipality', 'citymunDesc')
+                                        ->label("Municipality")
+                                        ->live()
+                                        ->options(
+                                                function (Forms\Get $get){
+                                                        return RefMunicipality::query()
+                                                            ->where('provCode', $get('provCode'))
+                                                            ->get()
+                                                            ->mapWithKeys(function (RefMunicipality $municipality) {
+                                                                return [$municipality->citymunCode => $municipality->citymunDesc];
+                                                            });
+                                                }
+                                        ),
+
+                                Forms\Components\Select::make('brgyCode')
+                                        ->columnSpan(1)
+                                        ->preload()
+                                        ->searchable()
+                                        ->relationship('barangay', 'brgyDesc')
+                                        ->label("Barangay")
+                                        ->live()
+                                        ->options(
+                                                function (Forms\Get $get){
+                                                        return RefBarangay::query()
+                                                            ->where('citymunCode', $get('citymunCode'))
+                                                            ->get()
+                                                            ->mapWithKeys(function (RefBarangay $barangay) {
+                                                                return [$barangay->brgyCode => $barangay->brgyDesc];
+                                                            });
+                                                }
+                                        ),
+
+                                
+                                Forms\Components\TextInput::make('branch_street')
+                                        ->label("Street"),
+                                Forms\Components\TextInput::make('branch_building_number')
+                                        ->label("Building No."),
+
+                ]),
+
             ]);
     }
 

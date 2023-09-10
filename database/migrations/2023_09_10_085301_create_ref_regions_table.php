@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('ref_regions', function (Blueprint $table) {
             $table->id();
-            $table->string('region_name')->nullable();
+            $table->string('psgcCode')->nullable();
+            $table->string('regDesc')->nullable();
+            $table->string('regCode')->nullable();
         });
     }
 
