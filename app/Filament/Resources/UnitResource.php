@@ -59,7 +59,11 @@ class UnitResource extends Resource
                 TextColumn::make('unit_model')->searchable(['unit_model', 'unit_price', 'unit_type']),
             ])
             ->filters([
-                //
+                Tables\Filters\Filter::make('branch_filter')
+                    ->default()
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query->where('unit_branch', auth()->user()->branch_id);
+                    })
             ])
             ->actions([
                 Tables\Actions\EditAction::make()

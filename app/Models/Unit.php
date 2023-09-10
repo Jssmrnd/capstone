@@ -14,6 +14,8 @@ class Unit extends Model
 
     protected $fillable = [
         //Unit info
+        'unit_branch',
+
         'unit_series',
         'unit_model',
         'engine_type',
@@ -23,6 +25,10 @@ class Unit extends Model
         'unit_type',
         'unit_srp',
     ];
+
+    public function branch():BelongsTo{
+        return $this->belongsTo(Branch::class, 'unit_branch', 'id');
+    }
 
     public function customerApplication(): HasMany{
         return $this->hasMany(CustomerApplication::class);

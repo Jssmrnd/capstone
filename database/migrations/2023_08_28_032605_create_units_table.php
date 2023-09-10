@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('units', function (Blueprint $table) {
             $table->id();
+            $table->string('unit_branch')->nullable();
             $table->string('unit_model')->unique();
             $table->string('unit_color')->nullable();
             $table->integer('unit_quantity')->default(0);

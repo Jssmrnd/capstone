@@ -25,6 +25,11 @@ class Branch extends Model
         return $this->belongsTo(RefRegion::class, 'regCode', 'regCode');
     }
 
+    public function units():HasMany{
+        return $this->hasMany(Unit::class, 'unit_branch', 'id');
+    }
+
+
     public function refProvinces():BelongsTo{
         return $this->belongsTo(RefProvince::class, 'provCode', 'provCode');
     }
