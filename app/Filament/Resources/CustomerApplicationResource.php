@@ -737,7 +737,7 @@ class CustomerApplicationResource extends Resource
                         ->options([
                             'pending' => 'Pending',
                             'active' => 'Active',
-                            'rejected' => 'Rejected'
+                            'reject' => 'Reject'
                         ]),
             ])
             ->actions([
