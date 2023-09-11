@@ -15,11 +15,11 @@ class Unit extends Model
     protected $fillable = [
         //Unit info
         'unit_branch',
-
-        'unit_series',
         'unit_model',
-        'engine_type',
-        'starting_system',
+        'engine_number',
+        'frame_number',
+        'status',
+        'notes',
         'unit_quantity',
         'unit_color',
         'unit_type',

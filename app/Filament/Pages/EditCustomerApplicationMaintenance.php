@@ -42,7 +42,8 @@ class EditCustomerApplicationMaintenance extends Page implements HasForms
         return $form
             ->schema([
             Forms\Components\TextInput::make("rebate_value"),
-        ])->statePath('data');
+        ])
+        ->statePath('data');
     }
 
     public function save(): void

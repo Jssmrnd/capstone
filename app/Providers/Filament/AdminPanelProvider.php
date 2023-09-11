@@ -37,8 +37,8 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
-            ->id('dasboard')
-            ->path('dasboard')
+            ->id('dashboard')
+            ->path('dashboard')
             ->login(Login::class)
             ->colors([
                 'primary' => Color::Amber,
