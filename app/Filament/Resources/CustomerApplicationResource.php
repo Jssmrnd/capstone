@@ -32,6 +32,7 @@ class CustomerApplicationResource extends Resource
         ->schema([
                     //Unit Information
                     Forms\Components\Fieldset::make("Unit to be Financed")
+                            ->disabledOn('edit')
                             ->columns(4)
                             ->columnSpan(2)
                             ->schema([
@@ -122,7 +123,9 @@ class CustomerApplicationResource extends Resource
                                                     Forms\Components\Select::make('unit_mode_of_payment')
                                                                 ->required(true)
                                                                 ->label('Mode of Payment:')
-                                                                ->options(['Office','Field','Bank',])
+                                                                ->options(
+                                                                    ['Office','Field','Bank',]
+                                                                )
                                                                 ->columnSpan(1),
                                 ]),
                             ]),

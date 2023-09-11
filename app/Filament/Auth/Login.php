@@ -21,11 +21,12 @@ class Login extends BaseAuth
     protected function getLoginFormComponent(): Component 
     {
         return TextInput::make('employee_id')
-            ->label('Employee ID:')
+            ->label('Employee ID')
             ->required()
             ->autocomplete()
             ->autofocus();
     }
+
 
     protected function getCredentialsFromFormData(array $data): array
     {
