@@ -21,10 +21,17 @@ class PaymentsRelationManager extends RelationManager
     {
         return $form
             ->schema([
+                Forms\Components\Placeholder::make($this->getOwnerRecord()->applicant_surname),
+                Forms\Components\Placeholder::make($this->getOwnerRecord()->applicant_lastname),
+
                 Forms\Components\TextInput::make('payment_amount')
+                        ->default(function (){
+                            return $this->getOwnerRecord()->unit_amort_fin;
+                        })
                         ->required()
                         ->maxLength(255),
                 Forms\Components\Select::make('payment_status')
+                        ->live()
                         ->options([
                             'advance' => 'Advance',
                             'current' => 'Current',
@@ -34,7 +41,14 @@ class PaymentsRelationManager extends RelationManager
                         ->required(),
 
                 Forms\Components\TextInput::make('rebate_value')
-                ->required(),
+                        ->disabled(fn (Forms\Get $get): bool => match($get('payment_status')){
+                            'advance' => false,
+                            'current' => false,
+                            'advance' => true,
+                            'current' => true,
+                            default => true,
+                        })
+                        ->required(),
                 
                 Forms\Components\TextInput::make('payment_type')
                         ->required()
