@@ -51,6 +51,7 @@ class ViewCustomerApplication extends ViewRecord
             ])
             ->action(function(){
                 $this->getRecord()->application_status = 'reject';
+                $this->getRecord()->due_date = null;
                 $this->getRecord()->is_application_approved = false;
                 $this->getRecord()->is_application_rejected = true;
                 $unit = Unit::query()->find($this->getRecord()->unit_id);
