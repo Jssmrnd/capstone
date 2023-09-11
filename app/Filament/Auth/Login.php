@@ -27,7 +27,6 @@ class Login extends BaseAuth
             ->autofocus();
     }
 
-
     protected function getCredentialsFromFormData(array $data): array
     {
  
