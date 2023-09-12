@@ -5,21 +5,23 @@ namespace App\Filament\Fabricator\PageBlocks;
 use Filament\Forms\Components\Builder\Block;
 use Z3d0X\FilamentFabricator\PageBlocks\PageBlock;
 use Filament\Forms;
+use App\Models;
+use App\Models\Unit;
 
-class Hero extends PageBlock
+class ProductList extends PageBlock
 {
     public static function getBlockSchema(): Block
     {
-        return Block::make('hero')
-            ->label('Hero')
+        return Block::make('product-list')
             ->schema([
-                Forms\Components\TextInput::make('heading_title'),
-                Forms\Components\MarkdownEditor::make('heading_description'),
+                //
             ]);
     }
 
+
     public static function mutateData(array $data): array
     {
+        $data["product_list"] = Unit::all();
         return $data;
     }
 }

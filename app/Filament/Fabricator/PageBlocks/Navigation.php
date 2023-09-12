@@ -6,15 +6,13 @@ use Filament\Forms\Components\Builder\Block;
 use Z3d0X\FilamentFabricator\PageBlocks\PageBlock;
 use Filament\Forms;
 
-class Hero extends PageBlock
+class Navigation extends PageBlock
 {
     public static function getBlockSchema(): Block
     {
-        return Block::make('hero')
-            ->label('Hero')
+        return Block::make('navigation')
             ->schema([
-                Forms\Components\TextInput::make('heading_title'),
-                Forms\Components\MarkdownEditor::make('heading_description'),
+                Forms\Components\TextInput::make('company_name'), 
             ]);
     }
 

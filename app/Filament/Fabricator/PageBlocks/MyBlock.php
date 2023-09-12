@@ -13,7 +13,7 @@ class MyBlock extends PageBlock
         return Block::make('my')
             ->label('Navigation Elements')
             ->schema([
-                Forms\Components\TextInput::make('company_name'),
+                
             ]);
     }
 

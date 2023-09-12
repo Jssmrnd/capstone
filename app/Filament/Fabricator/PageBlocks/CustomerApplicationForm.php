@@ -4,17 +4,14 @@ namespace App\Filament\Fabricator\PageBlocks;
 
 use Filament\Forms\Components\Builder\Block;
 use Z3d0X\FilamentFabricator\PageBlocks\PageBlock;
-use Filament\Forms;
 
-class Hero extends PageBlock
+class CustomerApplicationForm extends PageBlock
 {
     public static function getBlockSchema(): Block
     {
-        return Block::make('hero')
-            ->label('Hero')
+        return Block::make('customer-application-form')
             ->schema([
-                Forms\Components\TextInput::make('heading_title'),
-                Forms\Components\MarkdownEditor::make('heading_description'),
+                //
             ]);
     }
 
