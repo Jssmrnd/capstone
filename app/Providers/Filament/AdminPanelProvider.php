@@ -8,6 +8,7 @@ use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Pages;
 use Filament\Navigation;
+use Z3d0X\FilamentFabricator\FilamentFabricatorPlugin;
 use Filament\Panel;
 use App;
 use App\Filament\Auth;
@@ -74,6 +75,9 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+            ])
+            ->plugins([
+                FilamentFabricatorPlugin::make(),
             ]);
     }
 }
