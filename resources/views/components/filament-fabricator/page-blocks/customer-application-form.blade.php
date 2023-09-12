@@ -1,9 +1,21 @@
 @aware(['page'])
 
-
+<head>
+  <link rel="stylesheet" href="{{ asset('css/miranda/global.css') }}" />
+  <link rel="stylesheet" href="{{ asset('css/miranda/style.css') }}" />
+  <link rel="stylesheet" href="{{ asset('css/miranda/media-queries.css') }}" />
+  <link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+/>
+<!-- Remix Icon CSS -->
+<link
+  href="https://cdn.jsdelivr.net/npm/remixicon@3.4.0/fonts/remixicon.css"
+  rel="stylesheet"
+/>
+</head>
 
 <header>
-  
     <!-- User registration and menu icon -->
     <div class="main">
       <a href="#" class="user"
