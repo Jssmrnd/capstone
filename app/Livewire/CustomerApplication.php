@@ -13,18 +13,18 @@ class CustomerApplication extends Component implements HasForms
 
     public $n = 0;
 
+    
+    public function increment(){
+        $this->n++;
+    }
+
     protected function getFormSchema(): array 
     {
         return [
             Forms\Components\TextInput::make('title')->required(),
-            Forms\Components\MarkdownEditor::make('content'),
-            // ...
+            Forms\Components\Textarea::make('test'),
         ];
     } 
-
-    public function increment(){
-        $this->n++;
-    }
 
     public function render()
     {

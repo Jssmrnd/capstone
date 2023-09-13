@@ -1,3 +1,3 @@
 @aware(['page'])
 
-<livewire:customer-application/>
+@livewire('customer-application')
