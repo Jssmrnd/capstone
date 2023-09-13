@@ -1,7 +1,8 @@
 @aware(['page'])
-
-<x-filament-panels::page>
-    <x-filament-panels::form>
-        {{ $this->form }}
-    </x-filament-panels::form>
-</x-filament-panels::page>
+<form wire:submit.prevent="submit">
+    {{ $this->form }}
+    
+    <button type="submit">
+        Submit
+    </button>
+</form>
