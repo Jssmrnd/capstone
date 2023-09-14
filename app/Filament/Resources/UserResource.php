@@ -23,15 +23,23 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\TextInput::make('employee_id')
+                    ->label("ID")
+                    ->numeric()
+                    ->required()
+                    ->maxLength(255),
                 Forms\Components\TextInput::make('name')
                     ->label("Name")
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Select::make('branch')
+                Forms\Components\Select::make('branch_id')
                     ->searchable()
                     ->preload()
                     ->relationship('branch', 'id')
                     ->label("Branch")
+                    ->required(),
+                Forms\Components\TextInput::make('password')
+                    ->label("Password")
                     ->required(),
                 Forms\Components\Toggle::make('is_admin')->label("Admin"),
                 Forms\Components\TextInput::make("email")
@@ -86,7 +94,7 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            
         ];
     }
     
