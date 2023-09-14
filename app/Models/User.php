@@ -9,12 +9,14 @@ use Filament\Panel as FilamentPanel;
 use Filament\Tables\Columns\Layout\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements FilamentUser
@@ -29,6 +31,7 @@ class User extends Authenticatable implements FilamentUser
     protected $fillable = [
         'name',
         'employee_id',
+        'is_admin',
         'branch_id',
         'email',
         'password',
@@ -60,7 +63,7 @@ class User extends Authenticatable implements FilamentUser
 
     public function canAccessPanel(FilamentPanel $panel): bool
     {
-        return str_ends_with($this->email,'@admin.com');
+        return true;
     }
 
 }
