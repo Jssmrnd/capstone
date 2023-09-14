@@ -13,7 +13,10 @@ class PagePolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->hasAnyRole(
+                                    'admin',
+                                    'developer'
+                                );
     }
 
     /**
@@ -21,7 +24,10 @@ class PagePolicy
      */
     public function view(User $user, Page $page): bool
     {
-        return false;
+        return $user->hasAnyRole(
+                                    'admin',
+                                    'developer'
+                                );
     }
 
     /**
@@ -29,7 +35,10 @@ class PagePolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->hasAnyRole(
+                                    'admin',
+                                    'developer'
+                                );
     }
 
 }
