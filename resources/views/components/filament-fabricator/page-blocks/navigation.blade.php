@@ -22,14 +22,25 @@
       <nav class="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center">
         <a class="mr-5 hover:text-gray-900" href="/home">Home</a>
         <a class="mr-5 hover:text-gray-900" href="/products">Products</a>
-        <a class="mr-5 hover:text-gray-900" href="/application">Application</a>
+        @auth
+            <a class="mr-5 hover:text-gray-900" href="/application">Application</a>
+        @endauth
         <a class="mr-5 hover:text-gray-900" href="/contact-us">Contact Us</a>
         <a class="mr-5 hover:text-gray-900" href="/about-us">About Us</a>
       </nav>
-      <button class="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">Button
-        <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
-          <path d="M5 12h14M12 5l7 7-7 7"></path>
-        </svg>
-      </button>
+        @if (Route::has('login'))
+            <div class="sm:fixed sm:top-0 sm:right-0 p-6 text-right z-10">
+                @auth
+                    <a href="{{ url('/home') }}" class="mr-5 hover:text-gray-900">Logout</a>
+                    <a href="{{ url('/home') }}" class="mr-5 hover:text-gray-900">Logout</a>
+                @else
+                    <a href="{{ route('login') }}" class="mr-5 hover:text-gray-900">Log in</a>
+
+                    @if (Route::has('register'))
+                        <a href="{{ route('register') }}" class="mr-5 hover:text-gray-900">Register</a>
+                    @endif
+                @endauth
+            </div>
+        @endif
     </div>
   </header>
