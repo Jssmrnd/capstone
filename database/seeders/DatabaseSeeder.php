@@ -53,55 +53,56 @@ class DatabaseSeeder extends Seeder
         //     $miscPermission,
         // ]);
 
-        // $superAdminRole = Role::create(['name' => 'super-admin'])->syncPermissions([
-        //     $userPermission1,
-        //     $userPermission2,
-        //     $userPermission3,
-        //     $userPermission4,
-        //     $rolePermission1,
-        //     $rolePermission2,
-        //     $rolePermission3,
-        //     $rolePermission4,
-        //     $permission1,
-        //     $permission2,
-        //     $permission3,
-        //     $permission4,
-        //     $adminPermission1,
-        //     $adminPermission2,
-        //     $userPermission1,
-        // ]);
-        // $adminRole = Role::create(['name' => 'admin'])->syncPermissions([
-        //     $userPermission1,
-        //     $userPermission2,
-        //     $userPermission3,
-        //     $userPermission4,
-        //     $rolePermission1,
-        //     $rolePermission2,
-        //     $rolePermission3,
-        //     $rolePermission4,
-        //     $permission1,
-        //     $permission2,
-        //     $permission3,
-        //     $permission4,
-        //     $adminPermission1,
-        //     $adminPermission2,
-        //     $userPermission1,
-        // ]);
-        // $moderatorRole = Role::create(['name' => 'moderator'])->syncPermissions([
-        //     $userPermission2,
-        //     $rolePermission2,
-        //     $permission2,
-        //     $adminPermission1,
-        // ]);
-        // $developerRole = Role::create(['name' => 'developer'])->syncPermissions([
-        //     $adminPermission1,
-        // ]);
+        $superAdminRole = Role::create(['name' => 'super-admin'])->syncPermissions([
+            $userPermission1,
+            $userPermission2,
+            $userPermission3,
+            $userPermission4,
+            $rolePermission1,
+            $rolePermission2,
+            $rolePermission3,
+            $rolePermission4,
+            $permission1,
+            $permission2,
+            $permission3,
+            $permission4,
+            $adminPermission1,
+            $adminPermission2,
+            $userPermission1,
+        ]);
+        $adminRole = Role::create(['name' => 'admin'])->syncPermissions([
+            $userPermission1,
+            $userPermission2,
+            $userPermission3,
+            $userPermission4,
+            $rolePermission1,
+            $rolePermission2,
+            $rolePermission3,
+            $rolePermission4,
+            $permission1,
+            $permission2,
+            $permission3,
+            $permission4,
+            $adminPermission1,
+            $adminPermission2,
+            $userPermission1,
+        ]);
+        $moderatorRole = Role::create(['name' => 'moderator'])->syncPermissions([
+            $userPermission2,
+            $rolePermission2,
+            $permission2,
+            $adminPermission1,
+        ]);
+        $developerRole = Role::create(['name' => 'developer'])->syncPermissions([
+            $adminPermission1,
+        ]);
 
         $developerRole = Role::findByName('developer');
         $moderatorRole = Role::findByName('moderator');
         $adminRole = Role::findByName('admin');
         $superAdminRole = Role::findByName('super-admin');
         $userRole = Role::findByName('user');
+
 
         // CREATE ADMINS & USERS
         User::create([
