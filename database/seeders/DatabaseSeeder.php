@@ -22,8 +22,8 @@ class DatabaseSeeder extends Seeder
     {
         //\App\Models\CustomerApplication::factory(10)->create();
 
-        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
-        // Misc
+        // app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+        // // Misc
         // $miscPermission = Permission::create(['name' => 'N/A']);
 
         // // USER MODEL
@@ -108,6 +108,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'super admin',
             'employee_id' => 1000001,
             'is_admin' => 1,
+            'branch_id' => 1,
             'email' => 'super@admin.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
@@ -118,6 +119,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'admin',
             'employee_id' => 1000002,
             'is_admin' => 1,
+            'branch_id' => 1,
             'email' => 'admin@admin.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
@@ -128,6 +130,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'moderator',
             'employee_id' => 1000003,
             'is_admin' => 1,
+            'branch_id' => 1,
             'email' => 'moderator@admin.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
@@ -138,6 +141,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'developer',
             'employee_id' => 1000004,
             'is_admin' => 1,
+            'branch_id' => 1,
             'email' => 'developer@admin.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
@@ -149,6 +153,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Test '.$i,
                 'employee_id' => 1000004+$i,
                 'is_admin' => 0,
+                'branch_id' => 1,
                 'email' => 'test'.$i.'@test.com',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'), // password
