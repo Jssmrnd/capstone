@@ -50,22 +50,22 @@ class UserPolicy
      */
     public function delete(User $user, User $model): bool
     {
-        return true;
+        return $user->hasAnyRole('super-admin');
     }
 
-    // /**
-    //  * Determine whether the user can restore the model.
-    //  */
-    // public function restore(User $user, User $model): bool
-    // {
-    //     //
-    // }
+    /**
+     * Determine whether the user can restore the model.
+     */
+    public function restore(User $user, User $model): bool
+    {
+        return $user->hasAnyRole('super-admin');
+    }
 
-    // /**
-    //  * Determine whether the user can permanently delete the model.
-    //  */
-    // public function forceDelete(User $user, User $model): bool
-    // {
-    //     //
-    // }
+    /**
+     * Determine whether the user can permanently delete the model.
+     */
+    public function forceDelete(User $user, User $model): bool
+    {
+        return $user->hasAnyRole('super-admin');
+    }
 }
