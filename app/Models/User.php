@@ -67,7 +67,7 @@ class User extends Authenticatable implements FilamentUser
                                     'admin',
                                     'developer',
                                     'moderator',
-                                    'super-admin'
+                                    'super-admin',
                                 );
     }
 
