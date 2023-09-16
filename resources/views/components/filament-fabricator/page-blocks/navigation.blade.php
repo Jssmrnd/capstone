@@ -31,8 +31,7 @@
         @if (Route::has('login'))
             <div class="sm:fixed sm:top-0 sm:right-0 p-6 text-right z-10">
                 @auth
-                    <a href="{{ url('/home') }}" class="mr-5 hover:text-gray-900">Logout</a>
-                    <a href="{{ url('/home') }}" class="mr-5 hover:text-gray-900">Logout</a>
+                    <a href= "{{ route('logout') }}" class="mr-5 hover:text-gray-900">Logout</a>
                 @else
                     <a href="{{ route('login') }}" class="mr-5 hover:text-gray-900">Log in</a>
 

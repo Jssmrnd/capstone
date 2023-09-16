@@ -16,7 +16,7 @@ class AdminUser
     public function handle(Request $request, Closure $next): Response
     {
         if($request->user() != null){
-            if($request->user()->hasAnyRole('super-admin', 'admin')){
+            if($request->user()->hasAnyRole('super-admin', 'admin', '')){
                 return $next($request);
             }
         }
