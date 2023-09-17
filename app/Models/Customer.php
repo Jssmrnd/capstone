@@ -12,7 +12,6 @@ class Customer extends Model implements Authenticatable
     use \Illuminate\Auth\Authenticatable;
     use HasFactory;
     use Notifiable;
-
     protected $fillable = [
         //persnal information
         'customer_firstname',
@@ -29,6 +28,4 @@ class Customer extends Model implements Authenticatable
         'customer_municipality',
         'customer_barangay',
     ];
-
-
 }

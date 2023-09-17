@@ -4,6 +4,7 @@ use App\Http\Controllers\ClientLogin;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CustomerLogin;
 use App\Http\Middleware\CustomerUser;
+use App\Providers\Filament\AdminPanelProvider;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,9 +17,6 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-
-
 
 Route::get('/login', [CustomerLogin::class, 'index'])
 ->name('login');

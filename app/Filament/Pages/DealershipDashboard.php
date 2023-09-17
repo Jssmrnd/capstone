@@ -19,7 +19,6 @@ class DealershipDashboard extends BasePage
     protected function getHeaderActions(): array
     {
         return [
-                Filament\Actions\Action::make('Hello'),
         ];
     }
 

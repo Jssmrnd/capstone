@@ -18,7 +18,6 @@ class ProductList extends PageBlock
             ]);
     }
 
-
     public static function mutateData(array $data): array
     {
         $data["product_list"] = Unit::all();

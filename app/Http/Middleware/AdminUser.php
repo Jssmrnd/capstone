@@ -15,11 +15,14 @@ class AdminUser
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if($request->user() != null){
-            if($request->user()->hasAnyRole('super-admin', 'admin', '')){
-                return $next($request);
-            }
+        if(!auth()->check() || !auth()->user()->is_admin){
+            abort(403);
         }
+        // if($request->user() != null){
+        //     if($request->user()->hasAnyRole('super-admin', 'admin', '')){
+        //         return $next($request);
+        //     }
+        // }
         return redirect('/home');
     }
 }

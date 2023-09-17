@@ -28,6 +28,8 @@ class User extends Authenticatable implements FilamentUser
      *
      * @var array<int, string>
      */
+
+    public static $filamentUserColumn = 'is_filament_user';
     protected $fillable = [
         'name',
         'employee_id',
@@ -61,14 +63,10 @@ class User extends Authenticatable implements FilamentUser
         return $this->belongsTo(Branch::class);
     }
 
+
     public function canAccessPanel(FilamentPanel $panel): bool
     {
-        return $this->hasAnyRole(
-                                    'admin',
-                                    'developer',
-                                    'moderator',
-                                    'super-admin',
-                                );
+        return True;
     }
 
 }
