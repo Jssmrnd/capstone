@@ -20,10 +20,11 @@ class ViewCustomerApplication extends ViewRecord
                     ->requiresConfirmation()
                     ->form([
                         Forms\Components\DatePicker::make('due_date')
+                                ->format('d-m-Y')
                                 ->label('Set Due Date'),
                     ])
                     ->action(function(array $data){
-                        $this->getRecord()->application_status = 'approved';
+                        $this->getRecord()->application_status = 'active';
                         $this->getRecord()->due_date = $data['due_date'];
                         $this->getRecord()->is_application_approved = true;
                         $this->getRecord()->is_application_rejected = false;

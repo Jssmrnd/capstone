@@ -30,7 +30,7 @@ class PaymentResource extends Resource
                 ->relationship(
                     name: 'customerApplication',
                     titleAttribute: 'applicant_lastname',
-                    modifyQueryUsing: fn (Builder $query) => $query->where("application_status", "approved"),
+                    modifyQueryUsing: fn (Builder $query) => $query->where("application_status", "active"),
                 )
                 ->label('For Applicant:')
                 ->preload()
@@ -39,15 +39,17 @@ class PaymentResource extends Resource
                 ->live()
                 ->afterStateUpdated(
                     function($state, Forms\Set $set){
-                        $application = CustomerApplication::query()->where("id", $state)->first();
+                        $application = CustomerApplication::query()
+                                ->where("id", $state)
+                                ->first();
+
                         $due_date = $application->due_date;
+                        $today = Carbon::parse(Carbon::today()->format('Y-m-d'));
                         $amort_fin = $application->unit_amort_fin;
-                        $set('due', $due_date);
+                        $set('due_date', $due_date);
                         $set('payment_amount', $amort_fin);
 
-                        $due = Carbon::parse(Carbon::createFromFormat('Y-m-d', $due_date));
                         $delinquent = Carbon::parse(Carbon::createFromFormat('Y-m-d', $due_date)->addDays(30));
-                        $today = Carbon::parse(Carbon::today()->format('Y-m-d'));
 
                         $is_advance = $today->lessThan($due_date);
                         $is_current = $today->equalTo($due_date);
@@ -68,7 +70,12 @@ class PaymentResource extends Resource
                         }
                     }
                 ),
-                Forms\Components\TextInput::make('due'),
+                Forms\Components\TextInput::make('due_date')
+                        ->hidden(function(string $operation){
+                            if($operation == "edit"){
+                                return true;
+                            }
+                        }),
                 Forms\Components\TextInput::make('payment_amount'),
                 Forms\Components\Select::make('payment_status')
                         ->live()
@@ -116,9 +123,9 @@ class PaymentResource extends Resource
                 Tables\Actions\EditAction::make()
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                // Tables\Actions\BulkActionGroup::make([
+                //     Tables\Actions\DeleteBulkAction::make(),
+                // ]),
             ])
             ->emptyStateActions([
                 Tables\Actions\CreateAction::make(),
