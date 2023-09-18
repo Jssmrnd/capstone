@@ -27,7 +27,8 @@ class UserResource extends Resource
                     ->label("ID")
                     ->numeric()
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->hidden(false),
                 Forms\Components\TextInput::make('name')
                     ->label("Name")
                     ->required()
@@ -39,6 +40,7 @@ class UserResource extends Resource
                     ->label("Branch")
                     ->required(),
                 Forms\Components\TextInput::make('password')
+                    ->password()
                     ->label("Password")
                     ->required(),
                 Forms\Components\Toggle::make('is_admin')->label("Admin"),
