@@ -11,9 +11,10 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Carbon;
+use Filament\Notifications;
 
 class PaymentResource extends Resource
 {
@@ -25,19 +26,66 @@ class PaymentResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('payment_type')->label('Payment Type:')
-                        ->columnSpan(1)
-                        ->required(true),
                 Forms\Components\Select::make('customer_application_id')
-                        ->label('Application ID:')
-                        ->relationship('customerApplication', 'id')
-                        ->preload()
-                        ->searchable()
-                        ->required()
-                        ->live(),
-                Forms\Components\Select::make('payment_amount')
-                        ->relationship('customerApplication', 'unit_monthly_amort')
-                        ->label('Payment Amount:')
+                ->relationship(
+                    name: 'customerApplication',
+                    titleAttribute: 'applicant_lastname',
+                    modifyQueryUsing: fn (Builder $query) => $query->where("application_status", "approved"),
+                )
+                ->label('For Applicant:')
+                ->preload()
+                ->searchable()
+                ->required()
+                ->live()
+                ->afterStateUpdated(
+                    function($state, Forms\Set $set){
+                        $application = CustomerApplication::query()->where("id", $state)->first();
+                        $due_date = $application->due_date;
+                        $amort_fin = $application->unit_amort_fin;
+                        $set('due', $due_date);
+                        $set('payment_amount', $amort_fin);
+
+                        $due = Carbon::parse(Carbon::createFromFormat('Y-m-d', $due_date));
+                        $delinquent = Carbon::parse(Carbon::createFromFormat('Y-m-d', $due_date)->addDays(30));
+                        $today = Carbon::parse(Carbon::today()->format('Y-m-d'));
+
+                        $is_advance = $today->lessThan($due_date);
+                        $is_current = $today->equalTo($due_date);
+                        $is_overdue = $today->greaterThan($due_date) && $today->lessThan($delinquent);
+                        $is_delinquent = $today->greaterThan($delinquent);
+
+                        if($today->lessThan($due_date)){
+                            $set('payment_status', 'advance');
+                        }
+                        elseif($today->equalTo($due_date)){
+                            $set('payment_status', 'current');
+                        }
+                        elseif($today->greaterThan($due_date) && $today->lessThan($delinquent)){
+                            $set('payment_status', 'overdue');
+                        }
+                        elseif($today->greaterThan($delinquent)){
+                            $set('payment_status', 'delinquent');
+                        }
+                    }
+                ),
+                Forms\Components\TextInput::make('due'),
+                Forms\Components\TextInput::make('payment_amount'),
+                Forms\Components\Select::make('payment_status')
+                        ->live()
+                        ->options([
+                            'advance' => 'Advance',
+                            'current' => 'Current',
+                            'overdue' => 'Overdue',
+                            'diligent' => 'Diligent',
+                        ])
+                        ->required(),
+
+                Forms\Components\Select::make('payment_type')->label('Payment Type:')
+                        ->options([
+                            "field" => "Field",
+                            "office" => "Office",
+                            "bank" => "Bank",
+                        ])
                         ->columnSpan(1)
                         ->required(true),
             ]);
@@ -65,7 +113,7 @@ class PaymentResource extends Resource
                 Tables\Filters\Filter::make('created_at')
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

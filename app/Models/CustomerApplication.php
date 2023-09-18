@@ -132,7 +132,6 @@ class CustomerApplication extends Model
 
 
     ];
-
     protected $casts = [
         'properties'                => 'json',
         'personal_references'       => 'json',
@@ -141,6 +140,11 @@ class CustomerApplication extends Model
         'educational_attainment'    => 'json',
         'dependents'                => 'json',
     ];
+
+    public function get_payment_total(): float
+    {
+        return $this->payments()->sum('payment_amount');
+    }
 
     public function payments():HasMany{
         return $this->hasMany(Payment::class);

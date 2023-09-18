@@ -19,6 +19,7 @@ class Payment extends Model
         'payment_amount',           // 2000.00
     ];
 
+
     public function customerApplication():BelongsTo{
         return $this->belongsTo(CustomerApplication::class);
     }

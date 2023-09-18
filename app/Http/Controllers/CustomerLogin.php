@@ -20,7 +20,7 @@ class CustomerLogin extends Controller
             'password' => ['required'],
         ]);
         
-        if (Auth::guard('customers')->attempt($credentials)) {
+        if (Auth::guard()->attempt($credentials)) {
             $request->session()->regenerate();
             return redirect('/home');
         }
