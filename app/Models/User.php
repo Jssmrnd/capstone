@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
@@ -66,7 +67,10 @@ class User extends Authenticatable implements FilamentUser
 
     public function canAccessPanel(FilamentPanel $panel): bool
     {
-        return True;
+        if(auth()->user()->is_admin){
+            return true;
+        };
+        return false;
     }
 
 }
