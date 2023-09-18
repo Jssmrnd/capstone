@@ -141,7 +141,7 @@ class CustomerApplication extends Model
         'dependents'                => 'json',
     ];
 
-    public function get_payment_total(): float
+    public function calculateTotalPayments(): float
     {
         return $this->payments()->sum('payment_amount');
     }
