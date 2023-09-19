@@ -13,8 +13,14 @@ class Hero extends PageBlock
         return Block::make('hero')
             ->label('Hero')
             ->schema([
-                Forms\Components\TextInput::make('heading_title'),
-                Forms\Components\MarkdownEditor::make('heading_description'),
+                Forms\Components\TextInput::make('heading_title')
+                        ->label("Heading Text"),
+                Forms\Components\FileUpload::make("heading_image")
+                        ->label("Heading Image")
+                        ->disk('local')
+                        ->directory('page-images')
+                        ->visibility('private'),
+                
             ]);
     }
 
