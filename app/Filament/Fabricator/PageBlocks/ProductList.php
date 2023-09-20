@@ -7,6 +7,7 @@ use Z3d0X\FilamentFabricator\PageBlocks\PageBlock;
 use Filament\Forms;
 use App\Models;
 use App\Models\Unit;
+use App\Models\UnitModel;
 
 class ProductList extends PageBlock
 {
@@ -20,7 +21,9 @@ class ProductList extends PageBlock
 
     public static function mutateData(array $data): array
     {
-        $data["product_list"] = Unit::all();
+        // dd(Unit::all()->first());
+        $data["product_list"] = UnitModel::all();
+        // dd(UnitModel::all()->first());
         return $data;
     }
 }
