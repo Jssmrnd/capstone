@@ -14,8 +14,8 @@ class CreateUnit extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['unit_branch'] = auth()->user()->branch_id;
-    
+        $data['branch_id'] = auth()->user()->branch_id;
+        $data['unit_quantity'] = 1;
         return $data;
     }
 
