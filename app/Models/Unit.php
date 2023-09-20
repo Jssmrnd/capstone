@@ -13,21 +13,25 @@ class Unit extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        //Unit info
-        'unit_branch',
-        'unit_model',
+        
+        //Foreign keys
+        'branch_id',
+        'unit_model_id',
+
         'engine_number',
         'frame_number',
+
+        'unit_quantity',
         'status',
         'notes',
-        'unit_quantity',
-        'unit_color',
-        'unit_type',
-        'unit_srp',
     ];
 
+    public function unitModel():BelongsTo{
+        return $this->belongsTo(UnitModel::class);
+    }
+
     public function branch():BelongsTo{
-        return $this->belongsTo(Branch::class, 'unit_branch', 'id');
+        return $this->belongsTo(Branch::class);
     }
 
     public function customerApplication(): HasMany{

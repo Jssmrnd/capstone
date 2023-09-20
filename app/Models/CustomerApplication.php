@@ -151,7 +151,7 @@ class CustomerApplication extends Model
     }
 
     public function units():BelongsTo{
-        return $this->belongsTo(Unit::class, 'unit_id', 'id');
+        return $this->belongsTo(Unit::class, 'model_id', 'id');
     }
 
 }

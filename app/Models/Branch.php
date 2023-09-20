@@ -26,7 +26,7 @@ class Branch extends Model
     }
 
     public function units():HasMany{
-        return $this->hasMany(Unit::class, 'unit_branch', 'id');
+        return $this->hasMany(Unit::class, 'branch_id', 'id');
     }
 
 
