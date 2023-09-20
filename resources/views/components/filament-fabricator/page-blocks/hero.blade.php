@@ -6,7 +6,7 @@
 <section id="Content1">
     <div>
        <!-- Heading Image -->
-      <img src="{{ asset('images/home 2.jpg') }}" alt="section1-image-bg" />
+      <img src="{{ asset('storage/site-images/homepage-hero-image.jpg') }}" alt="section1-image-bg" />
       <div class="tagline-text">
         <h2>{{ $heading_title }}</h2>
         <div class="buttons">
