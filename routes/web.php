@@ -4,8 +4,12 @@ use App\Http\Controllers\ClientLogin;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CustomerLogin;
 use App\Http\Middleware\CustomerUser;
+use App\Models\Unit;
+use App\Models\UnitModel;
 use App\Providers\Filament\AdminPanelProvider;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Blade;
+use Z3d0X\FilamentFabricator\Facades\FilamentFabricator;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +23,41 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function(){
-    return view('welcome');
+    return redirect('/home');
+});
+
+
+Route::prefix('/products')->group(function () {
+    Route::get('/product-specs/{int:key}', function($key){
+        $filamentFabricatorPage = FilamentFabricator::getPageModel()::query()
+        ->where('slug', "product-specs")
+        ->firstOrFail();
+
+        /** @var ?class-string<Layout> $layout */
+        $layout = FilamentFabricator::getLayoutFromName($filamentFabricatorPage?->layout);
+
+        if (! isset($layout)) {
+            throw new \Exception("Filament Fabricator: Layout \"{$filamentFabricatorPage->layout}\" not found");
+        }
+
+        /** @var string $component */
+        $component = $layout::getComponent();
+
+        $unit = UnitModel::query()->find($key);
+        $unit->price = '₱' . number_format($unit->price, 2);
+
+        return Blade::render(
+            <<<'BLADE'
+            <x-dynamic-component
+                :component="$component"
+                :page="$page"
+                :unit="$unit"
+            />
+            BLADE,
+            ['component' => $component, 'page' => $filamentFabricatorPage, 'unit' => $unit]
+        );
+
+    });
 });
 
 Route::get('/login', [CustomerLogin::class, 'index'])
