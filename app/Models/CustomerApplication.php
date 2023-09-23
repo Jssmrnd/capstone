@@ -150,8 +150,7 @@ class CustomerApplication extends Model
         return $this->hasMany(Payment::class);
     }
 
-    public function units():BelongsTo{
-        return $this->belongsTo(Unit::class, 'model_id', 'id');
+    public function unitModel():BelongsTo{
+        return $this->belongsTo(UnitModel::class);
     }
-
 }

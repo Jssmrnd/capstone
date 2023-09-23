@@ -5,7 +5,7 @@
         @livewireStyles
     </head>
     <body>
-        <livewire:search/>
+      <livewire:application-form>
         @livewireScripts
     </body>
 </html>
