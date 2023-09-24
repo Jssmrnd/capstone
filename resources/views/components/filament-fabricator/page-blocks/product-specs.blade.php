@@ -389,7 +389,7 @@
           </div>
         </div>
         <div class="c3-buttons">
-          <a href="../html/application.html">Send Application</a>
+          <a href="/application">Send Applicationdasd</a>
         </div>
       </section>
     </main>

@@ -25,8 +25,8 @@ class TestPanelPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->id('testpanel')
-            ->path('testpanel')
+            ->id('customer')
+            ->path('customer')
             ->login(Login::class)
             ->colors([
                 'primary' => Color::Amber,
