@@ -25,17 +25,17 @@ class CustomerDues extends BaseWidget
             )
             ->columns([
                 Tables\Columns\TextColumn::make("id")
-                        ->color('danger'),
+                        ->label("Application ID"),
                 Tables\Columns\TextColumn::make("due_date")
-                        ->dateTime('M d Y')
-                        ->color('danger'),
-                Tables\Columns\TextColumn::make("applicant_lastname")
-                        ->color('danger'),
+                        ->dateTime('M d Y'),
+                Tables\Columns\TextColumn::make("applicant_lastname"),
                 Tables\Columns\TextColumn::make("unit_monthly_amort")
-                        ->color('success'),
+                        ->label("Monthly Amort.")
+                        ->money("php")
+                        ->color("success"),
             ])
             ->actions([
-                Tables\Actions\Action::make('open')
+                Tables\Actions\Action::make('view')
                     ->url(fn (CustomerApplication $record): string => CustomerApplicationResource::getUrl('edit', ['record' => $record])),
             ]);
     }
