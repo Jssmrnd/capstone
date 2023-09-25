@@ -48,8 +48,8 @@ class Login extends BaseAuth
         $data = $this->form->getState();
 
         //check if user is a an admin, returns an error to page if not.
-        if(User::query()->where('employee_id', $data["employee_id"])->get()->first() != null){
-            if(!User::query()->where('employee_id', $data["employee_id"])->get()->first()->is_admin){
+        if(User::query()->where('id', $data["id"])->get()->first() != null){
+            if(!User::query()->where('id', $data["id"])->get()->first()->is_admin){
                 throw ValidationException::withMessages([
                     'data.email' => __('filament-panels::pages/auth/login.messages.failed'),
                     'data.employee_id' => __('filament-panels::pages/auth/login.messages.failed'),
@@ -73,8 +73,8 @@ class Login extends BaseAuth
 
     protected function getLoginFormComponent(): Component 
     {
-        return TextInput::make('employee_id')
-            ->label('Employee ID')
+        return TextInput::make('id')
+            ->label('User ID')
             ->required()
             ->autocomplete()
             ->autofocus();
@@ -83,7 +83,7 @@ class Login extends BaseAuth
     protected function getCredentialsFromFormData(array $data): array
     {
         return [
-            'employee_id' => $data['employee_id'],
+            'id' => $data['id'],
             'password'  => $data['password'],
         ];
     }
