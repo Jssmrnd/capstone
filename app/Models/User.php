@@ -22,7 +22,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements FilamentUser
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -33,9 +33,11 @@ class User extends Authenticatable implements FilamentUser
     public static $filamentUserColumn = 'is_filament_user';
     protected $fillable = [
         'name',
-        'employee_id',
         'is_admin',
         'branch_id',
+        'gender',
+        'birthday',
+        'contact_number',
         'email',
         'password',
     ];
@@ -60,7 +62,8 @@ class User extends Authenticatable implements FilamentUser
         'password' => 'hashed',
     ];
 
-    public function branch(): BelongsTo{
+    public function branch():BelongsTo
+    {
         return $this->belongsTo(Branch::class);
     }
 
