@@ -16,4 +16,18 @@ class ListPermissions extends ListRecords
             Actions\CreateAction::make(),
         ];
     }
+
+    public function getTabs(): array
+    {
+        return [
+            null => ListRecords\Tab::make('Recents'),
+            'Users Module' => ListRecords\Tab::make()->query(fn ($query) => $query->where('name', 'like', '%' . "user" . '%')),
+            'Permissions Module' => ListRecords\Tab::make()->query(fn ($query) => $query->where('name', 'like', '%' . "permissions" . '%')),
+            'Roles Module' => ListRecords\Tab::make()->query(fn ($query) => $query->where('name', 'like', '%' . "roles" . '%')),
+            'Application Module' => ListRecords\Tab::make()->query(fn ($query) => $query->where('name', 'like', '%' . "customer-application" . '%')),
+            'Payments Module' => ListRecords\Tab::make()->query(fn ($query) => $query->where('name', 'like', '%' . "payment" . '%')),
+            'Unit Module' => ListRecords\Tab::make()->query(fn ($query) => $query->where('name', 'like', '%' . "unit" . '%')),
+        ];
+    }
+
 }

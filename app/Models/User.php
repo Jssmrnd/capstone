@@ -18,11 +18,12 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Traits\HasPermissions;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements FilamentUser
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, HasPermissions;
 
     /**
      * The attributes that are mass assignable.
@@ -67,6 +68,10 @@ class User extends Authenticatable implements FilamentUser
         return $this->belongsTo(Branch::class);
     }
 
+    public function role(): HasOne
+    {
+        return $this->hasOne(Role::class);
+    }
 
     public function canAccessPanel(FilamentPanel $panel): bool
     {

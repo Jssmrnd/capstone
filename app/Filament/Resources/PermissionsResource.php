@@ -4,7 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PermissionsResource\Pages;
 use App\Filament\Resources\PermissionsResource\RelationManagers;
-use Spatie\Permission\Models\Permission as Permissions;
+use Spatie\Permission\Models\Permission;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PermissionsResource extends Resource
 {
-    protected static ?string $model = Permissions::class;
+    protected static ?string $model = Permission::class;
 
     protected static ?string $navigationGroup = 'Maintenance Module';
 
@@ -36,7 +36,6 @@ class PermissionsResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make("id"),
                 Tables\Columns\TextColumn::make("name")
                         ->searchable(),
                 Tables\Columns\TextColumn::make("created_at")
