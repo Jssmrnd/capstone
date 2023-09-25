@@ -17,43 +17,76 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationLabel = 'Users';
+
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('employee_id')
-                    ->label("ID")
-                    ->numeric()
-                    ->required()
-                    ->maxLength(255)
-                    ->hidden(false),
-                Forms\Components\TextInput::make('name')
-                    ->label("Name")
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Select::make('branch_id')
-                    ->searchable()
-                    ->preload()
-                    ->relationship('branch', 'id')
-                    ->label("Branch")
-                    ->required(),
-                Forms\Components\TextInput::make('password')
-                    ->password()
-                    ->label("Password")
-                    ->required(),
-                Forms\Components\Toggle::make('is_admin')->label("Admin"),
-                Forms\Components\TextInput::make("email")
-                    ->label("Email")
-                    ->email()
-                    ->maxLength(255),
-                // Forms\Components\DateTimePicker::make("email_verified_at"),
-                // Forms\Components\TextInput::make("password")
-                //     ->password()
-                //     ->required()
-                //     ->maxLength(255),
-                Forms\Components\Select::make("roles")->relationship('roles', 'name')->multiple()->preload(),
+                Forms\Components\Group::make()
+                        ->columnSpan(1)
+                        ->columns(2)
+                        ->schema([
+
+                            Forms\Components\TextInput::make('id')
+                                    ->label("User ID")
+                                    ->columnSpan(2)
+                                    ->disabled(true)
+                                    ->columnSpan(1),
+
+                            Forms\Components\Fieldset::make()
+                                    ->label("User Personal Information")
+                                    ->columnSpan(2)
+                                    ->columns(2)
+                                    ->schema([
+                                            Forms\Components\TextInput::make('name')
+                                                    ->columnSpan(2)
+                                                    ->label("Name")
+                                                    ->required()
+                                                    ->maxLength(255),
+                                            Forms\Components\Select::make('gender')
+                                                    ->label("Gender")
+                                                    ->required()
+                                                    ->options([
+                                                            "male" => "Male",
+                                                            "female" => "Female",
+                                                    ]),
+                                            Forms\Components\DatePicker::make("birthday")
+                                                    ->label("Birthday")
+                                                    ->maxDate(now())
+                                                    ->minDate(now()->subYears(100)),
+                                            Forms\Components\TextInput::make('password')
+                                                    ->hidden(fn (string $operation): string => $operation == "edit")
+                                                    ->password()
+                                                    ->label("Password")
+                                                    ->required(),
+                                            Forms\Components\TextInput::make("email")
+                                                    ->label("Email")
+                                                    ->email()
+                                                    ->maxLength(255),
+                                            Forms\Components\TextInput::make("contact_number")
+                                                    ->label("Contact No.")
+                                                    ->tel()
+                                                    ->maxLength(255),
+                                    ]),
+                        ]),
+
+                        Forms\Components\Group::make()
+                                ->label("Account Details")
+                                ->columns(1)
+                                ->schema([
+                                        Forms\Components\Select::make("roles")
+                                                ->relationship('roles', 'name')
+                                                ->preload(),
+                                        Forms\Components\Select::make("branch_id")
+                                                ->relationship('branch', 'id')
+                                                ->searchable()
+                                                ->preload(),
+                                        Forms\Components\Toggle::make('is_admin')
+                                                ->label("Admin"),
+                                ]),
             ]);
     }
 
@@ -61,21 +94,24 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('employee_id')
+                Tables\Columns\TextColumn::make('id')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('roles.name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('roles.name'),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_at')
-                    ->dateTime(),
-                Tables\Columns\TextColumn::make('branch.id')
-                    ->searchable(),
+                Tables\Columns\IconColumn::make('is_admin')
+                ->options([
+                    false => 'heroicon-o-x-circle',
+                    true => 'heroicon-o-check-circle',
+                ])
+                    ->colors([
+                        false => 'secondary',
+                        true => 'success',
+                    ])
+                    ->label("Admin")
             ])
             ->filters([
                 //
