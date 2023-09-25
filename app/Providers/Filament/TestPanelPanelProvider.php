@@ -19,6 +19,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 use App\Filament\Auth\Login;
+use App\Filament\TestPanel\Pages\Auth\Register;
 
 class TestPanelPanelProvider extends PanelProvider
 {
@@ -28,6 +29,10 @@ class TestPanelPanelProvider extends PanelProvider
             ->id('customer')
             ->path('customer')
             ->login(Login::class)
+            ->registration(Register::class)
+            ->passwordReset()
+            ->emailVerification()
+            ->profile()
             ->colors([
                 'primary' => Color::Amber,
             ])
