@@ -15,8 +15,6 @@ class CreateUser extends CreateRecord
     protected function afterFill(): void
     {
         // Runs before the form fields are populated with their default values.
-        
-        $this->data['employee_id'] = 1000003;
     }
 
 }
