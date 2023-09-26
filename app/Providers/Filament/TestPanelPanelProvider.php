@@ -34,6 +34,7 @@ class TestPanelPanelProvider extends PanelProvider
             ->registration(Register::class)
             ->passwordReset()
             ->emailVerification()
+            ->topNavigation(true)
             ->profile()
             ->colors([
                 'primary' => Color::Amber,
