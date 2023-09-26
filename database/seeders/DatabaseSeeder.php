@@ -44,20 +44,31 @@ class DatabaseSeeder extends Seeder
         $branchPermission3 = Permission::create(['name' => 'update: branch']);
         $branchPermission4 = Permission::create(['name' => 'delete: branch']);
 
-
         // UNITMODEL MODEL
         $unitModelPermission1 = Permission::create(['name' => 'create: unit-model']);
         $unitModelPermission2 = Permission::create(['name' => 'read: unit-model']);
         $unitModelPermission3 = Permission::create(['name' => 'update: unit-model']);
         $unitModelPermission4 = Permission::create(['name' => 'delete: unit-model']);
 
-        // UNITMODEL MODEL
+        // Unit MODEL
         $unitPermission1 = Permission::create(['name' => 'create: unit']);
         $unitPermission2 = Permission::create(['name' => 'read: unit']);
         $unitPermission3 = Permission::create(['name' => 'update: unit']);
         $unitPermission4 = Permission::create(['name' => 'delete: unit']);
 
-        // CUSTOMER APPLICATION
+        // CustomerPage MODEL
+        $unitPermission1 = Permission::create(['name' => 'create: customer-page']);
+        $unitPermission2 = Permission::create(['name' => 'read: customer-page']);
+        $unitPermission3 = Permission::create(['name' => 'update: customer-page']);
+        $unitPermission4 = Permission::create(['name' => 'delete: customer-page']);
+
+        // 
+        $unitPermission1 = Permission::create(['name' => 'create: page']);
+        $unitPermission2 = Permission::create(['name' => 'read: page']);
+        $unitPermission3 = Permission::create(['name' => 'update: page']);
+        $unitPermission4 = Permission::create(['name' => 'delete: page']);
+
+        // Customer Application
         $customerAppPermission1 = Permission::create(['name' => 'create: customer-application']);
         $customerAppPermission2 = Permission::create(['name' => 'read: customer-application']);
         $customerAppPermission3 = Permission::create(['name' => 'update: customer-application']);
@@ -75,9 +86,6 @@ class DatabaseSeeder extends Seeder
         $permission3 = Permission::create(['name' => 'update: permission']);
         $permission4 = Permission::create(['name' => 'delete: permission']);
 
-        // ADMINS
-        $adminPermission1 = Permission::create(['name' => 'read: admin']);
-        $adminPermission2 = Permission::create(['name' => 'update: admin']);
 
         // CREATE ROLES
         $userRole = Role::create(['name' => 'Customer'])->syncPermissions([
@@ -101,19 +109,10 @@ class DatabaseSeeder extends Seeder
             $customerAppPermission1, $customerAppPermission2, $customerAppPermission3, $customerAppPermission4,
 
 
-            $rolePermission1,
-            $rolePermission2,
-            $rolePermission3,
-            $rolePermission4,
+            $rolePermission1,$rolePermission2,$rolePermission3,$rolePermission4,
 
-            $permission1,
-            $permission2,
-            $permission3,
-            $permission4,
+            $permission1,$permission2,$permission3,$permission4,
 
-            $adminPermission1,
-            $adminPermission2,
-            $userPermission1,
         ]);
         
         $adminRole = Role::create(['name' => 'acount-officer'])->syncPermissions([
@@ -136,73 +135,5 @@ class DatabaseSeeder extends Seeder
 
         ]);
 
-        // $developerRole = Role::findByName('developer');
-        // $moderatorRole = Role::findByName('moderator');
-        // $adminRole = Role::findByName('admin');
-        // $superAdminRole = Role::findByName('super-admin');
-        // $userRole = Role::findByName('user');
-
-
-        // // CREATE ADMINS & USERS
-        // User::create([
-        //     'name' => 'branch',
-        //     'is_admin' => 1,
-        //     'branch_id' => 7,
-        //     'email' => 'super@admin.com',
-        //     'email_verified_at' => now(),
-        //     'password' => Hash::make('password'),
-        //     'remember_token' => Str::random(10),
-        // ])->assignRole($superAdminRole);
-
-        // User::create([
-        //     'name' => 'admin',
-        //     'employee_id' => 1000002,
-        //     'is_admin' => 1,
-        //     'branch_id' => 1,
-        //     'email' => 'admin@admin.com',
-        //     'email_verified_at' => now(),
-        //     'password' => Hash::make('password'),
-        //     'remember_token' => Str::random(10),
-        // ])->assignRole($adminRole);
-
-        // User::create([
-        //     'name' => 'moderator',
-        //     'employee_id' => 1000003,
-        //     'is_admin' => 1,
-        //     'branch_id' => 1,
-        //     'email' => 'moderator@admin.com',
-        //     'email_verified_at' => now(),
-        //     'password' => Hash::make('password'),
-        //     'remember_token' => Str::random(10),
-        // ])->assignRole($moderatorRole);
-
-        // User::create([
-        //     'name' => 'developer',
-        //     'employee_id' => 1000004,
-        //     'is_admin' => 1,
-        //     'branch_id' => 1,
-        //     'email' => 'developer@admin.com',
-        //     'email_verified_at' => now(),
-        //     'password' => Hash::make('password'),
-        //     'remember_token' => Str::random(10),
-        // ])->assignRole($developerRole);
-
-        // for ($i=1; $i < 50; $i++) {
-        //     User::create([
-        //         'name' => 'Test '.$i,
-        //         'employee_id' => 1000004+$i,
-        //         'is_admin' => 0,
-        //         'branch_id' => 1,
-        //         'email' => 'test'.$i.'@test.com',
-        //         'email_verified_at' => now(),
-        //         'password' => Hash::make('password'), // password
-        //         'remember_token' => Str::random(10),
-        //     ])->assignRole($userRole);
-        // }
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
     }
 }

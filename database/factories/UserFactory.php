@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Branch;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -15,11 +17,24 @@ class UserFactory extends Factory
      *
      * @return array<string, mixed>
      */
+
+    // public function configure(): static
+    // {
+    //     return $this->afterMaking(function (User $user) {
+    //         return $user->assignRole('branch-manager');
+    //     });
+    // }
+
     public function definition(): array
     {
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
+            'gender' => fake()->randomElement(['male','female']),
+            'branch_id' => 7,
+            'is_admin' => true,
+            'contact_number' => fake()->randomDigit(11),
+            'birthday' => fake()->date('Y-m-d', 'now'),
             'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
