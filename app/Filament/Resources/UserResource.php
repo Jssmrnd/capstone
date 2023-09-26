@@ -54,6 +54,7 @@ class UserResource extends Resource
                                                             "female" => "Female",
                                                     ]),
                                             Forms\Components\DatePicker::make("birthday")
+                                                    ->required()
                                                     ->label("Birthday")
                                                     ->maxDate(now())
                                                     ->minDate(now()->subYears(100)),
@@ -63,10 +64,12 @@ class UserResource extends Resource
                                                     ->label("Password")
                                                     ->required(),
                                             Forms\Components\TextInput::make("email")
+                                                    ->required()
                                                     ->label("Email")
                                                     ->email()
                                                     ->maxLength(255),
                                             Forms\Components\TextInput::make("contact_number")
+                                                    ->required()
                                                     ->label("Contact No.")
                                                     ->tel()
                                                     ->maxLength(255),
@@ -78,13 +81,16 @@ class UserResource extends Resource
                                 ->columns(1)
                                 ->schema([
                                         Forms\Components\Select::make("roles")
+                                                ->required()
                                                 ->relationship('roles', 'name')
                                                 ->preload(),
                                         Forms\Components\Select::make("branch_id")
+                                                ->required()
                                                 ->relationship('branch', 'id')
                                                 ->searchable()
                                                 ->preload(),
                                         Forms\Components\Toggle::make('is_admin')
+                                                ->required()
                                                 ->label("Admin"),
                                 ]),
             ]);
