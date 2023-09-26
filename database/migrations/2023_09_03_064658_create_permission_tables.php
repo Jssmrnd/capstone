@@ -14,7 +14,7 @@ class CreatePermissionTables extends Migration
      */
     public function up()
     {
-
+        
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         $tableNames = config('permission.table_names');

@@ -14,7 +14,7 @@ class PaymentsPolicy
     public function viewAny(User $user): bool
     {
         return $user->hasAnyPermission(
-            "read: payments"
+            "read: payment"
         );
     }
 
@@ -24,7 +24,7 @@ class PaymentsPolicy
     public function view(User $user, Payments $payments): bool
     {
         return $user->hasAnyPermission(
-            "read: payments"
+            "read: payment"
         );
     }
 
@@ -34,7 +34,7 @@ class PaymentsPolicy
     public function create(User $user): bool
     {
         return $user->hasAnyPermission(
-            "create: payments"
+            "create: payment"
         );
     }
 
@@ -44,7 +44,7 @@ class PaymentsPolicy
     public function update(User $user, Payments $payments): bool
     {
         return $user->hasAnyPermission(
-            "update: payments"
+            "update: payment"
         );
     }
 
@@ -54,7 +54,7 @@ class PaymentsPolicy
     public function delete(User $user, Payments $payments): bool
     {
         return $user->hasAnyPermission(
-            "delete: payments"
+            "delete: payment"
         );
     }
 
