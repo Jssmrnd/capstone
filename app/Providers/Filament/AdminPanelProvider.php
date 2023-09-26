@@ -42,6 +42,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->authGuard("admin")
             ->login(Login::class)
             ->sidebarCollapsibleOnDesktop()
             ->colors([

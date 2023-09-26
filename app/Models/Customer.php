@@ -12,20 +12,20 @@ class Customer extends Model implements Authenticatable
     use \Illuminate\Auth\Authenticatable;
     use HasFactory;
     use Notifiable;
+
+
+
     protected $fillable = [
         //persnal information
-        'customer_firstname',
-        'customer_middlename',
-        'customer_lastname',
-        'customer_birthday',
-        'password',
-        //contact
-        'customer_email',
-        'customer_phonenumber',
-        'customer_region',
-        //address
-        'customer_province',
-        'customer_municipality',
-        'customer_barangay',
+        "name",
+        "email",
+        "password",
     ];
+
+    
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
+
 }

@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Auth\CustomerLogin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -28,7 +29,8 @@ class TestPanelPanelProvider extends PanelProvider
         return $panel
             ->id('customer')
             ->path('customer')
-            ->login(Login::class)
+            ->authGuard('web')
+            ->login(CustomerLogin::class)
             ->registration(Register::class)
             ->passwordReset()
             ->emailVerification()
