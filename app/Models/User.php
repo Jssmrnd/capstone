@@ -4,18 +4,15 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Models\Scopes\UserScope;
 use Filament\Models\Contracts\FilamentUser;
-use Filament\Panel as FilamentPanel;
-use Filament\Tables\Columns\Layout\Panel;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Auth;
+
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasPermissions;
@@ -61,7 +58,13 @@ class User extends Authenticatable implements FilamentUser
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'is_admin' => 'boolean',
     ];
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new UserScope);
+    }
 
     public function branch():BelongsTo
     {
@@ -73,7 +76,7 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasOne(Role::class);
     }
 
-    public function canAccessPanel(FilamentPanel $panel): bool
+    public function canAccessPanel(Panel $panel): bool
     {
         if(auth()->user()){
             return true;
