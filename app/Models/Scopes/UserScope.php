@@ -2,6 +2,8 @@
 
 namespace App\Models\Scopes;
 
+use App\Models\User;
+use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
@@ -13,10 +15,8 @@ class UserScope implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-        if(auth()->user()->is_admin){
-        }
-        else{
+        if(auth()->check()){
             $builder->where('branch_id', auth()->user()->branch_id);
-        }
+        };
     }
 }
