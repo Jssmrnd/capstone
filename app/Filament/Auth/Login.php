@@ -47,21 +47,21 @@ class Login extends BaseAuth
 
         $data = $this->form->getState();
 
-        //check if user is a an admin, returns an error to page if not.
-        if(User::query()->where('id', $data["id"])->get()->first() != null){
-            if(!User::query()->where('id', $data["id"])->get()->first()->is_admin){
-                throw ValidationException::withMessages([
-                    'data.email' => __('filament-panels::pages/auth/login.messages.failed'),
-                    'data.employee_id' => __('filament-panels::pages/auth/login.messages.failed'),
-                ]);
-            }
-        }
+        // //check if user is a an admin, returns an error to page if not.
+        // if(User::query()->where('id', $data["id"])->get()->first() != null){
+        //     if(!User::query()->where('id', $data["id"])->get()->first()->is_admin){
+        //         throw ValidationException::withMessages([
+        //             'data.email' => __('filament-panels::pages/auth/login.messages.failed'),
+        //             'data.employee_id' => __('filament-panels::pages/auth/login.messages.failed'),
+        //         ]);
+        //     }
+        // }
 
         //checks if user is a filament user
         if (!Filament::auth()->attempt($this->getCredentialsFromFormData($data), $data['remember'] ?? false)) {
             throw ValidationException::withMessages([
                 'data.email' => __('filament-panels::pages/auth/login.messages.failed'),
-                'data.employee_id' => __('filament-panels::pages/auth/login.messages.failed'),
+                'data.id' => __('filament-panels::pages/auth/login.messages.failed'),
             ]);
         }
 
