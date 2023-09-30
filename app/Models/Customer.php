@@ -39,7 +39,7 @@ class Customer extends Authenticatable implements FilamentUser
         "email",
         "password",
     ];
-    
+
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
