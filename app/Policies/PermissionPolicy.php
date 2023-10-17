@@ -35,7 +35,7 @@ class PermissionPolicy
     public function viewAny(User $user): bool
     {
         return $user->hasAnyPermission(
-            "read: permissions"
+            "read: permission"
         );
     }
 
@@ -45,7 +45,7 @@ class PermissionPolicy
     public function view(User $user, Permission $permission): bool
     {
         return $user->hasAnyPermission(
-            "read: permissions"
+            "read: permission"
         );
     }
 
@@ -55,7 +55,7 @@ class PermissionPolicy
     public function create(User $user): bool
     {
         return $user->hasAnyPermission(
-            "create: permissions"
+            "create: permission"
         );
     }
 
@@ -65,7 +65,7 @@ class PermissionPolicy
     public function update(User $user, Permission $permission): bool
     {
         return $user->hasAnyPermission(
-            "update: permissions"
+            "update: permission"
         );
     }
 
@@ -75,7 +75,7 @@ class PermissionPolicy
     public function delete(User $user, Permission $permission): bool
     {
         return $user->hasAnyPermission(
-            "delete: permissions"
+            "delete: permission"
         );
     }
 

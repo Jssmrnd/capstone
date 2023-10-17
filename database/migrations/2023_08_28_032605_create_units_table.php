@@ -17,7 +17,7 @@ return new class extends Migration
     {
         Schema::create('units', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Branch::class);
+            $table->foreignIdFor(Branch::class)->nullable();
             $table->foreignIdFor(UnitModel::class);
             $table->string('engine_number')
                     ->unique();

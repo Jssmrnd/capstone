@@ -17,7 +17,7 @@ class EditCustomerApplicationMaintenance extends Page implements HasForms
     use InteractsWithForms;
 
     protected static ?string $navigationIcon = 'heroicon-o-cog';
-    protected static ?string $navigationLabel = 'Application Maintenance';
+    protected static ?string $navigationLabel = 'Utilities';
     protected static ?string $navigationGroup = 'Maintenance Module';
     protected static string $view = 'filament.pages.edit-customer-application';
 

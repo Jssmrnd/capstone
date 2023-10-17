@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\Branch;
 use App\Models\Unit;
+use App\Models\UnitModel;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -21,8 +23,14 @@ return new class extends Migration
             $table->boolean('is_application_approved')->default(false);
             $table->boolean('is_application_rejected')->default(false);
 
+            $table->foreignIdFor(Branch::class)->nullable()->onDelete('set null');
+            $table->string('author_id')->nullable();
+            $table->enum('application_type',['online', 'walk-in']);
+
+
             // Unit Information
-            $table->foreignIdFor(Unit::class)->nullable();
+            $table->foreignIdFor(UnitModel::class)->onDelete('set null');
+            $table->foreignIdFor(Unit::class)->onDelete('set null');
             $table->string('unit_term')->nullable();
             $table->decimal('unit_monthly_amort', 10, 2)->nullable();
             $table->decimal('unit_ttl_dp')->nullable();

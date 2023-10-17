@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\Payment;
 use App\Models\Payments;
 use App\Models\User;
+use App\Models\Customer;
 use Illuminate\Auth\Access\Response;
 
 class PaymentsPolicy
@@ -12,57 +13,63 @@ class PaymentsPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user): bool
+    public function viewAny($user): bool
     {
-        return $user->hasAnyPermission(
-            "read: payment"
-        );
+        if($user::class == Customer::class || $user->hasAnyPermission("read: payments")){
+            return true;
+        };
+        return false;
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Payment $payments): bool
+    public function view($user, Payment $payments): bool
     {
-        return $user->hasAnyPermission(
-            "read: payment"
-        );
+        if($user::class == Customer::class || $user->hasAnyPermission("read: payments")){
+            return true;
+        };
+        return false;
     }
 
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create($user): bool
     {
-        return $user->hasAnyPermission(
-            "create: payment"
-        );
+        
+        if($user::class == Customer::class || $user->hasAnyPermission("read: payments")){
+            return true;
+        };
+        return false;
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Payment $payments): bool
+    public function update($user, Payment $payments): bool
     {
-        return $user->hasAnyPermission(
-            "update: payment"
-        );
+        if($user::class == Customer::class || $user->hasAnyPermission("read: payments")){
+            return true;
+        };
+        return false;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Payment $payments): bool
+    public function delete($user, Payment $payments): bool
     {
-        return $user->hasAnyPermission(
-            "delete: payment"
-        );
+        if($user::class == Customer::class || $user->hasAnyPermission("read: payments")){
+            return true;
+        };
+        return false;
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Payment $payments): bool
+    public function restore($user, Payment $payments): bool
     {
         return false;
     }
@@ -70,7 +77,7 @@ class PaymentsPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Payment $payments): bool
+    public function forceDelete($user, Payment $payments): bool
     {
         return false;
     }

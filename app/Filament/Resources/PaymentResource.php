@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Carbon;
 use Filament\Notifications;
+use Illuminate\Database\Eloquent\Model;
 
 class PaymentResource extends Resource
 {
@@ -48,6 +49,8 @@ class PaymentResource extends Resource
                         $amort_fin = $application->unit_amort_fin;
                         $set('due_date', $due_date);
                         $set('payment_amount', $amort_fin);
+
+                        //Y-m-d
 
                         $delinquent = Carbon::parse(Carbon::createFromFormat('Y-m-d', $due_date)->addDays(30));
 
@@ -116,11 +119,23 @@ class PaymentResource extends Resource
                         ->label('Date Paid')
                         ->dateTime('d-M-Y'),
             ])
+            ->paginated(false)
             ->filters([
                 Tables\Filters\Filter::make('created_at')
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('pdf') 
+                ->label('PDF')
+                ->color('success')
+                ->icon('heroicon-s-download')
+                ->action(function (Model $record) {
+                    return response()->streamDownload(function () use ($record) {
+                        echo Pdf::loadHtml(
+                            Blade::render('pdf', ['record' => $record])
+                        )->stream();
+                    }, $record->number . '.pdf');
+                }), 
             ])
             ->bulkActions([
                 // Tables\Actions\BulkActionGroup::make([

@@ -30,105 +30,115 @@ class CustomerApplicationResource extends Resource
     {
         return $form
         ->schema([
+                Forms\Components\Select::make("branch_id")
+                ->options([
+                    Models\Branch::query()->where("id", auth()->user()->branch_id)->first()->id => 
+                    Models\Branch::query()->where("id", auth()->user()->branch_id)->first()->full_address,
+                ]),
+                // ->preload(),
+                // ->preload(),
                     //Unit Information
                     Forms\Components\Fieldset::make("Unit to be Financed")
-                            ->disabledOn('edit')
                             ->columns(4)
                             ->columnSpan(2)
                             ->schema([
-                                    Forms\Components\Select::make('unit_id')
-                                            ->hint("Ex. Mio soul i")
-                                            ->columnSpan(2)
-                                            ->label('Unit Model')
-                                            ->relationship('units', 'unit_model')
-                                            ->searchable(['unit_model', 'id'])
-                                            ->preload()
-                                            ->live()
-                                            ->afterStateUpdated(
-                                                    function(Forms\Get $get, Forms\Set $set){
-                                                        $unit_price = Models\Unit::find($get("unit_id"))->unit_srp;
-                                                        $set('unit_srp', $unit_price);
-                                                    }
-                                    ),
+                                Forms\Components\Select::make('unit_model_id')
+                                        ->hint("Ex. Mio soul i")
+                                        ->columnSpan(2)
+                                        ->label('Unit Model')
+                                        ->relationship('unitModel', 'model_name')
+                                        ->searchable(['model_name', 'id'])
+                                        ->preload()
+                                        ->live()
+                                        ->afterStateUpdated(
+                                                function(Forms\Get $get, Forms\Set $set){
+                                                    $unit_price = Models\UnitModel::find($get("unit_model_id"))->price;
+                                                    $set('unit_srp', $unit_price);
+                                                }
+                                        ),
 
-
-                                    Forms\Components\Group::make()
-                                            ->columnSpan(4)
-                                            ->columns(2)
-                                            ->live()
-                                            ->disabled(fn (Forms\Get $get): bool => ! $get('unit_id'))
-                                            ->schema([
-                                                    
-                                                    Forms\Components\TextInput::make('unit_engine_number')
-                                                            ->prefix('#')
-                                                            ->columnSpan(1)
-                                                            ->label('Engine Number')
-                                                            ->numeric(),
-
-                                                    Forms\Components\TextInput::make('unit_srp')
-                                                            ->columnSpan(1)
+    
+                                Forms\Components\Group::make()
+                                        ->columnSpan(4)
+                                        ->columns(2)
+                                        ->live()
+                                        ->disabled(fn (Forms\Get $get): bool => ! $get('unit_model_id'))
+                                        ->schema([
+                                                
+                                                Forms\Components\Select::make('unit_id')
+                                                        ->relationship(
+                                                                'units', 
+                                                                'engine_number',
+                                                                modifyQueryUsing: fn (Builder $query, Forms\Get $get) => $query->where("unit_model_id", $get('unit_model_id')))
+                                                        ->prefix('#')
+                                                        ->columnSpan(1)
+                                                        ->label('Engine Number'),
+                                                        // ->getOptionLabelsUsing(fn (array $values): array => Models\Unit::whereIn('model', $values)->pluck('name', 'id')->toArray()),
+    
+                                                Forms\Components\TextInput::make('unit_srp')
+                                                        ->columnSpan(1)
+                                                        ->required(true)
+                                                        ->label('Selling Retail Price:')
+                                                        ->numeric(),
+                                                Forms\Components\TextInput::make('unit_term')
+                                                        ->columnSpan(1)
+                                                        ->minValue(0)
+                                                        ->required(true)
+                                                        ->label('Term:')
+                                                        ->minValue(1)
+                                                        ->numeric()
+                                                        ->live(500)
+                                                        ->afterStateUpdated(
+                                                                function(Forms\Get $get, Forms\Set $set){
+                                                                $_term = $get('unit_term');
+                                                                $_unit_srp = $get('unit_srp');
+                                                                if($_term > 1){
+                                                                        $quotient = number_format((float)$_unit_srp/$_term, 2, '.', '');
+                                                                        $set('unit_amort_fin', $quotient);
+                                                                        $set('unit_monthly_amort', $quotient);
+                                                                }
+                                                            }
+                                                        ),
+                                                Forms\Components\TextInput::make('unit_ttl_dp')
                                                             ->required(true)
-                                                            ->label('Selling Retail Price:')
-                                                            ->numeric(),
-                                                    Forms\Components\TextInput::make('unit_term')
-                                                            ->columnSpan(1)
-                                                            ->minValue(0)
-                                                            ->required(true)
-                                                            ->label('Term:')
-                                                            ->minValue(1)
+                                                            ->label('Total Downpayment:')
                                                             ->numeric()
+                                                            ->minValue(0)
+                                                            ->columnSpan(1)
                                                             ->live(500)
                                                             ->afterStateUpdated(
                                                                     function(Forms\Get $get, Forms\Set $set){
-                                                                    $_term = $get('unit_term');
-                                                                    $_unit_srp = $get('unit_srp');
-                                                                    if($_term > 1){
-                                                                            $quotient = number_format((float)$_unit_srp/$_term, 2, '.', '');
-                                                                            $set('unit_amort_fin', $quotient);
-                                                                            $set('unit_monthly_amort', $quotient);
+                                                                            $dp = $get('unit_ttl_dp');
+                                                                            $_term = $get('unit_term');
+                                                                            $_unit_srp = $get('unit_srp');
+                                                                            if($_term > 1 || $get('unit_ttl_dp' <= $get('unit_srp'))){
+                                                                                    $quotient = number_format((float)((float)$_unit_srp - (float)$dp)/$_term, 2, '.', '');
+                                                                                    $set('unit_amort_fin', $quotient);
+                                                                                    $set('monthly_amortization', $quotient);
+                                                                            }
                                                                     }
-                                                                }
                                                             ),
-                                                    Forms\Components\TextInput::make('unit_ttl_dp')
-                                                                ->required(true)
-                                                                ->label('Total Downpayment:')
-                                                                ->numeric()
-																->minValue(0)
-                                                                ->columnSpan(1)
-                                                                ->live(500)
-                                                                ->afterStateUpdated(
-                                                                        function(Forms\Get $get, Forms\Set $set){
-                                                                                $dp = $get('unit_ttl_dp');
-                                                                                $_term = $get('unit_term');
-                                                                                $_unit_srp = $get('unit_srp');
-                                                                                if($_term > 1 || $get('unit_ttl_dp' <= $get('unit_srp'))){
-                                                                                        $quotient = number_format((float)((float)$_unit_srp - (float)$dp)/$_term, 2, '.', '');
-                                                                                        $set('unit_amort_fin', $quotient);
-                                                                                        $set('monthly_amortization', $quotient);
-                                                                                }
-                                                                        }
-                                                                ),
-                                                    Forms\Components\TextInput::make('unit_monthly_amort')->required(true)
-                                                                ->label('Monthly Amorthization:')
-																->minValue(0)
-                                                                ->numeric(),
-                                                    Forms\Components\Select::make('unit_type')
-                                                                ->required()
-                                                                ->options(['New','Repeat',]),
-                                                    Forms\Components\TextInput::make('unit_amort_fin')
-                                                                ->numeric()
-																->minValue(0)
-                                                                ->required(true)
-                                                                ->label('Amorthization Fin:'),
-                                                    Forms\Components\Select::make('unit_mode_of_payment')
-                                                                ->required(true)
-                                                                ->label('Mode of Payment:')
-                                                                ->options(
-                                                                    ['Office','Field','Bank',]
-                                                                )
-                                                                ->columnSpan(1),
-                                ]),
+                                                Forms\Components\TextInput::make('unit_monthly_amort')->required(true)
+                                                            ->label('Monthly Amorthization:')
+                                                            ->minValue(0)
+                                                            ->numeric(),
+                                                Forms\Components\Select::make('unit_type')
+                                                            ->required()
+                                                            ->options(['New','Repeat',]),
+                                                Forms\Components\TextInput::make('unit_amort_fin')
+                                                            ->numeric()
+                                                            ->minValue(0)
+                                                            ->required(true)
+                                                            ->label('Amorthization Fin:'),
+                                                Forms\Components\Select::make('unit_mode_of_payment')
+                                                            ->required(true)
+                                                            ->label('Mode of Payment:')
+                                                            ->options(
+                                                                ['Office','Field','Bank',]
+                                                            )
+                                                            ->columnSpan(1),
                             ]),
+                        ]),
                     //End of Unit Information
 
                     // Applicant Information
@@ -656,7 +666,6 @@ class CustomerApplicationResource extends Resource
     {
         return $infolist
             ->schema([
-
                 InfoLists\Components\Section::make('Customer Application')->schema([
 
                         InfoLists\Components\FieldSet::make('Applicant Information')
@@ -679,7 +688,7 @@ class CustomerApplicationResource extends Resource
                                 ->columns(4)
                                 ->columnSpan(2)
                                 ->schema([
-                                    InfoLists\Components\TextEntry::make('units.unit_model')
+                                    InfoLists\Components\TextEntry::make('unitModel.model_name')
                                             ->label('Unit Model'),
                                     InfoLists\Components\TextEntry::make('unit_term')
                                             ->label('Unit Term'),
@@ -723,20 +732,6 @@ class CustomerApplicationResource extends Resource
 
                 ]),
 
-                // InfoLists\Components\Actions::make([
-                //     InfoLists\Components\Actions\Action::make('Make Payment')->color('success')->form([
-                //         Forms\Components\Fieldset::make("Payments")->relationship('payments.payment_amount')->schema([
-                //             Forms\Components\TextInput::make("payment_amount"),
-                //         ]),
-                //     ]),
-                //     InfoLists\Components\Actions\Action::make('Reject')->color('danger')
-                //     ->modalDescription('Are you sure you\'d like to reject this application? This cannot be undone.')
-                //     ->form([
-                //         Forms\Components\TextInput::make('reason_of_rejection'),
-                //     ])
-                //     ->requiresConfirmation(),
-                // ])->columnSpan(4),
-
             ])->columns(4);
     }
 
@@ -747,6 +742,10 @@ class CustomerApplicationResource extends Resource
                 Tables\Columns\TextColumn::make('id')
                         ->label("Application ID:")
                         ->searchable(),
+                Tables\Columns\TextColumn::make('application_type')
+                        ->label("Type:")
+                        ->badge()
+                        ->searchable(),
                 Tables\Columns\TextColumn::make('application_status')
                         ->label("Status:")
                         ->badge(),
@@ -754,7 +753,7 @@ class CustomerApplicationResource extends Resource
                         ->label("First Name:"),
                 Tables\Columns\TextColumn::make('applicant_lastname')
                         ->label("Last Name:"),
-                Tables\Columns\TextColumn::make('units.unit_model')
+                Tables\Columns\TextColumn::make('unitModel.model_name')
                         ->label("Unit Model:"),
                 Tables\Columns\TextColumn::make('unit_srp')->label("Price:")
                         ->summarize(Average::make())->money('php'),

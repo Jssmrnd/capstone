@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UnitModelResource\Pages;
 use App\Filament\Resources\UnitModelResource\RelationManagers;
+use App\Models\Unit;
 use App\Models\UnitModel;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -11,6 +12,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class UnitModelResource extends Resource
@@ -30,22 +32,10 @@ class UnitModelResource extends Resource
                 Forms\Components\SpatieMediaLibraryFileUpload::make('media')
                     ->collection('product-images')
                     ->required(),
-                Forms\Components\Textarea::make('colors')
-                    ->columnSpanFull(),
                 Forms\Components\TextInput::make('price')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('body_type')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('dry_weight')
-                    ->numeric(),
-                Forms\Components\TextInput::make('length_mm')
-                    ->numeric(),
-                Forms\Components\TextInput::make('width_mm')
-                    ->numeric(),
-                Forms\Components\TextInput::make('height_mm')
-                    ->numeric(),
-                Forms\Components\TextInput::make('wheelbase_mm')
-                    ->numeric(),
             ]);
     }
 
@@ -62,24 +52,16 @@ class UnitModelResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('body_type')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('unit.unit_quantity')
+                Tables\Columns\TextColumn::make('Stock')
+                    ->getStateUsing( function (Model $record){
+                        return Unit::where('unit_model_id', $record->id)
+                                ->whereNull('customer_application_id')
+                                ->count();
+                    })
                     ->label('Unit Quantity')
                     ->searchable(),
-                // Tables\Columns\TextColumn::make('dry_weight')
-                //     ->numeric()
-                //     ->sortable(),
-                // Tables\Columns\TextColumn::make('length_mm')
-                //     ->numeric()
-                //     ->sortable(),
-                // Tables\Columns\TextColumn::make('width_mm')
-                //     ->numeric()
-                //     ->sortable(),
-                // Tables\Columns\TextColumn::make('height_mm')
-                //     ->numeric()
-                //     ->sortable(),
-                // Tables\Columns\TextColumn::make('wheelbase_mm')
-                //     ->numeric()
-                //     ->sortable(),
+                    // ->counts('unit')
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -94,6 +76,14 @@ class UnitModelResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->action(
+                        function(Model $record){
+                            if($record->getMedia('product-images')->first()){
+                                $record->getMedia('product-images')->first()->delete();
+                            }
+                            $record->delete();
+                        }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

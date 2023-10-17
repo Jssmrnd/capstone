@@ -37,7 +37,7 @@ class UnitResource extends Resource
                 Forms\Components\Textarea::make('notes'),
                 Forms\Components\Select::make('status')
                         ->options([
-                            'brand new' => 'New',
+                            'brand-new' => 'New',
                             'depo' => 'Depo',
                             'repo' => 'Repo',
                         ])
@@ -52,14 +52,15 @@ class UnitResource extends Resource
                 TextColumn::make('unitModel.model_name')->label('Model'),
                 TextColumn::make('status')->label('status'),
                 TextColumn::make('unitModel.price')->label('Price')->money('php'),
+                TextColumn::make('engine_number'),
                 TextColumn::make('created_at'),
             ])
             ->filters([
-                Tables\Filters\Filter::make('branch_filter')
-                    ->default()
-                    ->query(function (Builder $query, array $data): Builder {
-                        return $query->where('branch_id', auth()->user()->branch_id);
-                    })
+                // Tables\Filters\Filter::make('branch_filter')
+                //     ->default()
+                //     ->query(function (Builder $query, array $data): Builder {
+                //         return $query->where('branch_id', auth()->user()->branch_id);
+                //     })
             ])
             ->actions([
                 Tables\Actions\EditAction::make()

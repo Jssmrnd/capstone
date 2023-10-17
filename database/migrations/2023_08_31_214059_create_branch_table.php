@@ -21,8 +21,8 @@ return new class extends Migration
             $table->string('regCode')->nullable();
             $table->string('provCode')->nullable();
             $table->string('citymunCode')->nullable();
-            $table->string('branch_street')->nullable();
-            $table->string('branch_building_number')->nullable();
+            $table->string('street_name')->nullable();
+            $table->string('full_address')->nullable();
             $table->timestamps();
         });
     }

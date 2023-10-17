@@ -97,9 +97,9 @@ class BranchResource extends Resource
                                         ),
 
                                 
-                                Forms\Components\TextInput::make('branch_street')
+                                Forms\Components\TextInput::make('street_name')
                                         ->label("Street"),
-                                Forms\Components\TextInput::make('branch_building_number')
+                                Forms\Components\TextInput::make('full_address')
                                         ->label("Building No."),
 
                 ]),
@@ -114,19 +114,8 @@ class BranchResource extends Resource
                 Tables\Columns\TextColumn::make("id")
                         ->wrap()
                         ->label("ID"),
-                Tables\Columns\TextColumn::make("refRegions.regDesc")
-                        ->wrap()
-                        ->label("Region"),
-                Tables\Columns\TextColumn::make("refProvinces.provDesc")
-                        ->label("Province"),
-                Tables\Columns\TextColumn::make("refMunicipalities.citymunDesc")
-                        ->label("Municipality"),  
-                Tables\Columns\TextColumn::make("refBarangays.brgyDesc")
-                        ->label("Barangay"),
-                Tables\Columns\TextColumn::make("branch_street")
-                        ->label("Street"),
-                Tables\Columns\TextColumn::make("branch_building_number")
-                        ->label("Building Number"),
+                Tables\Columns\TextColumn::make("full_address")
+                        ->label("Full Address"),
                 Tables\Columns\TextColumn::make("created_at")
                         ->label("Date Created")
                         ->dateTime('d-M-Y'),

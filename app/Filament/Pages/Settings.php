@@ -16,9 +16,11 @@ class Settings extends Page implements HasForms
 
     protected static ?string $navigationIcon = 'heroicon-o-cog';
 
+    protected static ?string $navigationLabel = 'Backup and Restore';
+
     protected static ?string $navigationGroup = 'Maintenance Module';
 
-    public ?array $data = []; 
+    public ?array $data = [];
     protected static string $view = 'filament.pages.settings';
 
     public static function shouldRegisterNavigation(): bool
@@ -26,7 +28,6 @@ class Settings extends Page implements HasForms
         return true;
     }
 
-     
     public function mount(): void 
     {
         $this->form->fill(CustomerApplicationMaintenance::all()->toArray()[0]);

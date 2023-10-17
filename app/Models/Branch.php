@@ -17,8 +17,8 @@ class Branch extends Model
         'regCode',
         'provCode',
         'citymunCode',
-        'branch_street',
-        'branch_building_number',
+        'street_name',
+        'full_address',
     ];
 
     public function refRegions():BelongsTo{
@@ -28,7 +28,6 @@ class Branch extends Model
     public function units():HasMany{
         return $this->hasMany(Unit::class, 'branch_id', 'id');
     }
-
 
     public function refProvinces():BelongsTo{
         return $this->belongsTo(RefProvince::class, 'provCode', 'provCode');
@@ -44,6 +43,10 @@ class Branch extends Model
 
     public function users(): HasMany{
         return $this->hasMany(User::class);
+    }
+
+    public function customerApplications():HasMany{
+        return $this->hasMany(CustomerApplication::class);
     }
 
 }

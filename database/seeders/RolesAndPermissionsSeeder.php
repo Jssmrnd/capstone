@@ -53,6 +53,11 @@ class RolesAndPermissionsSeeder extends Seeder
         $branchPermission3 = Permission::create(['guard_name' => 'admin', 'name' => 'update: branch']);
         $branchPermission4 = Permission::create(['guard_name' => 'admin', 'name' => 'delete: branch']);
 
+        // CUSTOMER PAGE MODEL
+        $unitPermission1 = Permission::create(['guard_name' => 'admin', 'name' => 'create: page']);
+        $unitPermission2 = Permission::create(['guard_name' => 'admin', 'name' => 'read: page']);
+        $unitPermission3 = Permission::create(['guard_name' => 'admin', 'name' => 'update: page']);
+        $unitPermission4 = Permission::create(['guard_name' => 'admin', 'name' => 'delete: page']);
 
         // UNITMODEL MODEL
         $unitModelPermission1 = Permission::create(['guard_name' => 'admin', 'name' => 'create: unit-model']);
@@ -60,7 +65,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $unitModelPermission3 = Permission::create(['guard_name' => 'admin', 'name' => 'update: unit-model']);
         $unitModelPermission4 = Permission::create(['guard_name' => 'admin', 'name' => 'delete: unit-model']);
 
-        // UNITMODEL MODEL
+        // UNIT MODEL
         $unitPermission1 = Permission::create(['guard_name' => 'admin', 'name' => 'create: unit']);
         $unitPermission2 = Permission::create(['guard_name' => 'admin', 'name' => 'read: unit']);
         $unitPermission3 = Permission::create(['guard_name' => 'admin', 'name' => 'update: unit']);
@@ -86,11 +91,11 @@ class RolesAndPermissionsSeeder extends Seeder
 
         
         // CREATE ROLES
-        $userRole = Role::create(['name' => 'Customer'])->syncPermissions([
+        $userRole = Role::create(['name' => 'customer'])->syncPermissions([
             $miscPermission,
         ]);
 
-        $superAdminRole = Role::create(['guard_name' => 'admin', 'name' => 'branch-manager'])->syncPermissions([
+        $branch_manager = Role::create(['guard_name' => 'admin', 'name' => 'branch-manager'])->syncPermissions([
             $userPermission1,       //create: user
             $userPermission2,       //read: user
             $userPermission3,       //update: user
@@ -130,6 +135,11 @@ class RolesAndPermissionsSeeder extends Seeder
             $paymentPermission1,$paymentPermission2,$paymentPermission3,$paymentPermission4,
 
         ]);
+
+        if(User::query()->where('name', 'admin')->first() != null){
+            $user = User::query()->where('name', 'admin')->first();
+            $user->assignRole('branch-manager');
+        }
 
     }
 }

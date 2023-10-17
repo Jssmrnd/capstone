@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\CustomerApplicationScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,7 +19,13 @@ class CustomerApplication extends Model
         'application_status',
         'application_is_new',
 
+        //mutate data here
+        'branch_id', 
+        'author_id',
+        'application_type',
+
         //Unit
+        'unit_model_id',
         'unit_id',
         'unit_term',
         'unit_monthly_amort',
@@ -132,6 +139,7 @@ class CustomerApplication extends Model
 
 
     ];
+
     protected $casts = [
         'properties'                => 'json',
         'personal_references'       => 'json',
@@ -140,6 +148,40 @@ class CustomerApplication extends Model
         'educational_attainment'    => 'json',
         'dependents'                => 'json',
     ];
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new CustomerApplicationScope);
+    }
+
+    public function approveThisApplication(){
+        // changes the applications status
+        $this->application_status = "active";
+        $this->is_application_approved = true;
+        $this->is_application_rejected = false;
+        //gets the associated unit and marks it as owned.
+        $unit = Unit::query()->where('id', $this->unit_id)->first();
+        $unit->customer_application_id = $this->id;
+        $unit->save();
+        $this->save();
+    }
+
+    public function rejectThisApplication(): void{
+        // changes the applications status
+        $this->application_status = "reject";
+        $this->is_application_approved = false;
+        $this->is_application_rejected = true;
+        $this->due_date = null; // sets the due date to null.
+        //gets the associated unit and marks it as owned.
+        $unit = Unit::query()->where('id', $this->unit_id)->first();
+        $unit->customer_application_id = null;
+        $unit->save();
+        $this->save();
+    }
+    
+    public function branches():BelongsTo{
+        return $this->belongsTo(Branch::class);
+    }
 
     public function calculateTotalPayments(): float
     {
@@ -153,4 +195,9 @@ class CustomerApplication extends Model
     public function unitModel():BelongsTo{
         return $this->belongsTo(UnitModel::class);
     }
+
+    public function units():BelongsTo{
+        return $this->belongsTo(Unit::class);
+    }
+
 }

@@ -12,26 +12,28 @@ class ViewCustomerApplication extends ViewRecord
 {
     protected static string $resource = CustomerApplicationResource::class;
 
-    protected function getHeaderActions(): array
+
+protected function getHeaderActions(): array
     {
+        //we can minimize this whole code by creating a function at the Model,
+        //Analyze the neccessary functions before creating it.
+        //Motorcycle Assignment
+
         return [
+            
+            //Approve Application
             Actions\Action::make("Approve")
                     ->color('success')
                     ->requiresConfirmation()
                     ->form([
                         Forms\Components\DatePicker::make('due_date')
-                                ->format('d-m-Y')
+                                ->format('Y-m-d')
                                 ->label('Set Due Date'),
                     ])
                     ->action(function(array $data){
-                        $this->getRecord()->application_status = 'active';
-                        $this->getRecord()->due_date = $data['due_date'];
-                        $this->getRecord()->is_application_approved = true;
-                        $this->getRecord()->is_application_rejected = false;
-                        $unit = Unit::query()->find($this->getRecord()->unit_id);
-                        $unit->unit_quantity -= 1;
-                        $unit->save();
-                        $this->getRecord()->save();
+                        $this->record->approveThisApplication();
+                        $this->getRecord()->due_date = $data['due_date'];   //sets the due date.
+                        $this->getRecord()->save(); // sales the record
                         $this->refreshFormData([
                             'application_status',
                         ]);
@@ -44,6 +46,7 @@ class ViewCustomerApplication extends ViewRecord
                         }
                     ),
 
+            //Reject Application,
             Actions\Action::make("Reject")
             ->color('danger')
             ->requiresConfirmation()
@@ -51,14 +54,7 @@ class ViewCustomerApplication extends ViewRecord
                 Forms\Components\Textarea::make('reason')->label('Reason of Rejection:'),
             ])
             ->action(function(){
-                $this->getRecord()->application_status = 'reject';
-                $this->getRecord()->due_date = null;
-                $this->getRecord()->is_application_approved = false;
-                $this->getRecord()->is_application_rejected = true;
-                $unit = Unit::query()->find($this->getRecord()->unit_id);
-                $unit->unit_quantity += 1;
-                $unit->save();
-                $this->getRecord()->save();
+                $this->record->rejectThisApplication();
                 $this->refreshFormData([
                     'application_status',
                 ]);

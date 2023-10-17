@@ -30,7 +30,7 @@ class UnitModel extends Model implements HasMedia
     protected $casts = [
         "colors" => "json",
     ];
-
+    
 
     public function unit():HasMany
     {

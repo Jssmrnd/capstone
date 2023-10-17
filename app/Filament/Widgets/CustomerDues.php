@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\Builder;
 class CustomerDues extends BaseWidget
 {
 
+    protected int | string | array $columnSpan = 'full';
+
     public function table(Table $table): Table
     {
         return $table

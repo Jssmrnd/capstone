@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\CustomerApplicationResource\Pages;
+namespace App\Filament\TestPanel\Resources\CustomerApplicationResource\Pages;
 
-use App\Filament\Resources\CustomerApplicationResource;
+use App\Filament\TestPanel\Resources\CustomerApplicationResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
@@ -13,15 +13,7 @@ class EditCustomerApplication extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\ViewAction::make(),
             Actions\DeleteAction::make(),
         ];
     }
-
-    protected function mutateFormDataBeforeSave(array $data): array
-    {
-        $data['application_is_new'] = false;
-        return $data;
-    }
-
 }

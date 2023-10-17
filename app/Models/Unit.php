@@ -15,16 +15,22 @@ class Unit extends Model
     protected $fillable = [
         
         //Foreign keys
+        'is_owned',
         'branch_id',
         'unit_model_id',
 
         'engine_number',
         'frame_number',
 
-        'unit_quantity',
         'status',
         'notes',
     ];
+
+    public function getStock():int {
+        $count = Unit::where('model_name', 'ducati')->count();
+        return $count;
+    }
+
 
     public function unitModel():BelongsTo{
         return $this->belongsTo(UnitModel::class);

@@ -19,11 +19,6 @@ return new class extends Migration
             $table->string("price")->nullable();
             $table->string("body_type")->nullable();
 
-            $table->decimal("dry_weight")->nullable();
-            $table->integer("length_mm")->nullable();
-            $table->integer("width_mm")->nullable();
-            $table->integer("height_mm")->nullable();
-            $table->integer("wheelbase_mm")->nullable();
             $table->timestamps();
         });
     }
