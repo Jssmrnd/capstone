@@ -6,6 +6,8 @@ use App\Filament\Resources\PaymentResource\Pages;
 use App\Models\CustomerApplication;
 use App\Models\Unit;
 use App\Models\Payment;
+use Illuminate\Support\Facades\Blade;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -126,15 +128,14 @@ class PaymentResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\Action::make('pdf') 
-                ->label('PDF')
+                ->label('Print')
                 ->color('success')
-                ->icon('heroicon-s-download')
                 ->action(function (Model $record) {
                     return response()->streamDownload(function () use ($record) {
                         echo Pdf::loadHtml(
-                            Blade::render('pdf', ['record' => $record])
+                            Blade::render('monthly_amort_receipt', ['record' => $record, 'date_today' => Carbon::now()->format('d-M-Y')])
                         )->stream();
-                    }, $record->number . '.pdf');
+                    }, $record->id . '.pdf');
                 }), 
             ])
             ->bulkActions([
