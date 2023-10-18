@@ -172,6 +172,9 @@ return [
         App\Providers\Filament\TestPanelPanelProvider::class,
         // App\Providers\Filament\TestPanelPanelProvider::class,
         App\Providers\RouteServiceProvider::class,
+
+
+        Ixudra\Curl\CurlServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -187,6 +190,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
+        'Curl' => Ixudra\Curl\Facades\Curl::class,
     ])->toArray(),
 
 ];
