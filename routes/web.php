@@ -3,6 +3,7 @@
 use App\Http\Controllers\ClientLogin;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CustomerLogin;
+use App\Http\Controllers\PaymongoController;
 use App\Http\Middleware\CustomerUser;
 use App\Models\Unit;
 use App\Models\UnitModel;
@@ -25,6 +26,10 @@ use Z3d0X\FilamentFabricator\Facades\FilamentFabricator;
 Route::get('/', function(){
     return redirect('/home');
 });
+
+
+Route::get('pay/{customerApplicationId}', [PaymongoController::class, 'pay'])->name('paymongo');
+Route::get('payment-success/{customerApplicationId}', [PaymongoController::class, 'success'])->name('payment-success');
 
 
 Route::prefix('/products')->group(function () {

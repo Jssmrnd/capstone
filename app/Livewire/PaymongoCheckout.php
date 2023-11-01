@@ -1,54 +1,48 @@
 <?php
 
-namespace App\Filament\Pages;
+namespace App\Livewire;
 
-use App\Filament\Resources\PaymentResource;
 use App\Models\CustomerApplication;
-use App\Models\CustomerApplicationMaintenance;
 use App\Models\Payment;
-use Carbon\Carbon;
-use Filament\Actions\Action;
-use Filament\Actions\Contracts\HasActions;
-use Filament\Actions\CreateAction;
-use Filament\Forms\Concerns\HasFormComponentActions;
-use Filament\Pages\Concerns\HasRoutes;
-use Filament\Pages\Page;
 use Filament\Forms;
+use Filament\Actions\Action;
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Actions\Contracts\HasActions;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
-use Filament\Pages\Concerns\InteractsWithFormActions;
-use Filament\Resources\Pages\CreateRecord;
+use Livewire\Component;
 use Illuminate\Database\Eloquent\Builder;
+use Carbon\Carbon;
+use Filament\Support\Exceptions\Halt;
 
-
-class Settings extends Page
+class PaymongoCheckout extends Component implements HasForms, HasActions
 {
-
-
-    use InteractsWithFormActions; // what is the differencw with this
-
-    protected static ?string $navigationIcon = 'heroicon-o-cog';
-
-    protected static ?string $navigationLabel = 'Backup and Restore';
-
-    protected static ?string $navigationGroup = 'Utilities';
+    use InteractsWithActions;
+    use InteractsWithForms;
 
     public ?array $data = [];
-    protected static string $view = 'filament.pages.settings';
-
-
-
-    public function mount(): void 
+    
+    public function mount(): void
     {
-        $this->form->fill(CustomerApplicationMaintenance::all()->toArray());
+        $this->form->fill();
     }
- 
-    public function form(Form $form): Form
+
+    public function render()
     {
-        return $form
-            ->schema([
-                Forms\Components\Select::make('customer_application_id')
+        return view('livewire.paymongo-checkout');
+    }
+
+    public function getFormActions():array{
+        return [
+            $this->createAction(),
+        ];
+    }
+
+    public function form(Form $form): Form{
+        return $form->schema([
+            Forms\Components\Select::make('customer_application_id')
             ->relationship(
                 name: 'customerApplication',
                 titleAttribute: 'applicant_lastname',
@@ -120,27 +114,43 @@ class Settings extends Page
                     ])
                     ->columnSpan(1)
                     ->required(true),
-            ])
-            ->statePath('data')
-            ->model(Payment::class);
+
+            // Forms\Components\Actions::make([
+            //             Forms\Components\Actions\Action::make("create")
+            //             ->label("Checkout")
+            //             ->action(function(){
+            //                 // return redirect()->route("paymongo", ["customerApplicationId" => 1]);
+            //                 return 0;
+            //             }),
+            //         ]),      
+        ])->statePath("data")
+        ->model(Payment::class);
     }
 
+    public function save(): void
+    {
+        try {
+            $data = $this->form->getState();
 
-    public function getFormActions():array{
-        return [
-            $this->createAction(),
-        ];
-    }
+            $data = $this->mutateFormDataBeforeSave($data);
 
-    public function save(){
-        $data = $this->form->getState();
-        return redirect()->route("paymongo", ["customerApplicationId" => $data['customer_application_id']]);
+            $this->handleRecordUpdate($this->record, $data);
+
+        } catch (Halt $exception) {
+            return;
+        }
+
+        $this->getSavedNotification()?->send();
+
+        if ($redirectUrl = $this->getRedirectUrl()) {
+            $this->redirect($redirectUrl);
+        }
     }
 
     public function createAction(): Action
     {
         return Action::make('save')
-            ->label('Checkout')
+            ->label('Paymongo')
             ->submit('save');
     }
 }

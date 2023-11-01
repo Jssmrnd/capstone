@@ -172,8 +172,6 @@ return [
         App\Providers\Filament\TestPanelPanelProvider::class,
         // App\Providers\Filament\TestPanelPanelProvider::class,
         App\Providers\RouteServiceProvider::class,
-
-
         Ixudra\Curl\CurlServiceProvider::class,
     ])->toArray(),
 

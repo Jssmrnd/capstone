@@ -17,15 +17,15 @@ class EditCustomerApplicationMaintenance extends Page implements HasForms
     use InteractsWithForms;
 
     protected static ?string $navigationIcon = 'heroicon-o-cog';
-    protected static ?string $navigationLabel = 'Utilities';
-    protected static ?string $navigationGroup = 'Maintenance Module';
+    protected static ?string $navigationLabel = 'Audit Trail';
+    protected static ?string $navigationGroup = 'Utilities';
     protected static string $view = 'filament.pages.edit-customer-application';
 
     public ?array $data = [];
 
     public function mount()
     {
-        $this->data = CustomerApplicationMaintenance::all()->toArray()[0];
+        $this->data = CustomerApplicationMaintenance::first();
     }
 
     protected function getFormActions(): array
@@ -42,6 +42,12 @@ class EditCustomerApplicationMaintenance extends Page implements HasForms
         return $form
             ->schema([
             Forms\Components\TextInput::make("rebate_value"),
+            
+            Forms\Components\Actions\Action::make('Make Online Payment')
+            ->label("Payment")
+            ->action(function(){
+                return redirect()->route("paymongo", ["customerApplicationId" => 1]);
+            }),
         ])
         ->statePath('data');
     }
