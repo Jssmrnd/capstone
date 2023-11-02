@@ -27,10 +27,27 @@ class CustomerApplicationResource extends Resource
     {
         return $form
         ->schema([
+
+                Forms\Components\Wizard::make([
+                        Forms\Components\Wizard\Step::make('Branch')
+                            ->schema([
+                                // ...
+                            ]),
+                        Forms\Components\Wizard\Step::make('Motorcycle')
+                            ->schema([
+                                // ...
+                            ]),
+                        Forms\Components\Wizard\Step::make('Applicant Information')
+                            ->schema([
+                                // ...
+                            ]),
+                        ]),
+                
             Forms\Components\Select::make("branch_id")
                     ->relationship('branches', 'full_address')
-                    ->searchable('full_address'),
-                    // ->preload(),
+                    ->searchable('full_address')
+                    ->columnspan(2)
+                    ->preload(),
             //Unit Information
             Forms\Components\Fieldset::make("Unit to be Financed")
                     ->disabledOn('edit')
@@ -67,7 +84,12 @@ class CustomerApplicationResource extends Resource
                                                         modifyQueryUsing: fn (Builder $query, Forms\Get $get) => $query->where("unit_model_id", $get('unit_model_id')))
                                                 ->prefix('#')
                                                 ->columnSpan(1)
-                                                ->label('Engine Number'),
+                                                ->label('Engine Number')
+                                                ->hidden(function(string $operation){
+                                                        if($operation == "create"){
+                                                            return true;
+                                                        }
+                                                }),
 
                                             Forms\Components\TextInput::make('unit_srp')
                                                     ->columnSpan(1)
@@ -170,6 +192,9 @@ class CustomerApplicationResource extends Resource
                                     ->columnSpan(3)
                                     ->required(true)
                                     ->options(['single'=> 'Single', 'married' => 'Married', 'separated' => 'Separated', 'widow' => 'Widow']),
+                        Forms\Components\SpatieMediaLibraryFileUpload::make('media')
+                                    ->collection('product-images')
+                                    ->required(),
                             Forms\Components\Textarea::make('applicant_present_address')
                                     ->label('Present Address:')
                                     ->columnSpan(1)->required(true),
@@ -179,7 +204,6 @@ class CustomerApplicationResource extends Resource
                             Forms\Components\Textarea::make('applicant_provincial_address')
                                     ->label('Provincial Address:')->columnSpan(1),
                             Forms\Components\TextInput::make('applicant_lived_there')
-
                                     ->numeric()
                                     ->suffix('year(s)')
                                     ->inputMode('integer')
@@ -653,9 +677,7 @@ class CustomerApplicationResource extends Resource
                             //End Statement of monthly income
 
                         ]),
-
-
-        ]);
+                ]);
     }
 
     public static function table(Table $table): Table
@@ -684,8 +706,7 @@ class CustomerApplicationResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
