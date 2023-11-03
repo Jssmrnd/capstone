@@ -25,7 +25,7 @@ use Filament\Models\Contracts\HasName;
 class Customer extends Authenticatable implements FilamentUser, HasName, MustVerifyEmail
 {
 
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, HasPermissions, Notifiable;
+    use HasApiTokens, HasFactory, HasRoles, HasPermissions, Notifiable;
 
     /**
      * The attributes that are mass assignable.
