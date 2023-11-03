@@ -21,6 +21,7 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 use App\Filament\Auth\Login;
 use App\Filament\TestPanel\Pages\Auth\Register;
+use Filament\Pages\Auth\EmailVerification\EmailVerificationPrompt;
 
 class TestPanelPanelProvider extends PanelProvider
 {
@@ -33,7 +34,7 @@ class TestPanelPanelProvider extends PanelProvider
             ->login(CustomerLogin::class)
             ->registration(Register::class)
             ->passwordReset()
-            ->emailVerification()
+            ->emailVerification(EmailVerificationPrompt::class)
             ->topNavigation(true)
             ->profile()
             ->colors([
