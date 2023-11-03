@@ -30,7 +30,7 @@
     </ul>
     <!-- User registration and menu icon -->
     <div class="main">
-        <a href="/login" class="user" id="loginLink">Log In 
+        <a href="/customer" class="user" id="loginLink">Log In 
             <i class="ri-account-circle-fill"></i>
         </a>
         <div class="ri-menu-line" id="menu-icon"></div>
