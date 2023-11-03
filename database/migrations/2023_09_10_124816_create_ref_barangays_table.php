@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('refbrgy', function (Blueprint $table) {
-            $table->id();
+            $table->unsignedBigInteger('id')->primary();
             $table->string('brgyCode')->nullable();
             $table->string('brgyDesc')->nullable();
             $table->string('regCode')->nullable();

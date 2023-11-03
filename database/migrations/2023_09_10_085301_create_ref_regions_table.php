@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('psgcCode')->nullable();
             $table->string('regDesc')->nullable();
             $table->string('regCode')->nullable();
+            $table->timestamps();
         });
     }
 

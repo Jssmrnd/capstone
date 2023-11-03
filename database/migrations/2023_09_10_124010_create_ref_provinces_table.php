@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('provDesc')->nullable();
             $table->string('regCode')->nullable();
             $table->string('provCode')->nullable();
+            $table->timestamps();
         });
     }
 

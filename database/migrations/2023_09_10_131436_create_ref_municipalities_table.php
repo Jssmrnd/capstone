@@ -15,7 +15,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('ref_municipalities', function (Blueprint $table) {
-            $table->id();
+            $table->unsignedBigInteger('id')->primary();
             $table->string('psgcCode')->nullable();
             $table->string('citymunDesc')->nullable();
             $table->string('regDesc')->nullable();
