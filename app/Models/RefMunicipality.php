@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class RefMunicipality extends Model
 {
     use HasFactory;
+    public $incrementing = false;
 
     protected $fillable = [
         'psgcCode',

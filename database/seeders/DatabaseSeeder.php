@@ -10,6 +10,7 @@ use Spatie\Permission\Models\Permission;
 use Spatie\Permission\PermissionRegistrar;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -21,7 +22,17 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         //\App\Models\CustomerApplication::factory(10)->create();
-        User::query()->create([
+        $this->call(RolesAndPermissionsSeeder::class);
+        $this->createAdmin();
+        $this->call(RegionSeeder::class);
+        $this->call(ProvinceSeeder::class);
+        $this->call(MunicipalitySeeder::class);
+        $this->call(BarangaySeeder::class);
+        $this->call(BranchSeeder::class);
+    }
+
+    private function createAdmin():void{
+        $user = User::query()->create([
             'name' => "admin",
             'is_admin' => true,
             'branch_id' => null,
@@ -33,5 +44,6 @@ class DatabaseSeeder extends Seeder
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
         ]);
+        $user->assignRole('branch-manager');
     }
 }
