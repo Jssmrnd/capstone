@@ -6,6 +6,7 @@ use App\Models\Scopes\UserScope;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel as FilamentPanel;
 use Filament\Tables\Columns\Layout\Panel;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -21,10 +22,10 @@ use Spatie\Permission\Traits\HasPermissions;
 use Spatie\Permission\Traits\HasRoles;
 use Filament\Models\Contracts\HasName;
 
-class Customer extends Authenticatable implements FilamentUser, HasName
+class Customer extends Authenticatable implements FilamentUser, HasName, MustVerifyEmail
 {
 
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, HasPermissions;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, HasPermissions, Notifiable;
 
     /**
      * The attributes that are mass assignable.
