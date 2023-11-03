@@ -14,7 +14,7 @@ class Register extends AuthRegister
             'form' => $this->form(
                 $this->makeForm()
                     ->schema([
-                        $this->getNameFormComponent(),
+                        $this->getNameComponent(),
                         $this->getEmailFormComponent(),
                         $this->getPasswordFormComponent(),
                         $this->getPasswordConfirmationFormComponent(),
@@ -25,15 +25,24 @@ class Register extends AuthRegister
         ];
     }
 
+
+    protected function getNameComponent(): Component
+    {
+        return Forms\Components\Group::make()->schema([
+            Forms\Components\TextInput::make('firstname')
+                    ->required(),
+            Forms\Components\TextInput::make('middlename')
+                    ->required(),
+            Forms\Components\TextInput::make('lastname')
+                    ->required(),
+        ]);
+    }
+
     protected function getPersonalInformationComponent(): Component
     {
         return Forms\Components\Group::make()->schema([
-            Forms\Components\Select::make('gender')
-                    ->options([
-                        'male' => 'Male',
-                        'female' => 'Female',
-                    ])
-                    ->required(),
+            Forms\Components\DatePicker::make('birthday')
+                    ->format('Y-m-d'),
             Forms\Components\TextInput::make('contact_number')
                     ->required(),
         ]);

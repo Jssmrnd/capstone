@@ -19,8 +19,9 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasPermissions;
 use Spatie\Permission\Traits\HasRoles;
+use Filament\Models\Contracts\HasName;
 
-class Customer extends Authenticatable implements FilamentUser
+class Customer extends Authenticatable implements FilamentUser, HasName
 {
 
     use HasApiTokens, HasFactory, Notifiable, HasRoles, HasPermissions;
@@ -32,10 +33,18 @@ class Customer extends Authenticatable implements FilamentUser
      */
 
     public static $filamentUserColumn = 'is_filament_user';
+    public function getFilamentName(): string
+    {
+        return "{$this->firstname} {$this->lastname}";
+    }
 
     protected $fillable = [
-        //persnal information
-        "name",
+        "firstname",
+        "middlename",
+        "lastname",
+        "gender",
+        "address",
+        "birthday",
         "email",
         "password",
     ];

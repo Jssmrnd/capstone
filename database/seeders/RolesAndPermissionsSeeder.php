@@ -136,6 +136,12 @@ class RolesAndPermissionsSeeder extends Seeder
 
         ]);
 
+        $developerRole = Role::create(['guard_name' => 'admin', 'name' => 'customer'])->syncPermissions([
+
+            $paymentPermission1, $paymentPermission2, $customerAppPermission1, $customerAppPermission2
+
+        ]);
+
         if(User::query()->where('name', 'admin')->first() != null){
             $user = User::query()->where('name', 'admin')->first();
             $user->assignRole('branch-manager');

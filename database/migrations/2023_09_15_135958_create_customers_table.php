@@ -15,21 +15,23 @@ return new class extends Migration
             $table->id()->from(2000000);
             $table->string("firstname");
             $table->string("lastname");
-            $table->string("middlename");
-            $table->string("gender");
+            $table->string("middlename")->nullable();
+            $table->string("gender")->nullable();
+
+            $table->string("regCode")->nullable();
+            $table->string("provCode")->nullable();
+            $table->string("citymunCode")->nullable();
+            $table->string("brgyCode")->nullable();
+
             $table->date("birthday");
             $table->string("password");
             $table->timestamp('email_verified_at')->nullable();
-            $table->string("email")->unique();
+            $table->string("email");
             $table->rememberToken();
             $table->timestamps();
         });
     }
 
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
 
     /**
      * Reverse the migrations.
