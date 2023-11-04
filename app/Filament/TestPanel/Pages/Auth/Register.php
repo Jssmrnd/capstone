@@ -30,12 +30,15 @@ class Register extends AuthRegister
     {
         return Forms\Components\Group::make()->schema([
             Forms\Components\TextInput::make('firstname')
+                    ->label('First name')
                     ->required(),
             Forms\Components\TextInput::make('middlename')
+                    ->label('Middle name')
                     ->required(),
             Forms\Components\TextInput::make('lastname')
+                    ->label('Last name')
                     ->required(),
-        ]);
+        ])->columns(2);
     }
 
     protected function getPersonalInformationComponent(): Component
@@ -45,6 +48,6 @@ class Register extends AuthRegister
                     ->format('Y-m-d'),
             Forms\Components\TextInput::make('contact_number')
                     ->required(),
-        ]);
+        ])->columns(2);
     }
 }
