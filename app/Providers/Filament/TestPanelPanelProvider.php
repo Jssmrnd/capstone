@@ -22,6 +22,7 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Filament\Auth\Login;
 use App\Filament\TestPanel\Pages\Auth\Register;
 use Filament\Pages\Auth\EmailVerification\EmailVerificationPrompt;
+use Filament\Pages\Auth\PasswordReset\RequestPasswordReset;
 
 class TestPanelPanelProvider extends PanelProvider
 {
@@ -33,7 +34,7 @@ class TestPanelPanelProvider extends PanelProvider
             ->authGuard('web')
             ->login(CustomerLogin::class)
             ->registration(Register::class)
-            ->passwordReset()
+            ->passwordReset(RequestPasswordReset::class)
             ->emailVerification(EmailVerificationPrompt::class)
             ->topNavigation(true)
             ->profile()

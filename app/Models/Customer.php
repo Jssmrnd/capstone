@@ -6,6 +6,7 @@ use App\Models\Scopes\UserScope;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel as FilamentPanel;
 use Filament\Tables\Columns\Layout\Panel;
+use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -22,7 +23,7 @@ use Spatie\Permission\Traits\HasPermissions;
 use Spatie\Permission\Traits\HasRoles;
 use Filament\Models\Contracts\HasName;
 
-class Customer extends Authenticatable implements FilamentUser, HasName, MustVerifyEmail
+class Customer extends Authenticatable implements FilamentUser, HasName, MustVerifyEmail, CanResetPassword
 {
 
     use HasApiTokens, HasFactory, HasRoles, HasPermissions, Notifiable;
