@@ -11,8 +11,9 @@ class Navigation extends PageBlock
     public static function getBlockSchema(): Block
     {
         return Block::make('navigation')
+            ->label('Top bar navigation')
             ->schema([
-                Forms\Components\TextInput::make('company_name'), 
+                Forms\Components\TextInput::make('company_name'),
             ]);
     }
 
