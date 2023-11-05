@@ -12,7 +12,7 @@ class Hero extends PageBlock
     public static function getBlockSchema(): Block
     {
         return Block::make('hero')
-            ->label('Hero')
+            ->label('Hero section')
             ->schema([
                 
                 Forms\Components\TextInput::make('heading_title')
@@ -21,10 +21,11 @@ class Hero extends PageBlock
                 Forms\Components\Select::make('image_for')
                         ->required()
                         ->options([
-                            'homepage-hero-image' => "Home Page",
-                            'aboutpage-hero-image' => "About Page",
-                            'applicationpage-hero-image' => "Application Page",
-                            'productpage-hero-image' => "Product Page",
+                            'homepage-hero-image' => "home page",
+                            'aboutpage-hero-image' => "about us page",
+                            'applicationpage-hero-image' => "application page",
+                            'productpage-hero-image' => "products page",
+                            'contactpage-hero-image' => "contact us page",
                         ]),
 
                 Forms\Components\FileUpload::make("heading_image")
@@ -42,6 +43,8 @@ class Hero extends PageBlock
 
     public static function mutateData(array $data): array
     {
+        $data['heading_image'] = pathinfo($data['heading_image'], PATHINFO_FILENAME).".".pathinfo($data['heading_image'], PATHINFO_EXTENSION);;
+        // dd($data['heading_image']);
         return $data;
     }
 }
