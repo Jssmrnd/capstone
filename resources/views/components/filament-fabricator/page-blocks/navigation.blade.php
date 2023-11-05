@@ -10,22 +10,22 @@
     <ul class="navbar">
         {{-- redirects to the home --}}
         <li>
-            <a href="/home" class="active">Home</a>
+            <a href="/home" class="{{ request()->is('home') ? 'active': 'hidden' }}">Home</a>
         </li>
         {{-- redirects to the products --}}
         <li>
-            <a href="/products" >Products</a>
+            <a href="/products" class="{{ request()->is('products') ? 'active': 'hidden' }}">Products</a>
         </li>
         <li>
-            @auth<a href="/application">Application</a>@endauth
+            @auth<a href="/application" class="{{ request()->is('application') ? 'active': 'hidden' }}">Application</a>@endauth
         </li>
         {{-- redirects to the about --}}
         <li>
-            <a href="/about-us">About Us</a>
+            <a href="/about-us" class="{{ request()->is('about-us') ? 'active': 'hidden' }}">About Us</a>
         </li>
         {{-- redirects to the contact --}}
         <li>
-            <a href="/contact-us">Contact Us</a>
+            <a href="/contact-us" class="{{ request()->is('contact-us') ? 'active': 'hidden' }}">Contact Us</a>
         </li>
     </ul>
     <!-- User registration and menu icon -->
