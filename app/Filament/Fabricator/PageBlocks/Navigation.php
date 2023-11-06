@@ -61,7 +61,6 @@ class Navigation extends PageBlock
 
     public static function mutateData(array $data): array
     {
-
         $data['company_name'] = "Motorstar";
         return $data;
     }
