@@ -49,6 +49,7 @@ class UnitResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('id')->label('Id'),
                 TextColumn::make('unitModel.model_name')->label('Model'),
                 TextColumn::make('status')->label('status'),
                 TextColumn::make('unitModel.price')->label('Price')->money('php'),
