@@ -69,7 +69,10 @@ class CustomerApplicationResource extends Resource
                                                         ->relationship(
                                                                 'units', 
                                                                 'engine_number',
-                                                                modifyQueryUsing: fn (Builder $query, Forms\Get $get) => $query->where("unit_model_id", $get('unit_model_id')))
+                                                                modifyQueryUsing: fn (Builder $query, Forms\Get $get) => 
+                                                                                        $query->where("unit_model_id", $get('unit_model_id'))
+                                                                                                ->where('customer_application_id', null)
+                                                                                        )
                                                         ->prefix('#')
                                                         ->columnSpan(1)
                                                         ->label('Engine Number'),
