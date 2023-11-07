@@ -46,7 +46,10 @@ class CustomerApplicationResource extends Resource
                                         ->hint("Ex. Mio soul i")
                                         ->columnSpan(2)
                                         ->label('Unit Model')
-                                        ->relationship('unitModel', 'model_name')
+                                        ->relationship(
+                                                        'unitModel',
+                                                        'model_name'
+                                                        )
                                         ->searchable(['model_name', 'id'])
                                         ->preload()
                                         ->live()
