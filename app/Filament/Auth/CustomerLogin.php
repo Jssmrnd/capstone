@@ -20,12 +20,12 @@ class CustomerLogin extends BaseAuth
 
     public function getTitle(): string | Htmlable
     {
-        return __('Customer Panel');
+        return __('Welcome Customer!');
     }
 
     public function getHeading(): string | Htmlable
     {
-        return __('Customer Panel');
+        return __('Welcome Customer!');
     }
 
     public function form(Form $form): Form

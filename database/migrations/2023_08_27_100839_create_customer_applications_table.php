@@ -30,7 +30,7 @@ return new class extends Migration
 
             // Unit Information
             $table->foreignIdFor(UnitModel::class)->onDelete('set null');
-            $table->foreignIdFor(Unit::class)->onDelete('set null');
+            $table->foreignId('units_id')->onDelete('set null')->nullable();
             $table->string('unit_term')->nullable();
             $table->decimal('unit_monthly_amort', 10, 2)->nullable();
             $table->decimal('unit_ttl_dp')->nullable();

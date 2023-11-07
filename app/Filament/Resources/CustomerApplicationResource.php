@@ -65,7 +65,7 @@ class CustomerApplicationResource extends Resource
                                         ->disabled(fn (Forms\Get $get): bool => ! $get('unit_model_id'))
                                         ->schema([
                                                 
-                                                Forms\Components\Select::make('unit_id')
+                                                Forms\Components\Select::make('units_id')
                                                         ->relationship(
                                                                 'units', 
                                                                 'engine_number',

@@ -26,7 +26,6 @@ class CreatePayment extends CreateRecord
         $new_due =  Carbon::parse(Carbon::createFromFormat('Y-m-d', $prev_due)
                     ->addDays(30))->toDateString(); //calculates the due to a month forward.
 
-            dd($this_payment);
             //calculate the sum with the payment amount, make a notif when greater then or eq to unit srp
             if(($customer_application->calculateTotalPayments() + $this_payment["payment_amount"]) >= $customer_application->unit_srp
                 && $customer_application->application_status == "active")

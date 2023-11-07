@@ -2,8 +2,11 @@
 
 namespace App\Observers;
 
+use App\Mail\CustomerApplicationMail;
 use App\Models\AuditLog;
 use App\Models\CustomerApplication;
+use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\Facades\Mail;
 
 class CustomerApplicationObserver
 {
@@ -21,6 +24,8 @@ class CustomerApplicationObserver
                 "old_details" => "",
                 "record_id" => $customerApplication->id,
         ]);
+
+        Mail::to('antugaevasco@gmail.com')->send(new CustomerApplicationMail("Application Has been created"));
     }
 
     /**
@@ -51,14 +56,10 @@ class CustomerApplicationObserver
             }
         }
 
-        AuditLog::query()->create([
-            "user_id" => auth()->id(),
-            "operation" => "update",
-            "model" => class_basename($customerApplication),
-            "new_details" => $changes,
-            "old_details" => $changedValuesInOldArray,
-            "record_id" => $customerApplication->id,
-    ]);
+        $to_email = "antugaevasco@gmail.com";
+        $to_name = "Carlo";
+
+        Mail::to('antugaevasco@gmail.com')->send(new CustomerApplicationMail("Application Has been Been reviewed"));
     }
 
     /**
@@ -75,6 +76,27 @@ class CustomerApplicationObserver
             "old_details" => "",
             "record_id" => $customerApplication->id,
     ]);
+
+    // $to_email = "antugaevasco@gmail.com";
+    // $to_name = "Carlo";
+
+    // Mail::send('customer-application-email', ['name' => "Dealership", 'body' => "Test mail" ], function($message) use ($to_name, $to_email) {
+    //     $message->to($to_email, $to_name)->subject("Application deleted.")
+    //     ->subject("Laravel Test Mail")
+    //     ->cc("hello")
+    //     ->bcc("");
+    //     $message->from("antugaevasco@gmail.com", 'Test Mail');
+
+    // });
+        // Mail::to(auth()->user()->email)->send(
+        //     new MailMessage()
+        //         ->greeting('Hello!')
+        //         ->line('One of your invoices has been paid!')
+        //         ->lineIf($this->amount > 0, "Amount paid: {$this->amount}")
+        //         ->action('View Invoice', $url)
+        //         ->line('Thank you for using our application!');
+        // );
+
     }
 
     /**

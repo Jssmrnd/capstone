@@ -31,7 +31,7 @@ class CustomerDues extends BaseWidget
                 Tables\Columns\TextColumn::make("due_date")
                         ->dateTime('M d Y'),
                 Tables\Columns\TextColumn::make("applicant_lastname"),
-                Tables\Columns\TextColumn::make("unit_monthly_amort")
+                Tables\Columns\TextColumn::make("unit_amort_fin")
                         ->label("Monthly Amort.")
                         ->money("php")
                         ->color("success"),

@@ -40,7 +40,7 @@ class TestPanelPanelProvider extends PanelProvider
             ->topNavigation(true)
             ->profile(EditProfile::class)
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Emerald,
             ])
             ->discoverResources(in: app_path('Filament/TestPanel/Resources'), for: 'App\\Filament\\TestPanel\\Resources')
             ->discoverPages(in: app_path('Filament/TestPanel/Pages'), for: 'App\\Filament\\TestPanel\\Pages')

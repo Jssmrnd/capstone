@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string("citymunCode")->nullable();
             $table->string("brgyCode")->nullable();
 
-            $table->date("birthday");
+            $table->date("birthday")->nullable();
             $table->string("password");
             $table->timestamp('email_verified_at')->nullable();
             $table->string("email");

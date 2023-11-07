@@ -12,7 +12,7 @@ class CreateCustomerApplication extends CreateRecord
     protected static string $resource = CustomerApplicationResource::class;
 
     protected function mutateFormDataBeforeCreate(array $data): array
-    { 
+    {
         $data['branch_id'] = auth()->user()->branch_id;
         $data['application_is_new'] = false;
         $data['author_id'] = auth()->user()->id;

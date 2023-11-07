@@ -28,20 +28,20 @@ class CustomerApplicationResource extends Resource
         return $form
         ->schema([
 
-                Forms\Components\Wizard::make([
-                        Forms\Components\Wizard\Step::make('Branch')
-                            ->schema([
-                                // ...
-                            ]),
-                        Forms\Components\Wizard\Step::make('Motorcycle')
-                            ->schema([
-                                // ...
-                            ]),
-                        Forms\Components\Wizard\Step::make('Applicant Information')
-                            ->schema([
-                                // ...
-                            ]),
-                        ]),
+                // Forms\Components\Wizard::make([
+                //         Forms\Components\Wizard\Step::make('Branch')
+                //             ->schema([
+                //                 // ...
+                //             ]),
+                //         Forms\Components\Wizard\Step::make('Motorcycle')
+                //             ->schema([
+                //                 // ...
+                //             ]),
+                //         Forms\Components\Wizard\Step::make('Applicant Information')
+                //             ->schema([
+                //                 // ...
+                //             ]),
+                //         ]),
                 
             Forms\Components\Select::make("branch_id")
                     ->relationship('branches', 'full_address')
@@ -76,20 +76,14 @@ class CustomerApplicationResource extends Resource
                                     ->live()
                                     ->disabled(fn (Forms\Get $get): bool => ! $get('unit_model_id'))
                                     ->schema([
-                                            
-                                            Forms\Components\Select::make('unit_id')
+                                            Forms\Components\Select::make('units_id')
                                                 ->relationship(
                                                         'units', 
                                                         'engine_number',
                                                         modifyQueryUsing: fn (Builder $query, Forms\Get $get) => $query->where("unit_model_id", $get('unit_model_id')))
                                                 ->prefix('#')
                                                 ->columnSpan(1)
-                                                ->label('Engine Number')
-                                                ->hidden(function(string $operation){
-                                                        if($operation == "create"){
-                                                            return true;
-                                                        }
-                                                }),
+                                                ->label('Engine Number'),
 
                                             Forms\Components\TextInput::make('unit_srp')
                                                     ->columnSpan(1)

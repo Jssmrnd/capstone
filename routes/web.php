@@ -5,12 +5,15 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CustomerLogin;
 use App\Http\Controllers\PaymongoController;
 use App\Http\Middleware\CustomerUser;
+use App\Mail\CustomerApplicationMail;
 use App\Models\Unit;
 use App\Models\UnitModel;
 use App\Providers\Filament\AdminPanelProvider;
+use Illuminate\Contracts\Mail\Mailer;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Blade;
 use Z3d0X\FilamentFabricator\Facades\FilamentFabricator;
+use Illuminate\Support\Facades\Mail;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +29,7 @@ use Z3d0X\FilamentFabricator\Facades\FilamentFabricator;
 Route::get('/', function(){
     return redirect('/home');
 });
+
 
 
 Route::get('pay/{customerApplicationId}', [PaymongoController::class, 'pay'])->name('paymongo');

@@ -11,10 +11,21 @@ use Filament\Forms\Form;
 use Filament\Http\Responses\Auth\Contracts\LoginResponse;
 use Filament\Notifications\Notification;
 use Filament\Pages\Auth\Login as BaseAuth;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Validation\ValidationException;
 
 class Login extends BaseAuth
 {
+
+    public function getTitle(): string | Htmlable
+    {
+        return __('Admin');
+    }
+
+    public function getHeading(): string | Htmlable
+    {
+        return __('Admin');
+    }
 
     public function form(Form $form): Form
     {

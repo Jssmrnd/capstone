@@ -9,13 +9,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class CustomerApplication extends Model
+class CustomerApplication extends Model implements HasMedia
 {
     use HasFactory;
+    use InteractsWithMedia;
 
     protected $fillable = [
-
+        'id',
         'application_status',
         'application_is_new',
 
@@ -26,7 +29,7 @@ class CustomerApplication extends Model
 
         //Unit
         'unit_model_id',
-        'unit_id',
+        'units_id',
         'unit_term',
         'unit_monthly_amort',
         'unit_ttl_dp',
@@ -160,7 +163,7 @@ class CustomerApplication extends Model
         $this->is_application_approved = true;
         $this->is_application_rejected = false;
         //gets the associated unit and marks it as owned.
-        $unit = Unit::query()->where('id', $this->unit_id)->first();
+        $unit = Unit::query()->where('id', $this->units_id)->first();
         $unit->customer_application_id = $this->id;
         $unit->save();
         $this->save();

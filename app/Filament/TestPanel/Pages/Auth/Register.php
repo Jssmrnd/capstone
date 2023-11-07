@@ -65,6 +65,8 @@ class Register extends AuthRegister
             Forms\Components\TextInput::make('contact_number')
                     ->numeric()
                     ->required(),
+            Forms\Components\DatePicker::make('birthday')
+            
         ]);
     }
 
