@@ -38,6 +38,10 @@ class Settings extends Page
     protected static string $view = 'filament.pages.settings';
 
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
 
     public function mount(): void 
     {

@@ -18,6 +18,7 @@ use Filament\Infolists\Infolist;
 class AuditLogResource extends Resource
 {
     protected static ?string $model = AuditLog::class;
+    
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -27,6 +28,11 @@ class AuditLogResource extends Resource
             ->schema([
                 //
             ]);
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Utilities';
     }
 
     public static function infolist(Infolist $infolist): Infolist

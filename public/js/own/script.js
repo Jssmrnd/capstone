@@ -50,6 +50,7 @@ eyeIcons.forEach((icon) => {
 
 //For Registration Form
 function toggleRegisterForm() {
+  window.location.href = '/customer/register';
   var content2 = document.getElementById("Content2");
   content2.style.transform = "translateX(0%)"; /* Slide in from the right */
   content2.style.zIndex = 2;

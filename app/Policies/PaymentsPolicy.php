@@ -15,7 +15,7 @@ class PaymentsPolicy
      */
     public function viewAny($user): bool
     {
-        if($user::class == Customer::class || $user->hasAnyPermission("read: payments")){
+        if($user::class == Customer::class || $user->hasAnyPermission("read: payment")){
             return true;
         };
         return false;
@@ -26,7 +26,7 @@ class PaymentsPolicy
      */
     public function view($user, Payment $payments): bool
     {
-        if($user::class == Customer::class || $user->hasAnyPermission("read: payments")){
+        if($user::class == Customer::class || $user->hasAnyPermission("read: payment")){
             return true;
         };
         return false;
@@ -38,7 +38,7 @@ class PaymentsPolicy
     public function create($user): bool
     {
         
-        if($user::class == Customer::class || $user->hasAnyPermission("read: payments")){
+        if($user::class == Customer::class || $user->hasAnyPermission("read: payment")){
             return true;
         };
         return false;
@@ -49,7 +49,7 @@ class PaymentsPolicy
      */
     public function update($user, Payment $payments): bool
     {
-        if($user::class == Customer::class || $user->hasAnyPermission("read: payments")){
+        if($user::class == Customer::class || $user->hasAnyPermission("read: payment")){
             return true;
         };
         return false;
@@ -60,7 +60,7 @@ class PaymentsPolicy
      */
     public function delete($user, Payment $payments): bool
     {
-        if($user::class == Customer::class || $user->hasAnyPermission("read: payments")){
+        if($user::class == Customer::class || $user->hasAnyPermission("read: payment")){
             return true;
         };
         return false;

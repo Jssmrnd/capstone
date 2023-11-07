@@ -12,11 +12,11 @@
         <h2>{{ $heading_title }}</h2>
         <div class="buttons">
           {{-- goes to the products section --}}
-          <button class="explore-button" onclick="toggleProductSection()">
+          <button class="explore-button" onclick="window.location.href = '/products';">
             Explore
           </button>
           {{-- goes to the registration form --}}
-          <button class="register-button" onclick="toggleRegisterForm()">
+          <button class="register-button" onclick="window.location.href = '/customer';">
             Register
           </button>
         </div>

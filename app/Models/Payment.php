@@ -25,7 +25,6 @@ class Payment extends Model
         dd($this->customerApplication());
     }
 
-    
 
     public static function calculateMonthlyPayments():array{
         $monthlyPayments = DB::table('payments')
@@ -51,4 +50,5 @@ class Payment extends Model
     public function customerApplication():BelongsTo{
         return $this->belongsTo(CustomerApplication::class);
     }
+    
 }

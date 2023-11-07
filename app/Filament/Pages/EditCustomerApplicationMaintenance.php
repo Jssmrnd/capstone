@@ -11,8 +11,9 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Pages\Page;
 use Filament\Support\Exceptions\Halt;
+use Filament\Actions\Action;
 
-class EditCustomerApplicationMaintenance extends Page implements HasForms
+class EditCustomerApplicationMaintenance extends Page
 {
     use InteractsWithForms;
 
@@ -31,7 +32,7 @@ class EditCustomerApplicationMaintenance extends Page implements HasForms
     protected function getFormActions(): array
     {
         return [
-            Forms\Components\Actions\Action::make('save')
+            Action::make('save')
                 ->label(__('filament-panels::resources/pages/edit-record.form.actions.save.label'))
                 ->submit('save'),
         ];
@@ -43,11 +44,6 @@ class EditCustomerApplicationMaintenance extends Page implements HasForms
             ->schema([
             Forms\Components\TextInput::make("rebate_value"),
             
-            Forms\Components\Actions\Action::make('Make Online Payment')
-            ->label("Payment")
-            ->action(function(){
-                return redirect()->route("paymongo", ["customerApplicationId" => 1]);
-            }),
         ])
         ->statePath('data');
     }
@@ -60,6 +56,11 @@ class EditCustomerApplicationMaintenance extends Page implements HasForms
         } catch (Halt $exception) {
             return;
         }
+    }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
     }
 
 }

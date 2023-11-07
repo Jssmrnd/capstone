@@ -14,6 +14,7 @@ use Filament\Panel;
 use App;
 use App\Filament\Auth;
 use App\Filament\Auth\Login;
+use App\Filament\Pages\CustomBackupPage;
 use App\Filament\Resources\UserResource;
 use App\Models\User;
 use Filament\Facades\Filament;
@@ -32,6 +33,7 @@ use Illuminate\Contracts\Support\Htmlable;
 
 
 use App\Filament\Widgets as MyWidgets;
+use ShuvroRoy\FilamentSpatieLaravelBackup\FilamentSpatieLaravelBackupPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -84,6 +86,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
                 FilamentFabricatorPlugin::make(),
+                FilamentSpatieLaravelBackupPlugin::make()->usingPage(CustomBackupPage::class)
             ]);
     }
 }
