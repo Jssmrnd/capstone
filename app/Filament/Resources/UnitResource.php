@@ -28,10 +28,7 @@ class UnitResource extends Resource
                 Forms\Components\Select::make('unit_model_id')
                         ->relationship('unitModel', 'model_name')
                         ->required(),
-                Forms\Components\TextInput::make('engine_number')
-                        ->numeric()
-                        ->required(),
-                Forms\Components\TextInput::make('frame_number')
+                Forms\Components\TextInput::make('chasis_number')
                         ->numeric()
                         ->required(),
                 Forms\Components\Textarea::make('notes'),

@@ -15,8 +15,10 @@ class CreatePayment extends CreateRecord
 {
     protected static string $resource = PaymentResource::class;
 
+
     protected function beforeCreate(): void
     {
+        $this->getCreateFormAction()->requiresConfirmation(true);
         //gets the customer application object.
         $customer_application = CustomerApplication::query()
                                                         ->where('id', $this->data['customer_application_id'])

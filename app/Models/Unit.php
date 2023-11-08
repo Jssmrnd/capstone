@@ -12,16 +12,11 @@ class Unit extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = [
-        
-        //Foreign keys
-        'is_owned',
+    protected $fillable = 
+    [
         'branch_id',
         'unit_model_id',
-
-        'engine_number',
-        'frame_number',
-
+        'chasis_number',
         'status',
         'notes',
     ];

@@ -22,13 +22,13 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         //\App\Models\CustomerApplication::factory(10)->create();
-        $this->call(RolesAndPermissionsSeeder::class);
+        // $this->call(RolesAndPermissionsSeeder::class);
         $this->createAdmin();
-        $this->call(RegionSeeder::class);
-        $this->call(ProvinceSeeder::class);
-        $this->call(MunicipalitySeeder::class);
-        $this->call(BarangaySeeder::class);
-        $this->call(BranchSeeder::class);
+        // $this->call(RegionSeeder::class);
+        // $this->call(ProvinceSeeder::class);
+        // $this->call(MunicipalitySeeder::class);
+        // $this->call(BarangaySeeder::class);
+        // $this->call(BranchSeeder::class);
     }
 
     private function createAdmin():void{

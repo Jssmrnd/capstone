@@ -45,9 +45,9 @@ class PaymongoController extends Controller
                     ->withData($data)
                     ->asJson()
                     ->post();
+                    
 
         // dd(env('AUTH_PAY'));
-        // dd($response);
     
         \Session::put('session_id',$response->data->id);
 
@@ -57,6 +57,8 @@ class PaymongoController extends Controller
     public function success(int $customerApplicationId){
         $customer_application = CustomerApplication::where("id", $customerApplicationId)->first();
         $sessionId = \Session::get('session_id');
+
+        dd("Succes Url");
 
         $response = Curl::to('https://api.paymongo.com/v1/checkout_sessions/'.$sessionId)
                 ->withHeader('accept: application/json')

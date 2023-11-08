@@ -61,14 +61,14 @@ class CustomerApplicationResource extends Resource
                                         Forms\Components\Select::make('units_id')
                                                 ->relationship(
                                                         'units', 
-                                                        'engine_number',
+                                                        'chasis_number',
                                                         modifyQueryUsing: fn (Builder $query, Forms\Get $get) => 
                                                                                 $query->where("unit_model_id", $get('unit_model_id'))
                                                                                         ->where('customer_application_id', null)
                                                                                 )
                                                 ->prefix('#')
                                                 ->columnSpan(1)
-                                                ->label('Engine Number'),
+                                                ->label('Chasis Number'),
                                                 // ->getOptionLabelsUsing(fn (array $values): array => Models\Unit::whereIn('model', $values)->pluck('name', 'id')->toArray()),
 
                                         Forms\Components\TextInput::make('unit_srp')
@@ -212,34 +212,6 @@ class CustomerApplicationResource extends Resource
                             ->label('Valid ID:')
                             ->required(true)
                             ->columnSpan(3),
-                        ])
-                        ->columnSpan(3)
-                        ->columns(6),
-
-                        Forms\Components\Fieldset::make("Educational Attainment")
-                        ->schema([
-                                // Forms\Components\Repeater::make("educational_attainment")
-                                //         ->schema([
-                                //                 Forms\Components\TextInput::make("course")
-                                //                         ->columnSpan(2),
-                                //                 Forms\Components\TextInput::make("no_years")
-                                //                         ->numeric()
-                                //                         ->suffix("year(s)"),
-                                //                 Forms\Components\TextInput::make("school"),
-                                //                 Forms\Components\DatePicker::make("year_grad"),
-                                //         ]),
-                                // Forms\Components\Repeater::make("dependents")
-                                //         ->schema([
-                                //             Forms\Components\TextInput::make("dependent_name")
-                                //                     ->label("Name"),
-                                //             Forms\Components\DatePicker::make("dependent_birthdate")
-                                //                     ->label("Birthdate"),
-                                //             Forms\Components\TextInput::make("dependent_school")
-                                //                     ->label("School"),
-                                //             Forms\Components\TextInput::make("dependent_monthly_tuition")
-                                //                     ->numeric()
-                                //                     ->label("Tuition"),
-                                //         ]),
                         ])
                         ->columnSpan(3)
                         ->columns(6),
@@ -497,7 +469,6 @@ class CustomerApplicationResource extends Resource
         ]);
     }
 
-
     public static function getIncome(): Forms\Components\Component
     {
         return new Forms\Components\Group([
@@ -717,6 +688,11 @@ class CustomerApplicationResource extends Resource
                                 Forms\Components\Wizard\Step::make('Unit')
                                         ->schema([
                                                 CustomerApplicationResource::getUnitToBeFinanced()
+                                                        ->disabled(
+                                                                function(string $operation){
+                                                                    if($operation == "edit"){
+                                                                        return true;
+                                                        }}),
                                         ]),
                                 Forms\Components\Wizard\Step::make('Applicant Information')
                                         ->schema([
@@ -819,19 +795,22 @@ class CustomerApplicationResource extends Resource
                                 ->columns(4)
                                 ->columnSpan(2)
                                 ->schema([
-                                    InfoLists\Components\TextEntry::make('unitModel.model_name')
-                                            ->label('Unit Model'),
-                                    InfoLists\Components\TextEntry::make('unit_term')
-                                            ->label('Unit Term'),
-                                    InfoLists\Components\TextEntry::make('unit_ttl_dp')
-                                            ->label('Down Payment')
-                                            ->money('php'),   
-                                    InfoLists\Components\TextEntry::make('unit_amort_fin')
-                                            ->label('Monthly Amortization')
-                                            ->money('php'),                     
-                                    InfoLists\Components\TextEntry::make('unit_srp')
-                                            ->label('Unit Price')
-                                            ->money('php'),   
+                                        InfoLists\Components\TextEntry::make('unitModel.model_name')
+                                                ->label('Unit Model'),
+                                        InfoLists\Components\TextEntry::make('units.chasis_number')
+                                                ->label('Chasis number')
+                                                ->badge(),   
+                                        InfoLists\Components\TextEntry::make('unit_term')
+                                                ->label('Unit Term'),
+                                        InfoLists\Components\TextEntry::make('unit_ttl_dp')
+                                                ->label('Down Payment')
+                                                ->money('php'),   
+                                        InfoLists\Components\TextEntry::make('unit_amort_fin')
+                                                ->label('Monthly Amortization')
+                                                ->money('php'),                     
+                                        InfoLists\Components\TextEntry::make('unit_srp')
+                                                ->label('Unit Price')
+                                                ->money('php'),
                         ]),
 
                     InfoLists\Components\FieldSet::make('Applicant Information')
@@ -881,9 +860,11 @@ class CustomerApplicationResource extends Resource
                         ->label("Status:")
                         ->badge(),
                 Tables\Columns\TextColumn::make('applicant_surname')
-                        ->label("First Name:"),
+                        ->label("First Name:")
+                        ->searchable(),
                 Tables\Columns\TextColumn::make('applicant_lastname')
-                        ->label("Last Name:"),
+                        ->label("Last Name:")
+                        ->searchable(),
                 Tables\Columns\TextColumn::make('unitModel.model_name')
                         ->label("Unit Model:"),
                 Tables\Columns\TextColumn::make('unit_srp')->label("Price:")
@@ -915,7 +896,7 @@ class CustomerApplicationResource extends Resource
                 Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [

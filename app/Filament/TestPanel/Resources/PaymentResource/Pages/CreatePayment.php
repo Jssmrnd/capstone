@@ -12,17 +12,13 @@ use Filament\Notifications;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Forms\Components;
 use App\Filament\TestPanel\Pages\CreateCustomerPayment;
+use Filament\Actions\Action;
 
 class CreatePayment extends CreateRecord
 {
     // protected static string $view = 'create-customer-payment';
 
     protected static string $resource = PaymentResource::class;
-
-    protected function getHeaderActions(): array
-    {
-        return [];
-    }
 
     function paymongo($customer_application){
         return redirect()->route('paymongo', $customer_application->id);

@@ -1,67 +1,35 @@
 <?php
 
-namespace App\Filament\TestPanel\Resources\PaymentResource\Pages;
+namespace App\Filament\Resources\PaymentResource\Pages;
 
-use App\Filament\TestPanel\Resources\PaymentResource;
-use App\Models\Payment;
-use Filament\Actions\Action;
-use Filament\Pages\Concerns\InteractsWithFormActions;
-use Filament\Resources\Pages\Page;
-use Filament\Forms;
-use Carbon\Carbon;
-use Filament\Notifications;
+use App\Filament\Resources\PaymentResource;
 use App\Models\CustomerApplication;
 use App\Models\CustomerApplicationMaintenance;
-use Filament\Facades\Filament;
+use App\Models\Payment;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Resources\Pages\Page;
+use Carbon\Carbon;
+use Filament\Actions\Action;
+use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Pages\Concerns\InteractsWithFormActions;
 use Illuminate\Database\Eloquent\Builder;
 
-class CreatePaymongoCheckout extends Page
+class CustomAdminPayment extends Page implements HasForms 
 {
     use InteractsWithFormActions;
     protected static string $resource = PaymentResource::class;
 
-    protected static string $view = 'filament.test-panel.resources.payment-resource.pages.create-paymongo-checkout';
+    protected static string $view = 'filament.resources.payment-resource.pages.custom-admin-payment';
+
     public ?array $data = [];
 
     public function mount(): void 
     {
         $this->form->fill(CustomerApplicationMaintenance::all()->toArray());
     }
-
-    protected function beforeCreate(): void
-    {
-        //gets the customer application object.
-        $customer_application = CustomerApplication::query()
-                                                        ->where('id', $this->data['customer_application_id'])
-                                                        ->first();
-        $this_payment = $this->data; //a dictionary
-        $prev_due = $customer_application->due_date;
-        $new_due =  Carbon::parse(Carbon::createFromFormat('Y-m-d', $prev_due)
-                    ->addDays(30))->toDateString(); //calculates the due to a month forward.
-
-            //calculate the sum with the payment amount, make a notif when greater then or eq to unit srp
-            if(($customer_application->calculateTotalPayments() + $this_payment["payment_amount"]) >= $customer_application->unit_srp
-                && $customer_application->application_status == "active")
-            {
-                Notifications\Notification::make()
-                        ->title("This account is complete!")
-                        ->body("This Account is now closed.")
-                        ->warning()
-                        ->persistent()
-                        ->send();
-                $customer_application->application_status = 'closed';
-                $customer_application->due_date = null;
-                $customer_application->save();
-            }
-
-            if($customer_application->application_status == "active")
-            {
-                $this->paymongo($customer_application);
-            }
-
-    }
- 
+    
     public function form(Form $form): Form
     {
         return $form
@@ -148,20 +116,27 @@ class CreatePaymongoCheckout extends Page
 
     public function getFormActions():array{
         return [
-            $this->createAction()->requiresConfirmation(),
+            $this->createAction(),
         ];
     }
 
     public function save(){
         $data = $this->form->getState();
-        return redirect()->route("paymongo", ["customerApplicationId" => $data['customer_application_id']]);
+
+        Payment::query()->create([
+            'customer_application_id' => $data["customer_application_id"],
+            'payment_status' => $data["payment_status"],
+            'payment_type' => $data["payment_type"],
+            'payment_amount' => $data["payment_amount"],
+        ]);
     }
 
     public function createAction(): Action
     {
         return Action::make('save')
-            ->label('Checkout')
+            ->requiresConfirmation()
+            ->label('Make Payment')
             ->submit('save');
     }
-}
 
+}

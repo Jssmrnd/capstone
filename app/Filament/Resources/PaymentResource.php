@@ -20,6 +20,7 @@ use Filament\Notifications;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Filament\Pages\TestPage;
+use App\Filament\Resources\CustomerApplicationResource\Pages\ViewCustomerApplication;
 
 class PaymentResource extends Resource
 {
@@ -102,6 +103,7 @@ class PaymentResource extends Resource
                         ])
                         ->columnSpan(1)
                         ->required(true),
+
             ]);
     }
 
@@ -109,24 +111,27 @@ class PaymentResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                        ->label('ID'),
+                    Tables\Columns\TextColumn::make('id')
+                            ->label('ID')
+                            ->searchable(),
+                    Tables\Columns\TextColumn::make('customerApplication.applicant_lastname')
+                            ->label('First Name')
+                            ->searchable(),
+                    Tables\Columns\TextColumn::make('payment_amount')
+                            ->label('Payment Amount')
+                            ->money('php'),
 
-                Tables\Columns\TextColumn::make('customerApplication.applicant_lastname')
-                        ->label('First Name'),
-
-                Tables\Columns\TextColumn::make('payment_amount')
-                        ->label('Payment Amount')
-                        ->money('php'),
-
-                Tables\Columns\TextColumn::make('created_at')
-                        ->label('Date Paid')
-                        ->dateTime('d-M-Y'),
+                    Tables\Columns\TextColumn::make('created_at')
+                            ->label('Date Paid')
+                            ->dateTime('d-M-Y'),
             ])
-            ->paginated(false)
+            ->defaultSort('created_at', 'desc')
+
+            ->defaultPaginationPageOption(5)
             ->filters([
                 Tables\Filters\Filter::make('created_at')
             ])
+            
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\Action::make('pdf') 
@@ -146,7 +151,7 @@ class PaymentResource extends Resource
                 // ]),
             ])
             ->emptyStateActions([
-                // Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()->requiresConfirmation(),
             ]);
     }
     
@@ -161,8 +166,9 @@ class PaymentResource extends Resource
     {
         return [
             'index' => Pages\ListPayments::route('/'),
-            'create' => Pages\CreatePayment::route('/create'),
+            // 'create' => Pages\CreatePayment::route('/create'),
             'edit' => Pages\EditPayment::route('/{record}/edit'),
+            'view-customer-application' => ViewCustomerApplication::route('/{record}'),
         ];
     }
 }

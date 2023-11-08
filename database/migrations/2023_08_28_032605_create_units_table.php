@@ -19,12 +19,11 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Branch::class)->nullable();
             $table->foreignIdFor(UnitModel::class);
-            $table->string('engine_number')
-                    ->unique();
-            $table->string('frame_number')
+            $table->string('chasis_number')
                     ->unique();
             $table->foreignIdFor(CustomerApplication::class)
-                    ->default(null)->nullable();
+                    ->default(null)
+                    ->nullable();
             $table->enum('status',['depo', 'repo', 'brand-new']);
             $table->string('notes')
                     ->nullable();

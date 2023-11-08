@@ -176,14 +176,15 @@ class CustomerApplication extends Model implements HasMedia
         $this->is_application_rejected = true;
         $this->due_date = null; // sets the due date to null.
         //gets the associated unit and marks it as owned.
-        $unit = Unit::query()->where('id', $this->unit_id)->first();
+        $unit = Unit::query()->where('id', $this->units_id)->first();
         $unit->customer_application_id = null;
+        $this->units_id = null;
         $unit->save();
         $this->save();
     }
     
     public function branches():BelongsTo{
-        return $this->belongsTo(Branch::class);
+        return $this->belongsTo(Branch::class, 'branch_id');
     }
 
     public function calculateTotalPayments(): float
