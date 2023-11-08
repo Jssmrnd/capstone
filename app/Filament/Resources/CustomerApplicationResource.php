@@ -761,8 +761,7 @@ class CustomerApplicationResource extends Resource
                                                     Forms\Components\TextArea::make('spouse_business_address')->label('Address:')->columnSpan(1),
                                                     Forms\Components\TextInput::make('spouse_nature_of_business')->label('Nature of Business:'),
                                             ]),
-							]),
-                    
+                ]),
         ]);
     }
 
@@ -847,6 +846,11 @@ class CustomerApplicationResource extends Resource
                                     ->money('php'),
                     ])->columns(3)->columnSpan(4),
 
+                ]),
+
+                Infolists\Components\Actions::make([
+                        Infolists\Components\Actions\Action::make("export_pdf")
+                                ->label('Export PDF'),
                 ]),
 
             ])->columns(4);

@@ -22,7 +22,6 @@ protected function getHeaderActions(): array
         //Motorcycle Assignment
 
         return [
-            
             //Approve Application
             Actions\Action::make("Approve")
                     ->color('success')

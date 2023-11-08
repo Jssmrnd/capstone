@@ -111,6 +111,10 @@ class UnitReleaseResource extends Resource
                                 ['Office','Field','Bank',]
                         )
                         ->columnSpan(1),
+                Forms\Components\DatePicker::make('due_date')
+                        ->format('Y-m-d') 
+                        ->label('Set Due Date')
+                        ->required(),
         ]);
     }
 
