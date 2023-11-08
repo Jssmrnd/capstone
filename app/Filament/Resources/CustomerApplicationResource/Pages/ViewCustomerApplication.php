@@ -27,27 +27,27 @@ protected function getHeaderActions(): array
             Actions\Action::make("Approve")
                     ->color('success')
                     ->requiresConfirmation()
-                    ->form([
-                            Forms\Components\DatePicker::make('due_date')
-                                    ->format('Y-m-d') 
-                                    ->label('Set Due Date')
-                                    ->required(),
-                            Forms\Components\Select::make('units_id')
-                                    ->relationship(
-                                            'units', 
-                                            'chasis_number',
-                                            modifyQueryUsing: fn (Builder $query) => 
-                                                                    $query->where("unit_model_id", $this->record->unit_model_id)
-                                                                            ->where('customer_application_id', null)
-                                                                    )
-                                    ->prefix('#')
-                                    ->columnSpan(1)
-                                    ->label('Chasis Number')
-                                    ->required(),
-                    ])
+                    // ->form([
+                    //         // Forms\Components\DatePicker::make('due_date')
+                    //         //         ->format('Y-m-d') 
+                    //         //         ->label('Set Due Date')
+                    //         //         ->required(),
+                    //         // Forms\Components\Select::make('units_id')
+                    //         //         ->relationship(
+                    //         //                 'units', 
+                    //         //                 'chasis_number',
+                    //         //                 modifyQueryUsing: fn (Builder $query) => 
+                    //         //                                         $query->where("unit_model_id", $this->record->unit_model_id)
+                    //         //                                                 ->where('customer_application_id', null)
+                    //         //                                         )
+                    //         //         ->prefix('#')
+                    //         //         ->columnSpan(1)
+                    //         //         ->label('Chasis Number')
+                    //         //         ->required(),
+                    // ])
                     ->action(function(array $data){
                         $this->record->approveThisApplication();
-                        $this->getRecord()->due_date = $data['due_date'];   //sets the due date.
+                        // $this->getRecord()->due_date = $data['due_date'];   //sets the due date.
                         $this->getRecord()->save(); // sales the record
                         $this->refreshFormData([
                             'application_status',

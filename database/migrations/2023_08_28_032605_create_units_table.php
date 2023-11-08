@@ -22,7 +22,6 @@ return new class extends Migration
             $table->string('chasis_number')
                     ->unique();
             $table->foreignIdFor(CustomerApplication::class)
-                    ->default(null)
                     ->nullable();
             $table->enum('status',['depo', 'repo', 'brand-new']);
             $table->string('notes')

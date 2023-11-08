@@ -17,7 +17,8 @@ class CustomerApplication extends Model implements HasMedia
     use HasFactory;
     use InteractsWithMedia;
 
-    protected $fillable = [
+    protected $fillable = 
+    [
         'id',
         'application_status',
         'application_is_new',
@@ -157,23 +158,26 @@ class CustomerApplication extends Model implements HasMedia
         static::addGlobalScope(new CustomerApplicationScope);
     }
 
-    public function approveThisApplication(){
+    public function approveThisApplication()
+    {
         // changes the applications status
         $this->application_status = "active";
         $this->is_application_approved = true;
         $this->is_application_rejected = false;
-        //gets the associated unit and marks it as owned.
-        $unit = Unit::query()->where('id', $this->units_id)->first();
-        $unit->customer_application_id = $this->id;
-        $unit->save();
+        // gets the associated unit and marks it as owned.
+        // $unit = Unit::query()->where('id', $this->units_id)->first();
+        // $unit->customer_application_id = $this->id;
+        // $unit->save();
         $this->save();
     }
 
-    public function rejectThisApplication(): void{
+    public function rejectThisApplication(): void
+    {
         // changes the applications status
         $this->application_status = "reject";
         $this->is_application_approved = false;
         $this->is_application_rejected = true;
+        $this->unit_term = null;
         $this->due_date = null; // sets the due date to null.
         //gets the associated unit and marks it as owned.
         $unit = Unit::query()->where('id', $this->units_id)->first();
@@ -181,6 +185,14 @@ class CustomerApplication extends Model implements HasMedia
         $this->units_id = null;
         $unit->save();
         $this->save();
+    }
+
+    public function release()
+    {
+        //gets the associated unit and marks it as owned.
+        $unit = Unit::query()->where('id', $this->units_id)->first();
+        $unit->customer_application_id = $this->id;
+        $unit->save();
     }
     
     public function branches():BelongsTo{
@@ -201,7 +213,7 @@ class CustomerApplication extends Model implements HasMedia
     }
 
     public function units():BelongsTo{
-        return $this->belongsTo(Unit::class);
+        return $this->belongsTo(Unit::class, 'units_id');
     }
 
 }
