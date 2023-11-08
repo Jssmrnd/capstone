@@ -18,6 +18,7 @@ class CreatePayment extends CreateRecord
 
     protected function beforeCreate(): void
     {
+        dd("Here");
         $this->getCreateFormAction()->requiresConfirmation(true);
         //gets the customer application object.
         $customer_application = CustomerApplication::query()
