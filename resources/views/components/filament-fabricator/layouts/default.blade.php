@@ -1,5 +1,4 @@
 @props(['page'])
-
 {{-- <x-filament-fabricator::layouts.base :title="$page->title">
 
     <x-filament-fabricator::page-blocks :blocks="$page->blocks" />
@@ -29,14 +28,13 @@
     {{-- @vite('resources/css/app.css') --}}
 </head>
 <body>
-
-<x-filament-fabricator::layouts.base :title="$page->title">
+    <x-filament-fabricator::layouts.base :title="$page->title">
     {{-- Header Here --}}
-
-<x-filament-fabricator::page-blocks :blocks="$page->blocks" />
-
+ 
+    <x-filament-fabricator::page-blocks :blocks="$page->blocks" />
+ 
      {{-- Footer Here --}}
-</x-filament-fabricator::layouts.base>
-    
+    </x-filament-fabricator::layouts.base>
+    @filamentScripts
 </body>
 </html>
