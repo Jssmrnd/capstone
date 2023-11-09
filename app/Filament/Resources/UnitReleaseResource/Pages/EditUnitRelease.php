@@ -29,7 +29,7 @@ class EditUnitRelease extends EditRecord
     protected function getSaveFormAction(): Action
     {
         return Action::make('save')
-            ->label("Hollaa")
+            ->label("Release")
             ->submit('save')
             ->keyBindings(['mod+s']);
     }
