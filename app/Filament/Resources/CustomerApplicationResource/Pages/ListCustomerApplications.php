@@ -22,7 +22,7 @@ class ListCustomerApplications extends ListRecords
         return [
             null => ListRecords\Tab::make('Recents'),
             'pending' => ListRecords\Tab::make()->query(fn ($query) => $query->where('application_status', 'pending')),
-            'approved' => ListRecords\Tab::make()->query(fn ($query) => $query->where('application_status', 'approved')),
+            'approved' => ListRecords\Tab::make()->query(fn ($query) => $query->where('application_status', 'active')),
             'rejected' => ListRecords\Tab::make()->query(fn ($query) => $query->where('application_status', 'reject')),
         ];
     }
