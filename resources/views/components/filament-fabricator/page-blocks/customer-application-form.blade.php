@@ -1,5 +1,4 @@
 @aware(['page'])
-
 <html>
     <head>
         <link rel="stylesheet" href="{{ asset('css/own/application.css') }}" />
