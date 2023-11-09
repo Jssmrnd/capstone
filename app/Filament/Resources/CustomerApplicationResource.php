@@ -20,6 +20,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Support\Enums\Alignment;
 
+use Filament\Infolists\Components\SpatieMediaLibraryImageEntry;
+
 class CustomerApplicationResource extends Resource
 {
     protected static ?string $model = CustomerApplication::class;
@@ -775,7 +777,6 @@ class CustomerApplicationResource extends Resource
         return $infolist
             ->schema([
                 InfoLists\Components\Section::make('Customer Application')->schema([
-
                         InfoLists\Components\FieldSet::make('Applicant Information')
                                 ->schema([
                                         InfoLists\Components\TextEntry::make('application_status')
@@ -801,6 +802,11 @@ class CustomerApplicationResource extends Resource
                                 ->columns(4)
                                 ->columnSpan(2)
                                 ->schema([
+
+                                        InfoLists\Components\ImageEntry::make('unitModel.image_file')
+                                                ->height(100)
+                                                ->width(100),
+
                                         InfoLists\Components\TextEntry::make('unitModel.model_name')
                                                 ->label('Unit Model')
                                                 ->hidden(fn(?Model $record): bool => $record->unit_model_id == null),

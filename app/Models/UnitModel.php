@@ -27,8 +27,6 @@ class UnitModel extends Model implements HasMedia
         "colors" => "json",
     ];
 
-    
-    
 
     public function unit():HasMany
     {

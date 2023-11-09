@@ -27,10 +27,10 @@ class UnitModelResource extends Resource
     public static function getUnitDetailsComponent(): Forms\Components\Component
     {
         return Forms\Components\Group::make([
-            Forms\Components\SpatieMediaLibraryFileUpload::make('media')
-                    ->label("Image")
-                    ->collection('product-images')
-                    ->columnSpan(2),
+                Forms\Components\FileUpload::make('image_file')
+                    ->directory('unit_model_images')
+                    ->acceptedFileTypes(['image/png','image/jpg'])
+                    ->disk('public'),
                 Forms\Components\TextInput::make('model_name')
                     ->maxLength(255)
                     ->required()
