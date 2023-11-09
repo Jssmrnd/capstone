@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UnitResource\Pages;
+use App\Models\Branch;
 use App\Models\Unit;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -21,25 +22,51 @@ class UnitResource extends Resource
     
     protected static ?string $navigationIcon = 'heroicon-o-building-storefront';
 
+    public static function getUnitStockDetailsComponent(): Forms\Components\Component
+    {
+        return Forms\Components\Group::make([
+            Forms\Components\Select::make('unit_model_id')
+                    ->relationship('unitModel', 'model_name')
+                    ->columnSpan(1)
+                    ->required(),
+            Forms\Components\Select::make('status')
+                    ->columnSpan(1)
+                    ->options([
+                            'brand-new' => 'New',
+                            'depo' => 'Depo',
+                            'repo' => 'Repo',
+                    ])
+                    ->required(),
+            Forms\Components\TextInput::make('chasis_number')
+                    ->numeric()
+                    ->columnSpan(1)
+                    ->required(),
+            Forms\Components\TextInput::make('engine_number')
+                    ->columnSpan(1)
+                    ->numeric()
+                    ->required(),
+            Forms\Components\Textarea::make('notes')
+                    ->columnSpan(2),      
+        ])
+        ->columns(2);
+    }
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('unit_model_id')
-                        ->relationship('unitModel', 'model_name')
-                        ->required(),
-                Forms\Components\TextInput::make('chasis_number')
-                        ->numeric()
-                        ->required(),
-                Forms\Components\Textarea::make('notes'),
-                Forms\Components\Select::make('status')
-                        ->options([
-                            'brand-new' => 'New',
-                            'depo' => 'Depo',
-                            'repo' => 'Repo',
+                UnitResource::getUnitStockDetailsComponent()->columnSpan(2),
+                Forms\Components\Fieldset::make('Branch Details')
+                        ->schema([
+                            Forms\Components\Placeholder::make('branch')
+                            ->columnSpan(2)
+                            ->label('Current Branch')
+                            ->content(fn ():string => Branch::query()
+                                                        ->where('id', auth()->user()->branch_id)->first()->full_address)
                         ])
-                        ->required(),
-            ]);
+                        ->columnSpan(1),
+            ])
+            ->columns(3);
     }
 
     public static function table(Table $table): Table
@@ -54,11 +81,6 @@ class UnitResource extends Resource
                 TextColumn::make('created_at'),
             ])
             ->filters([
-                // Tables\Filters\Filter::make('branch_filter')
-                //     ->default()
-                //     ->query(function (Builder $query, array $data): Builder {
-                //         return $query->where('branch_id', auth()->user()->branch_id);
-                //     })
             ])
             ->actions([
                 Tables\Actions\EditAction::make()

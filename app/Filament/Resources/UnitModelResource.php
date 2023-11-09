@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UnitModelResource\Pages;
 use App\Filament\Resources\UnitModelResource\RelationManagers;
+use App\Models\Branch;
 use App\Models\Unit;
 use App\Models\UnitModel;
 use Filament\Forms;
@@ -23,20 +24,47 @@ class UnitModelResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    public static function getUnitDetailsComponent(): Forms\Components\Component
+    {
+        return Forms\Components\Group::make([
+            Forms\Components\SpatieMediaLibraryFileUpload::make('media')
+                    ->label("Image")
+                    ->collection('product-images')
+                    ->columnSpan(2),
+                Forms\Components\TextInput::make('model_name')
+                    ->maxLength(255)
+                    ->required()
+                    ->columnSpan(2),
+                Forms\Components\TextInput::make('price')
+                    ->maxLength(255)
+                    ->required()
+                    ->columnSpan(1),
+                Forms\Components\TextInput::make('body_type')
+                    ->maxLength(255)
+                    ->required()
+                    ->columnSpan(1),
+                Forms\Components\MarkdownEditor::make('description')
+                    ->maxLength(255)
+                    ->columnSpan(2)
+                    ->required()
+                    ->toolbarButtons([
+                    ]),
+        ]);
+    }
+
+
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('model_name')
-                    ->maxLength(255),
-                Forms\Components\SpatieMediaLibraryFileUpload::make('media')
-                    ->collection('product-images')
-                    ->required(),
-                Forms\Components\TextInput::make('price')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('body_type')
-                    ->maxLength(255),
-            ]);
+                UnitModelResource::getUnitDetailsComponent()->columnSpan(2),
+                Forms\Components\Placeholder::make('branch')
+                ->label('Current Branch')
+                ->content(fn ():string => Branch::query()
+                                            ->where('id', auth()->user()->branch_id)->first()->full_address)
+            ])
+            ->columns(3);
     }
 
     public static function table(Table $table): Table

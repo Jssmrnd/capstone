@@ -21,6 +21,8 @@ return new class extends Migration
             $table->foreignIdFor(UnitModel::class);
             $table->string('chasis_number')
                     ->unique();
+            $table->string('engine_number')
+                    ->unique();
             $table->foreignIdFor(CustomerApplication::class)
                     ->nullable();
             $table->enum('status',['depo', 'repo', 'brand-new']);

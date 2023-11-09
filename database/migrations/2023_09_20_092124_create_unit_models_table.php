@@ -15,13 +15,15 @@ return new class extends Migration
             $table->id();
             $table->string("model_name")->nullable();
             $table->string("image_file")->nullable();
+            $table->string("brand")->nullable();
             $table->json("colors")->nullable();
             $table->string("price")->nullable();
             $table->string("body_type")->nullable();
-
+            $table->string("description")->nullable();
             $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.

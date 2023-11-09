@@ -16,6 +16,7 @@ class Unit extends Model
     [
         'branch_id',
         'unit_model_id',
+        'engine_number',
         'chasis_number',
         'status',
         'notes',

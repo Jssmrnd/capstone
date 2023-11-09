@@ -16,15 +16,11 @@ class UnitModel extends Model implements HasMedia
     protected $fillable = [
         'model_name',
         'image_file',
+        'brand',
         'colors',
         'price',
         'body_type',
-
-        'dry_weight',
-        'length_mm',
-        'width_mm',
-        'height_mm',
-        'wheelbase_mm',
+        'description',
     ];
 
     protected $casts = [
