@@ -26,6 +26,11 @@ class CustomerApplicationResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    public static function canDelete(Model $record): bool
+    {
+        return true;
+    }
+
     public static function getUnitToBeFinanced(): Forms\Components\Component
     {
                 return Forms\Components\Group::make([

@@ -13,6 +13,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class UnitReleaseResource extends Resource
@@ -30,6 +31,11 @@ class UnitReleaseResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function canCreate(): bool
+    {
+        return false;
+    }
+
+    public static function canDelete(Model $record): bool
     {
         return false;
     }
@@ -69,6 +75,9 @@ class UnitReleaseResource extends Resource
                                         {
                                             if($get('units_id') != ""){
                                                 $set('unit_status', Models\Unit::find($get('units_id'))->status);
+                                            }
+                                            else if($get('units_id') == ""){
+                                                $set('unit_status', "");
                                             }
                                         }
                                     )
@@ -111,10 +120,6 @@ class UnitReleaseResource extends Resource
                                 ['Office','Field','Bank',]
                         )
                         ->columnSpan(1),
-                Forms\Components\DatePicker::make('due_date')
-                        ->format('Y-m-d') 
-                        ->label('Set Due Date')
-                        ->required(),
         ]);
     }
 
@@ -122,9 +127,14 @@ class UnitReleaseResource extends Resource
     {
         return $form
             ->schema([
-                    UnitReleaseResource::getUnitInofrmationComponent()->columnSpan(2),
-                    UnitReleaseResource::getReleaseDetailsComponent()->columns(3)->columnSpan(2),
-                    Forms\Components\SpatieMediaLibraryFileUpload::make('media')->label('Stencil')->columnSpan(2),
+                    UnitReleaseResource::getUnitInofrmationComponent()
+                            ->columnSpan(2),
+                    UnitReleaseResource::getReleaseDetailsComponent()
+                            ->columns(3)
+                            ->columnSpan(2),
+                    Forms\Components\SpatieMediaLibraryFileUpload::make('media')
+                            ->label('Stencil')
+                            ->columnSpan(2),
                     
             ]);
     }
@@ -177,7 +187,7 @@ class UnitReleaseResource extends Resource
         return [
             'index' => Pages\ListUnitReleases::route('/'),
             // 'create' => Pages\CreateUnitRelease::route('/create'),
-            // 'edit' => Pages\EditUnitRelease::route('/{record}/edit'),
+            'edit' => Pages\EditUnitRelease::route('/{record}/edit'),
         ];
     }    
 }

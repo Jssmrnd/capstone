@@ -40,7 +40,7 @@ class Settings extends Page
 
     public static function shouldRegisterNavigation(): bool
     {
-        return false;
+        return True;
     }
 
     public function mount(): void 
