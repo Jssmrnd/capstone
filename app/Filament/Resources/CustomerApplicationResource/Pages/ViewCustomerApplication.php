@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\CustomerApplicationResource\Pages;
 
+use App\Enums\ApplicationStatus;
 use Filament\Forms;
 use App\Filament\Resources\CustomerApplicationResource;
 use App\Models\Unit;
@@ -17,68 +18,81 @@ class ViewCustomerApplication extends ViewRecord
 
 protected function getHeaderActions(): array
     {
-        //we can minimize this whole code by creating a function at the Model,
-        //Analyze the neccessary functions before creating it.
-        //Motorcycle Assignment
-
         return [
             //Approve Application
             Actions\Action::make("Approve")
                     ->color('success')
                     ->requiresConfirmation()
-                    // ->form([
-                    //         // Forms\Components\DatePicker::make('due_date')
-                    //         //         ->format('Y-m-d') 
-                    //         //         ->label('Set Due Date')
-                    //         //         ->required(),
-                    //         // Forms\Components\Select::make('units_id')
-                    //         //         ->relationship(
-                    //         //                 'units', 
-                    //         //                 'chasis_number',
-                    //         //                 modifyQueryUsing: fn (Builder $query) => 
-                    //         //                                         $query->where("unit_model_id", $this->record->unit_model_id)
-                    //         //                                                 ->where('customer_application_id', null)
-                    //         //                                         )
-                    //         //         ->prefix('#')
-                    //         //         ->columnSpan(1)
-                    //         //         ->label('Chasis Number')
-                    //         //         ->required(),
-                    // ])
                     ->action(function(array $data){
-                        $this->record->approveThisApplication();
-                        // $this->getRecord()->due_date = $data['due_date'];   //sets the due date.
-                        $this->getRecord()->save(); // sales the record
-                        $this->refreshFormData([
-                            'application_status',
-                        ]);
-                        Notification::make()
-                        ->title('Application is Active!')
-                        ->success()
-                        ->send();
+                        $this->record->setStatusTo(ApplicationStatus::ACTIVE_STATUS);
+                        $this->record->reject_note = null;
+                        $this->getRecord()->save(); // saves the record
                     })->hidden(
                         function(array $data){
-                            if($this->getRecord()->is_application_approved == 1){
+                            if($this->record->getStatus() == ApplicationStatus::REJECTED_STATUS 
+                                    || $this->record->getStatus() == ApplicationStatus::ACTIVE_STATUS 
+                                    || $this->record->getStatus() == ApplicationStatus::RESUBMISSION_STATUS)
+                                {
                                 return true;
                             }
                             return false;
                         }
                     ),
-
+            Actions\Action::make("Resubmission")
+                    ->slideOver()
+                    ->color('info')
+                    ->requiresConfirmation()
+                    ->form([
+                        Forms\Components\TextArea::make('resubmission_note')
+                        ->required()
+                        ->maxLength(255),
+                    ])
+                    ->action(function(array $data){
+                        $this->record->setStatusTo(ApplicationStatus::RESUBMISSION_STATUS);
+                        $this->record->resubmission_note = $data["resubmission_note"];
+                        $this->record->reject_note = null;
+                        Notification::make()
+                                ->title('Application is now in resubmission')
+                                ->success()
+                                ->send();
+                        $this->getRecord()->save(); // saves the record
+                        $this->refreshFormData([
+                            'application_status',
+                        ]);
+                    })->hidden(
+                        function(array $data){
+                            if(
+                                $this->record->getStatus() 
+                                    == ApplicationStatus::RESUBMISSION_STATUS) {
+                                return true;
+                            }
+                            return false;
+                        }
+                    ),
             //Reject Application,
             Actions\Action::make("Reject")
             ->color('danger')
+            ->slideOver()
             ->requiresConfirmation()
             ->form([
-                Forms\Components\Textarea::make('reason')->label('Reason of Rejection:'),
+                Forms\Components\Textarea::make('reject_note')->label('Reason of Rejection:'),
             ])
-            ->action(function(){
-                $this->record->rejectThisApplication();
+            ->action(function(array $data){
+                $this->record->setStatusTo(ApplicationStatus::REJECTED_STATUS);
+                $this->record->reject_note = $data["reject_note"];
+                $this->record->resubmission_note = null;
+                $this->record->save();
                 $this->refreshFormData([
                     'application_status',
                 ]);
+                Notification::make()
+                ->title('This application has been rejected!')
+                ->success()
+                ->send();
             })->hidden(
                 function(array $data){
-                    if($this->getRecord()->is_application_rejected == 1){
+                    if(
+                        $this->getRecord()->application_status == ApplicationStatus::REJECTED_STATUS){
                         return true;
                     }
                     return false;

@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\ApplicationStatus;
 use App\Models\Branch;
 use App\Models\Unit;
 use App\Models\UnitModel;
@@ -18,15 +19,14 @@ return new class extends Migration
 
             $table->id();
             $table->string("due_date")->nullable();
-            $table->string('application_status')->default('pending');
-            $table->boolean('application_is_new')->default(true);
-            $table->boolean('is_application_approved')->default(false);
-            $table->boolean('is_application_rejected')->default(false);
+            $table->string('application_status')->default(ApplicationStatus::PENDING_STATUS->value);
+            $table->text('reject_note')->default(null)->nullable();
+            $table->text('resubmission_note')->default(null)->nullable();
+            $table->boolean('release_status')->default(false);
 
             $table->foreignIdFor(Branch::class)->nullable()->onDelete('set null');
             $table->string('author_id')->nullable();
             $table->enum('application_type',['online', 'walk-in']);
-
 
             // Unit Information
             $table->foreignIdFor(UnitModel::class)->onDelete('set null');
@@ -40,7 +40,7 @@ return new class extends Migration
             $table->string('unit_mode_of_payment')->nullable();
 
             //Applicant Information
-            $table->string('applicant_surname')->nullable();
+            $table->string('applicant_firstname')->nullable();
             $table->string('applicant_middlename')->nullable();
             $table->string('applicant_lastname')->nullable();
             $table->string('applicant_birthday')->nullable();
@@ -50,7 +50,7 @@ return new class extends Migration
             $table->string('applicant_provincial_address')->nullable();
             $table->string('applicant_lived_there')->nullable();
             $table->string('applicant_house')->nullable();
-            $table->string('applicant_valid_id')->nullable();
+            $table->json('applicant_valid_id')->nullable();
             $table->string('applicant_telephone')->nullable();
 
             //Applcant Employment
@@ -62,6 +62,16 @@ return new class extends Migration
             $table->string('applicant_previous_employer')->nullable();
             $table->string('applicant_previous_employer_position')->nullable();
             $table->string('applicant_how_long_prev_job_or_business')->nullable();
+
+            //Co-Owner Employment
+            $table->string('co_owner_firstname')->nullable();
+            $table->string('co_owner_middlename')->nullable();
+            $table->string('co_owner_lastname')->nullable();
+            $table->string('co_owner_email')->nullable();
+            $table->string('co_owner_birthday')->nullable();
+            $table->string('co_owner_mobile_number')->nullable();
+            $table->string('co_owner_address')->nullable();
+            $table->json('co_owner_valid_id')->nullable();
 
             //Educational Attainment
             $table->json('educational_attainment')->nullable();
@@ -83,6 +93,7 @@ return new class extends Migration
             $table->string('spouse_how_long_job_business')->nullable();
             $table->string('spouse_business_address')->nullable();
             $table->string('spouse_nature_of_business')->nullable();
+            $table->json('spouse_valid_id')->nullable();
 
             //Educational Attainment
             $table->string('applicant_course')->nullable();

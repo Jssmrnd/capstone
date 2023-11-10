@@ -2,6 +2,7 @@
 
 namespace App\Filament\TestPanel\Resources\CustomerApplicationResource\Pages;
 
+use App\Enums;
 use App\Filament\TestPanel\Resources\CustomerApplicationResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
@@ -16,4 +17,16 @@ class EditCustomerApplication extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        $data['application_status'] = Enums\ApplicationStatus::PENDING_STATUS->value;
+        return $data;
+    }
+
+    protected function getRedirectUrl(): string
+{
+    return $this->getResource()::getUrl('view', ['record' => $this->getRecord()]);
+}
+
 }

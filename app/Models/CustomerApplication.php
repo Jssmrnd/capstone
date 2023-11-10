@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ApplicationStatus;
 use App\Models\Scopes\CustomerApplicationScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,7 +22,9 @@ class CustomerApplication extends Model implements HasMedia
     [
         'id',
         'application_status',
-        'application_is_new',
+        'reject_note',
+        'resubmission_note',
+        'release_status',
 
         //mutate data here
         'branch_id', 
@@ -41,7 +44,7 @@ class CustomerApplication extends Model implements HasMedia
         'due_date',
 
         //Applicant Information
-        'applicant_surname',
+        'applicant_firstname',
         'applicant_middlename',
         'applicant_lastname',
         'applicant_birthday',
@@ -65,6 +68,15 @@ class CustomerApplication extends Model implements HasMedia
         'applicant_previous_employer_position',
         'applicant_how_long_prev_job_or_business',
 
+        //Co owner Information
+        'co_owner_firstname',
+        'co_owner_middlename',
+        'co_owner_lastname',
+        'co_owner_email',
+        'co_owner_birthday',
+        'co_owner_mobile_number',
+        'co_owner_address',
+        'co_owner_valid_id',
         
         //Spouse Information
         'spouse_firstname',
@@ -74,6 +86,7 @@ class CustomerApplication extends Model implements HasMedia
         'spouse_present_address',
         'spouse_provincial_address',
         'spouse_telephone',
+        'spouse_valid_id',
 
         //Spouse Employer
         'spouse_employer',
@@ -145,7 +158,11 @@ class CustomerApplication extends Model implements HasMedia
     ];
 
     protected $casts = [
+        'application_status'        =>  ApplicationStatus::class,
         'properties'                => 'json',
+        'applicant_valid_id'        => 'json',
+        'spouse_valid_id'           => 'json',
+        'co_owner_valid_id'         => 'json',
         'personal_references'       => 'json',
         'bank_references'           => 'json',
         'credit_references'         => 'json',
@@ -158,34 +175,25 @@ class CustomerApplication extends Model implements HasMedia
         static::addGlobalScope(new CustomerApplicationScope);
     }
 
-    public function approveThisApplication()
+    public function setStatusTo(ApplicationStatus $status): void
     {
-        // changes the applications status
-        $this->application_status = "active";
-        $this->is_application_approved = true;
-        $this->is_application_rejected = false;
-        // gets the associated unit and marks it as owned.
-        // $unit = Unit::query()->where('id', $this->units_id)->first();
-        // $unit->customer_application_id = $this->id;
-        // $unit->save();
+        $this->application_status = $status;
         $this->save();
     }
 
-    public function rejectThisApplication(): void
+    public function getStatus(): ApplicationStatus|null
     {
-        // changes the applications status
-        $this->application_status = "reject";
-        $this->is_application_approved = false;
-        $this->is_application_rejected = true;
-        $this->unit_term = null;
-        $this->due_date = null; // sets the due date to null.
-        //gets the associated unit and marks it as owned.
-        $unit = Unit::query()->where('id', $this->units_id)->first();
-        $unit->customer_application_id = null;
-        $this->units_id = null;
-        $unit->save();
-        $this->save();
+        if($this->application_status != null){
+
+            return $this->application_status;
+        }
+        return null;
     }
+
+    // public function changeAttribute(string $attribute, $value): bool
+    // {
+    //     $this->attributes['attribute'] = $value;
+    // } 
 
     public function release()
     {

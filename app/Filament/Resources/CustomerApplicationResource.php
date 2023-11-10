@@ -8,6 +8,7 @@ use Filament\Tables\Columns\Summarizers\Average;
 use App\Filament\Resources\CustomerApplicationResource\RelationManagers;
 use App\Models\CustomerApplication;
 use App\Models;
+use App\Enums;
 use Filament\Infolists;
 use Filament\Infolists\Infolist;
 use Filament\Forms;
@@ -63,90 +64,71 @@ class CustomerApplicationResource extends Resource
                                         ->live()
                                         ->disabled(fn (Forms\Get $get): bool => ! $get('unit_model_id'))
                                         ->schema([
-                                                // Forms\Components\Select::make('units_id')
-                                                //         ->options(
-                                                //             fn (Forms\Get $get): array => Models\Unit::where('customer_application_id', null)
-                                                //                     ->where('unit_model_id', $get('unit_model_id'))         
-                                                //                     ->limit(20)
-                                                //                     ->pluck('chasis_number', 'id')
-                                                //                     ->toArray()
-                                                //         )
-                                                //         ->prefix('#')
-                                                //         ->columnSpan(1)
-                                                //         ->label('Chasis Number'),
-
                                                 Forms\Components\TextInput::make('unit_srp')
                                                         ->columnSpan(1)
                                                         ->required(true)
                                                         ->label('Selling Retail Price:')
                                                         ->numeric(),
-                                                // Forms\Components\TextInput::make('unit_term')
-                                                //         ->columnSpan(1)
-                                                //         ->minValue(0)
-                                                //         ->required(true)
-                                                //         ->label('Term:')
-                                                //         ->minValue(1)
-                                                //         ->numeric()
-                                                //         ->live(500)
-                                                //         ->afterStateUpdated(
-                                                //                 function(Forms\Get $get, Forms\Set $set){
-                                                //                 $_term = $get('unit_term');
-                                                //                 $_unit_srp = $get('unit_srp');
-                                                //                 if($_term > 1){
-                                                //                         $quotient = number_format((float)$_unit_srp/$_term, 2, '.', '');
-                                                //                         $set('unit_amort_fin', $quotient);
-                                                //                         $set('unit_monthly_amort', $quotient);
-                                                //                 }
-                                                //                 }
-                                                //         ),
-                                                // Forms\Components\TextInput::make('unit_ttl_dp')
-                                                //                 ->required(true)
-                                                //                 ->label('Total Downpayment:')
-                                                //                 ->numeric()
-                                                //                 ->minValue(0)
-                                                //                 ->columnSpan(1)
-                                                //                 ->live(500)
-                                                //                 ->afterStateUpdated(
-                                                //                         function(Forms\Get $get, Forms\Set $set){
-                                                //                                 $dp = $get('unit_ttl_dp');
-                                                //                                 $_term = $get('unit_term');
-                                                //                                 $_unit_srp = $get('unit_srp');
-                                                //                                 if($_term > 1 || $get('unit_ttl_dp' <= $get('unit_srp'))){
-                                                //                                         $quotient = number_format((float)((float)$_unit_srp - (float)$dp)/$_term, 2, '.', '');
-                                                //                                         $set('unit_amort_fin', $quotient);
-                                                //                                         $set('monthly_amortization', $quotient);
-                                                //                                 }
-                                                //                         }
-                                                //                 ),
-                                                // Forms\Components\TextInput::make('unit_monthly_amort')->required(true)
-                                                //                 ->label('Monthly Amorthization:')
-                                                //                 ->minValue(0)
-                                                //                 ->numeric(),
-                                                // Forms\Components\Select::make('unit_type')
-                                                //                 ->required()
-                                                //                 ->options(['New','Repeat',]),
-                                                // Forms\Components\TextInput::make('unit_amort_fin')
-                                                //                 ->numeric()
-                                                //                 ->minValue(0)
-                                                //                 ->required(true)
-                                                //                 ->label('Amorthization Fin:'),
-                                                // Forms\Components\Select::make('unit_mode_of_payment')
-                                                //                 ->required(true)
-                                                //                 ->label('Mode of Payment:')
-                                                //                 ->options(
-                                                //                 ['Office','Field','Bank',]
-                                                //                 )
-                                                //                 ->columnSpan(1),
                                 ]),
                 ]),
                 ]);
     }
 
+    public static function getCoOwnerInformation(): Forms\Components\Component
+    {
+        return Forms\Components\Section::make("Co-owner")
+                ->schema([
+                        Forms\Components\Group::make([
+                                Forms\Components\Group::make([
+                                        Forms\Components\TextInput::make('co_owner_firstname')
+                                        ->columnSpan(2)
+                                        ->label('First Name:')
+                                        ->required(true),
+                                Forms\Components\TextInput::make('co_owner_middlename')
+                                        ->columnSpan(2)
+                                        ->label('Middle Name:'),
+                                Forms\Components\TextInput::make('co_owner_lastname')
+                                        ->columnSpan(2)
+                                        ->label('Last Name:')
+                                        ->required(true),
+                                Forms\Components\TextInput::make('co_owner_email')
+                                        ->columnSpan(6)
+                                        ->label('Email:'),
+                                Forms\Components\DatePicker::make('co_owner_birthday')
+                                        ->columnSpan(3)
+                                        ->label('Birthday:')
+                                        ->maxDate(now()->subYears(150))
+                                        ->maxDate(now())
+                                        ->required(true),
+                                Forms\Components\TextInput::make('co_owner_mobile_number')
+                                        ->columnSpan(3)
+                                        ->label('Telephone:'),
+                                Forms\Components\TextArea::make('co_owner_address')
+                                        ->columnSpan(6)
+                                        ->label('Address')
+                                        ->required(true),
+                                ])
+                                ->columnSpan(3)
+                                ->columns(6),
+                                Forms\Components\Fileupload::make('co_owner_valid_id')
+                                        ->image()
+                                        ->multiple(true)
+                                        ->minFiles(2)
+                                        ->maxFiles(2)
+                                        ->label('Valid ID:')
+                                        ->required(true)
+                                        ->columnSpan(3),
+                        ])
+                        ->columns(6)
+                        ->columnSpan(6),
+                ])
+                ->columns(6);
+    }
     public static function getApplicantInformation(): Forms\Components\Component
     {
                 return Forms\Components\Group::make([
                         Forms\Components\Group::make([
-                                Forms\Components\TextInput::make('applicant_surname')
+                                Forms\Components\TextInput::make('applicant_firstname')
                                         ->label('First Name:')
                                         ->columnSpan(2)
                                         ->required(true),
@@ -209,19 +191,60 @@ class CustomerApplicationResource extends Resource
                         ])
                         ->columnSpan(3)
                         ->columns(6),
-
-                        Forms\Components\Fieldset::make("Requirements")
-                        ->schema([
-                            Forms\Components\TextInput::make('applicant_valid_id')
-                            ->label('Valid ID:')
-                            ->required(true)
-                            ->columnSpan(3),
-                        ])
-                        ->columnSpan(3)
-                        ->columns(6),
-
+                        Forms\Components\Fileupload::make('applicant_valid_id')
+                                ->multiple(true)
+                                ->label('Valid ID:')
+                                ->required(true)
+                                ->columnSpan(3),
                 ])
                 ->columns(6);
+    }
+
+    public static function getSpouseComponents(): Forms\Components\Component
+    {
+        return Forms\Components\Group::make([
+                Forms\Components\Section::make("Spouse Information")
+                        ->schema([
+                            Forms\Components\Fileupload::make('spouse_valid_id')
+                                    ->multiple(true)
+                                    ->label('Valid ID:')
+                                    ->required(true)
+                                    ->columnSpan(3)
+                                    ->columns(6),
+                            Forms\Components\Group::make([
+                                    Forms\Components\TextInput::make('spouse_firstname')
+                                            ->label('First name')
+                                            ->columnSpan(2)
+                                            ->required(true),
+                                    Forms\Components\TextInput::make('spouse_middlename')
+                                            ->label('Middle Name')
+                                            ->columnSpan(2),
+                                    Forms\Components\TextInput::make('spouse_lastname')
+                                            ->label('Last Name')
+                                            ->columnSpan(2)
+                                            ->required(true),
+                                    Forms\Components\DatePicker::make('spouse_birthday')
+                                            ->label('Birthday')
+                                            ->columnSpan(3)
+                                            ->required(true),
+                                    Forms\Components\TextInput::make('spouse_telephone')
+                                            ->label('Telephone')
+                                            ->columnSpan(3),
+                                    Forms\Components\Textarea::make('spouse_present_address')
+                                            ->columnSpan(3)
+                                            ->label('Present Address')
+                                            ->required(true),
+                                    Forms\Components\Textarea::make('spouse_provincial_address')
+                                            ->columnSpan(3)
+                                            ->label('Provincial Address'),
+                            ])
+                            ->columnSpan(3)
+                            ->columns(6),
+                ])
+                ->columnSpan(6)
+                ->columns(6),
+        ])
+        ->hidden(fn (Forms\Get $get): bool => $get('applicant_civil_status') != "married");
     }
 
     public static function getEducationalAttainment(): Forms\Components\Component
@@ -230,6 +253,7 @@ class CustomerApplicationResource extends Resource
                                 Forms\Components\Repeater::make("educational_attainment")
                                         ->schema([
                                                 Forms\Components\TextInput::make("course")
+                                                        ->label("Degree")
                                                         ->columnSpan(2),
                                                 Forms\Components\TextInput::make("no_years")
                                                         ->columnSpan(1)
@@ -380,19 +404,17 @@ class CustomerApplicationResource extends Resource
     {
         return Forms\Components\Group::make([
             Forms\Components\Fieldset::make("Present Employer")
-        //     ->columns(2)
-        //     ->columnSpan(2)
-            ->schema([
-                    Forms\Components\TextArea::make('applicant_present_business_employer')
-                            ->label('Business Employer:')
-                            ->columnSpan(2),
-                    Forms\Components\TextInput::make('applicant_position')
-                            ->label('Position:')
-                            ->columnSpan(1),
-                    Forms\Components\TextInput::make('applicant_how_long_job_or_business')
-                            ->label('How long:')
-                            ->columnSpan(1),
-            ]),
+                    ->schema([
+                            Forms\Components\TextArea::make('applicant_present_business_employer')
+                                    ->label('Business Employer:')
+                                    ->columnSpan(2),
+                            Forms\Components\TextInput::make('applicant_position')
+                                    ->label('Position:')
+                                    ->columnSpan(1),
+                            Forms\Components\TextInput::make('applicant_how_long_job_or_business')
+                                    ->label('How long:')
+                                    ->columnSpan(1),
+                    ]),
             Forms\Components\Fieldset::make("Applicant's Business")
                     ->columnSpan(1)
                     ->columns(1)
@@ -407,16 +429,40 @@ class CustomerApplicationResource extends Resource
                     ->columns(3)
                     ->columnSpan(3)
                     ->schema([
-                        Forms\Components\TextArea::make('applicant_previous_employer')
-                                ->label('Employer:')
-                                ->columnSpan(1),
-                        Forms\Components\TextArea::make('applicant_previous_employer_position')
-                                ->label('Position:')
-                                ->columnSpan(1),
-                        Forms\Components\TextArea::make('applicant_how_long_prev_job_or_business')
-                                ->label('How Long:')
-                                ->columnSpan(1),
+                            Forms\Components\TextArea::make('applicant_previous_employer')
+                                    ->label('Employer:')
+                                    ->columnSpan(1),
+                            Forms\Components\TextArea::make('applicant_previous_employer_position')
+                                    ->label('Position:')
+                                    ->columnSpan(1),
+                            Forms\Components\TextArea::make('applicant_how_long_prev_job_or_business')
+                                    ->label('How Long:')
+                                    ->columnSpan(1),
                     ]),
+            Forms\Components\Fieldset::make("Spouse's Employement Information")
+                    ->schema([
+                            Forms\Components\Fieldset::make("Present Employer")
+                            ->columns(2)
+                            ->columnSpan(2)
+                            ->schema([
+                                    Forms\Components\TextArea::make('spouse_employer')
+                                            ->label('Business Employer:')
+                                            ->columnSpan(2),
+                                    Forms\Components\TextInput::make('spouse_position')
+                                            ->label('Position:')
+                                            ->columnSpan(1),
+                                    Forms\Components\TextInput::make('spouse_how_long_job_business')
+                                            ->label('How long:')
+                                            ->columnSpan(1),
+                            ]),
+                            Forms\Components\Fieldset::make("Business")
+                                    ->columnSpan(1)
+                                    ->columns(1)
+                                    ->schema([
+                                            Forms\Components\TextArea::make('spouse_business_address')->label('Address:')->columnSpan(1),
+                                            Forms\Components\TextInput::make('spouse_nature_of_business')->label('Nature of Business:'),
+                                    ]),  
+                    ])->hidden(fn (Forms\Get $get): bool => $get('applicant_civil_status') != "married")
 
         ]);
     }
@@ -678,6 +724,23 @@ class CustomerApplicationResource extends Resource
 
     }
 
+    public static function getResubmissionNotes(): Forms\Components\Component
+    {
+        return Forms\Components\Group::make([
+                Forms\Components\TextArea::make('resubmission_note')
+                        ->label('Rejection Note')
+                        ->disabled(true),
+        ]);
+    }
+
+    public static function getRejectionNotes(): Forms\Components\Component
+    {
+        return Forms\Components\Group::make([
+                Forms\Components\TextArea::make('reject_note')
+                        ->label('Rejection Note'),
+        ]);
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -689,86 +752,40 @@ class CustomerApplicationResource extends Resource
                 ])
                 ->preload(),
                 Forms\Components\Wizard::make([
-                                Forms\Components\Wizard\Step::make('Unit')
-                                        ->schema([
-                                                CustomerApplicationResource::getUnitToBeFinanced()
-                                                        ->disabled(
-                                                                function(string $operation){
-                                                                    if($operation == "edit"){
-                                                                        return true;
-                                                        }}),
-                                        ]),
-                                Forms\Components\Wizard\Step::make('Applicant Information')
-                                        ->schema([
-                                                CustomerApplicationResource::getApplicantInformation()
-                                        ]),
-                                Forms\Components\Wizard\Step::make('Educational Attainment')
-                                        ->schema([
-                                                CustomerApplicationResource::getEducationalAttainment()
-                                        ]),
-                                Forms\Components\Wizard\Step::make('References')
-                                        ->schema([
-                                                CustomerApplicationResource::getReferences()
-                                        ]),
-                                Forms\Components\Wizard\Step::make('Employment')
-                                        ->schema([
-                                                CustomerApplicationResource::getEmployment()
-                                        ]),
-                                Forms\Components\Wizard\Step::make('Statement of Month. income')
-                                        ->schema([
-                                                // CustomerApplicationResource::getProperties(),
-                                                CustomerApplicationResource::getStatementOfMonthlyIncome()
-                                        ]),
-                        ])->columnSpan(6),
-                    Forms\Components\Fieldset::make("Spouse Information")
-							->hidden(fn (Forms\Get $get): bool => $get('applicant_civil_status') != "married")
-							->columns(3)
-							->columnSpan(2)
-							->schema([
-									Forms\Components\TextInput::make('spouse_firstname')->label('Surname:')
-											->columnSpan(1)->required(true),
-                                    Forms\Components\TextInput::make('spouse_middlename')
-                                            ->label('Middle Name:')
-                                            ->columnSpan(1),
-                                    Forms\Components\TextInput::make('spouse_lastname')
-                                            ->label('Last Name:')
-                                            ->columnSpan(1)
-                                            ->required(true),
-                                    Forms\Components\DatePicker::make('spouse_birthday')
-                                            ->label('Birthday:')
-                                            ->columnSpan(1)
-                                            ->required(true),
-                                    Forms\Components\TextInput::make('spouse_present_address')
-                                            ->label('Present Address:')
-                                            ->required(true),
-                                    Forms\Components\Textarea::make('spouse_provincial_address')
-                                            ->label('Provincial Address:')
-                                            ->columnSpan(1),
-                                    Forms\Components\Textarea::make('spouse_telephone')
-                                            ->label('Telephone:')
-                                            ->columnSpan(1),
-                                    Forms\Components\Fieldset::make("Present Employer")
-                                            ->columns(2)
-                                            ->columnSpan(2)
-                                            ->schema([
-                                                    Forms\Components\TextArea::make('spouse_employer')
-                                                            ->label('Business Employer:')
-                                                            ->columnSpan(2),
-                                                    Forms\Components\TextInput::make('spouse_position')
-                                                            ->label('Position:')
-                                                            ->columnSpan(1),
-                                                    Forms\Components\TextInput::make('spouse_how_long_job_business')
-                                                            ->label('How long:')
-                                                            ->columnSpan(1),
-                                            ]),
-                                    Forms\Components\Fieldset::make("Business")
-                                            ->columnSpan(1)
-                                            ->columns(1)
-                                            ->schema([
-                                                    Forms\Components\TextArea::make('spouse_business_address')->label('Address:')->columnSpan(1),
-                                                    Forms\Components\TextInput::make('spouse_nature_of_business')->label('Nature of Business:'),
-                                            ]),
-                ]),
+                        Forms\Components\Wizard\Step::make('Unit')
+                                ->schema([
+                                        CustomerApplicationResource::getUnitToBeFinanced()
+                                                ->disabled(
+                                                        function(string $operation){
+                                                            if($operation == "edit"){
+                                                                return true;
+                                                }}),
+                                ]),
+                        Forms\Components\Wizard\Step::make('Applicant Information')
+                                ->schema([
+                                        CustomerApplicationResource::getApplicantInformation(),
+                                        CustomerApplicationResource::getSpouseComponents(),
+                                        CustomerApplicationResource::getCoOwnerInformation()
+                                ]),
+                        Forms\Components\Wizard\Step::make('Educational Attainment')
+                                ->schema([
+                                        CustomerApplicationResource::getEducationalAttainment()
+                                ]),
+                        Forms\Components\Wizard\Step::make('References')
+                                ->schema([
+                                        CustomerApplicationResource::getReferences()
+                                ]),
+                        Forms\Components\Wizard\Step::make('Employment')
+                                ->schema([
+                                        CustomerApplicationResource::getEmployment()
+                                ]),
+                        Forms\Components\Wizard\Step::make('Statement of Month. income')
+                                ->schema([
+                                        CustomerApplicationResource::getProperties(),
+                                        CustomerApplicationResource::getStatementOfMonthlyIncome()
+                                ]),
+                ])
+                ->columnSpan(6),   
         ]);
     }
 
@@ -779,7 +796,7 @@ class CustomerApplicationResource extends Resource
                 InfoLists\Components\Section::make('Customer Application')->schema([
                         InfoLists\Components\FieldSet::make('Applicant Information')
                                 ->schema([
-                                        InfoLists\Components\TextEntry::make('application_status')
+                                        InfoLists\Components\TextEntry::make('application_status.value')
                                                 ->label('Application Status')
                                                 ->badge(),
                                         InfoLists\Components\TextEntry::make('payment_method')
@@ -834,12 +851,14 @@ class CustomerApplicationResource extends Resource
                             ->columns(6)
                             ->columnSpan(4)
                             ->schema([
-                                InfoLists\Components\TextEntry::make('applicant_surname')->label('First Name:'),
+                                InfoLists\Components\TextEntry::make('applicant_firstname')->label('First Name:'),
                                 InfoLists\Components\TextEntry::make('applicant_lastname')->label('Last Name:'),
-                                InfoLists\Components\TextEntry::make('applicant_valid_id')->label('Provided ID:'),
+                                InfoLists\Components\ImageEntry::make('applicant_valid_id')->label('Provided ID:')
+                                ->width(200)
+                                ->height(200),
                                 InfoLists\Components\TextEntry::make('applicant_house')->label('House:'),  
                                 InfoLists\Components\TextEntry::make('applicant_present_address')->label('Present Address:'),
-                                InfoLists\Components\TextEntry::make('applicant_telephone')->label('Contacts:'),       
+                                InfoLists\Components\TextEntry::make('applicant_telephone')->label('Contacts:'),        
                     ]),
 
                     InfoLists\Components\FieldSet::make("Applicant's Income")->schema([
