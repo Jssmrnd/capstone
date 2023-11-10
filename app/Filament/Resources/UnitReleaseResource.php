@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\ApplicationStatus;
+use App\Enums\ReleaseStatus;
 use App\Models;
 use App\Filament\Resources\UnitReleaseResource\Pages;
 use App\Filament\Resources\UnitReleaseResource\RelationManagers;
@@ -135,14 +137,12 @@ class UnitReleaseResource extends Resource
                     Forms\Components\SpatieMediaLibraryFileUpload::make('media')
                             ->label('Stencil')
                             ->columnSpan(2),
-                    
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn (Builder $query) => $query->where('application_status', 'active'))
             ->columns([
                     Tables\Columns\TextColumn::make('id')
                             ->label("Application ID:")
@@ -166,7 +166,13 @@ class UnitReleaseResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
-                        ->label('Release'),
+                        ->label('Release')
+                        ->hidden(function(?Model $record): bool {
+                                if($record->release_status == ReleaseStatus::UN_RELEASED->value) {
+                                        return false;
+                                }
+                                return true;
+                        }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

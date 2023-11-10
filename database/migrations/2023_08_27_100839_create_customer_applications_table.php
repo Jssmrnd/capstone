@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\ApplicationStatus;
+use App\Enums\ReleaseStatus;
 use App\Models\Branch;
 use App\Models\Unit;
 use App\Models\UnitModel;
@@ -22,7 +23,7 @@ return new class extends Migration
             $table->string('application_status')->default(ApplicationStatus::PENDING_STATUS->value);
             $table->text('reject_note')->default(null)->nullable();
             $table->text('resubmission_note')->default(null)->nullable();
-            $table->boolean('release_status')->default(false);
+            $table->string('release_status')->default(ReleaseStatus::UN_RELEASED->value);
 
             $table->foreignIdFor(Branch::class)->nullable()->onDelete('set null');
             $table->string('author_id')->nullable();

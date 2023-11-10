@@ -903,7 +903,7 @@ class CustomerApplicationResource extends Resource
                 Tables\Columns\TextColumn::make('units.chasis_number')
                         ->label("unit chasis:")
                         ->badge(),
-                Tables\Columns\TextColumn::make('applicant_surname')
+                Tables\Columns\TextColumn::make('applicant_firstname')
                         ->label("First Name:")
                         ->searchable(),
                 Tables\Columns\TextColumn::make('applicant_lastname')

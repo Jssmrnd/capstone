@@ -70,8 +70,8 @@ Route::prefix('/products')->group(function () {
     });
 });
 
-// Route::get('customer/login')
-// ->name('login');
+Route::get('customer/login')
+->name('login');
 // Route::post('/login', [CustomerLogin::class, 'authenticate']);
 
 // Route::get('/register', [CustomerController::class, 'create'])
