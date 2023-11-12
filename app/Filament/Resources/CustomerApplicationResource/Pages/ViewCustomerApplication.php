@@ -115,6 +115,7 @@ class ViewCustomerApplication extends ViewRecord
                     function(array $data){
                     $this->record->setStatusTo(ApplicationStatus::REPO_STATUS);
                     $this->record->assumed_by_id = $data['assumed_by_id'];
+                    // $this->record->application_status = ApplicationStatus::CLOSED_STATUS;
                     Models\Unit::query()->where('id', $this->record->units->id)->update([
                         'status'=> 'repo',
                     ]);
@@ -131,6 +132,8 @@ class ViewCustomerApplication extends ViewRecord
                     }
                 )
                 ->form([
+                    Forms\Components\TextArea::make('reposession_note')
+                            ->label('Note'),
                     Forms\Components\TextInput::make('assumed_by_firstname')
                             ->label('First name'),
                     Forms\Components\TextInput::make('assumed_by_middlename')
@@ -138,6 +141,7 @@ class ViewCustomerApplication extends ViewRecord
                     Forms\Components\TextInput::make('assumed_by_lastname')
                             ->label('Last name'),
                     Forms\Components\Select::make('assumed_by_id')
+                    ->required()
                     ->live()
                     ->label("Assumed By")
                     ->options(

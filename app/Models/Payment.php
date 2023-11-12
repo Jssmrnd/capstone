@@ -32,14 +32,12 @@ class Payment extends Model
         ->whereYear('created_at', Carbon::now()->year) // Filter by the current year
         ->groupBy(DB::raw('YEAR(created_at)'), DB::raw('MONTH(created_at)'))
         ->get();
-        
         $monthlyTotals = array_fill(1, 12, 0);
 
         foreach ($monthlyPayments as $payment) {
             $year = $payment->year;
             $month = $payment->month;
             $total = $payment->total;    
-            
             $monthlyTotals[$month] = $total;
         }
 

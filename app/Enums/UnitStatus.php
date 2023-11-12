@@ -4,16 +4,18 @@ namespace App\Enums;
 
 use Filament\Support\Contracts\HasLabel;
 
-enum ReleaseStatus:string implements HasLabel
+enum UnitStatus:string implements HasLabel
 {
-    case RELEASED          = "released";
-    case UN_RELEASED          = "un-released";
+    case REPOSESSION = "Reposession";
+    case BRAND_NEW = "Brand new";
+    case DEPO = "Depo";
 
     public function getLabel(): ?string
     {
         return match ($this) {
-            self::RELEASED => 'released',
-            self::UN_RELEASED => 'un-released',
+            self::REPOSESSION => "Reposession",
+            self::BRAND_NEW => "Brand new",
+            self::DEPO => "Depo",
         };
     }
 

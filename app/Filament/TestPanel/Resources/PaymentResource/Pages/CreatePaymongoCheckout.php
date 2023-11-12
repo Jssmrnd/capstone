@@ -4,6 +4,7 @@ namespace App\Filament\TestPanel\Resources\PaymentResource\Pages;
 
 use App\Filament\TestPanel\Resources\PaymentResource;
 use App\Models\Payment;
+use App\Enums;
 use Filament\Actions\Action;
 use Filament\Pages\Concerns\InteractsWithFormActions;
 use Filament\Resources\Pages\Page;
@@ -72,7 +73,8 @@ class CreatePaymongoCheckout extends Page
                 ->relationship(
                 name: 'customerApplication',
                 titleAttribute: 'applicant_lastname',
-                modifyQueryUsing: fn (Builder $query) => $query->where("application_status", "active"),
+                modifyQueryUsing: fn (Builder $query) => $query->where("application_status", Enums\ApplicationStatus::APPROVED_STATUS)
+                                                                            ->where("release_status", Enums\ReleaseStatus::RELEASED->value)
                 )
                 ->label('For Applicant:')
                 ->preload()
@@ -84,29 +86,43 @@ class CreatePaymongoCheckout extends Page
                         $application = CustomerApplication::query()
                                 ->where("id", $state)
                                 ->first();
-
+                        if($application != null){
+                            if($application->application_status == Enums\ApplicationStatus::APPROVED_STATUS 
+                                    && $application->release_status == Enums\ReleaseStatus::UN_RELEASED->value)
+                    {
+                                // dd("Down Payment");
+                            }else if($application->application_status == Enums\ApplicationStatus::ACTIVE_STATUS){
+                                // dd("Amort. Payment");
+                            }
+                        }
                         $due_date = $application->due_date;
-                        $today = Carbon::parse(Carbon::today()->format('Y-m-d'));
-                        $amort_fin = $application->unit_amort_fin;
+                        $carbon_format = Carbon::createFromFormat(config('app.date_format'), $due_date);
+                        $new_due =  Carbon::parse($carbon_format);
+                        $new_due = $new_due->addDays(31)->format(config('app.date_format'));
+
+
+
+                        $today = Carbon::parse(Carbon::createFromFormat(config('app.date_format'), Carbon::today()->format(config('app.date_format'))));
+                        $amort_fin = $application->unit_monthly_amort;
                         $set('due_date', $due_date);
                         $set('payment_amount', $amort_fin);
 
-                        //Y-m-d
+                        $delinquent = Carbon::parse(Carbon::createFromFormat(config('app.date_format'), $due_date)->addDays(30));
 
-                        $delinquent = Carbon::parse(Carbon::createFromFormat('Y-m-d', $due_date)->addDays(30));
+                        $parsed_date = Carbon::parse(Carbon::createFromFormat(config('app.date_format'), $due_date));
 
-                        $is_advance = $today->lessThan($due_date);
-                        $is_current = $today->equalTo($due_date);
-                        $is_overdue = $today->greaterThan($due_date) && $today->lessThan($delinquent);
+                        $is_advance = $today->lessThan($parsed_date);
+                        $is_current = $today->equalTo($parsed_date);
+                        $is_overdue = $today->greaterThan($parsed_date) && $today->lessThan($delinquent);
                         $is_delinquent = $today->greaterThan($delinquent);
 
-                        if($today->lessThan($due_date)){
+                        if($today->lessThan($parsed_date)){
                             $set('payment_status', 'advance');
                         }
-                        elseif($today->equalTo($due_date)){
+                        elseif($today->equalTo($parsed_date)){
                             $set('payment_status', 'current');
                         }
-                        elseif($today->greaterThan($due_date) && $today->lessThan($delinquent)){
+                        elseif($today->greaterThan($parsed_date) && $today->lessThan($delinquent)){
                             $set('payment_status', 'overdue');
                         }
                         elseif($today->greaterThan($delinquent)){
@@ -154,7 +170,7 @@ class CreatePaymongoCheckout extends Page
 
     public function save(){
         $data = $this->form->getState();
-        return redirect()->route("paymongo", ["customerApplicationId" => $data['customer_application_id']]);
+        return redirect()->route("paymongo");
     }
 
     public function createAction(): Action

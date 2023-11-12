@@ -14,7 +14,8 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id()->from(1000000);
-            $table->string("name");
+            $table->string("firstname");
+            $table->string("lastname");
             $table->string("password");
             $table->foreignIdFor(Branch::class)->nullable()->onDelete('set null');
             $table->timestamp('email_verified_at')->nullable();

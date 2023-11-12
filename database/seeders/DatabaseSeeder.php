@@ -23,12 +23,12 @@ class DatabaseSeeder extends Seeder
     {
         //\App\Models\CustomerApplication::factory(10)->create();
         $this->call(RolesAndPermissionsSeeder::class);
-        $this->createAdmin();
+        $this->call(BranchSeeder::class);
+        $this->call(UserSeeder::class);
         $this->call(RegionSeeder::class);
         $this->call(ProvinceSeeder::class);
         $this->call(MunicipalitySeeder::class);
         $this->call(BarangaySeeder::class);
-        $this->call(BranchSeeder::class);
     }
 
     private function createAdmin():void{
@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
             'is_admin' => true,
             'branch_id' => null,
             'gender' => 'male',
-            'birthday' => fake()->date('Y-m-d', 'now'),
+            'birthday' => fake()->date('m/d/Y', 'now'),
             'contact_number' => fake()->randomDigit(11),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),

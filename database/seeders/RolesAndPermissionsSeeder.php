@@ -33,119 +33,174 @@ class RolesAndPermissionsSeeder extends Seeder
         // $permission = Permission::create(['guard_name' => 'web', 'name' => 'publish articles']);
 
         // Misc
-        $miscPermission = Permission::create(['name' => 'N/A']);
+        // $miscPermission = Permission::create(['name' => 'N/A']);
 
         // USER MODEL
-        $userPermission1 = Permission::create(['guard_name' => 'admin', 'name' => 'create: user']);
-        $userPermission2 = Permission::create(['guard_name' => 'admin', 'name' => 'read: user']);
-        $userPermission3 = Permission::create(['guard_name' => 'admin', 'name' => 'update: user']);
-        $userPermission4 = Permission::create(['guard_name' => 'admin', 'name' => 'delete: user']);
+        $create_user = Permission::create(['guard_name' => 'admin', 'name' => 'create: user']);
+        $read_user = Permission::create(['guard_name' => 'admin', 'name' => 'read: user']);
+        $update_user = Permission::create(['guard_name' => 'admin', 'name' => 'update: user']);
+        $delete_user = Permission::create(['guard_name' => 'admin', 'name' => 'delete: user']);
 
         // PAYMENT MODEL
-        $paymentPermission1 = Permission::create(['guard_name' => 'admin', 'name' => 'create: payment']);
-        $paymentPermission2 = Permission::create(['guard_name' => 'admin', 'name' => 'read: payment']);
-        $paymentPermission3 = Permission::create(['guard_name' => 'admin', 'name' => 'update: payment']);
-        $paymentPermission4 = Permission::create(['guard_name' => 'admin', 'name' => 'delete: payment']);
-        
+        $create_payment = Permission::create(['guard_name' => 'admin', 'name' => 'create: payment']);
+        $read_payment = Permission::create(['guard_name' => 'admin', 'name' => 'read: payment']);
+        $update_payment = Permission::create(['guard_name' => 'admin', 'name' => 'update: payment']);
+        $delete_payment = Permission::create(['guard_name' => 'admin', 'name' => 'delete: payment']);
+
         // BRANCH MODEL
-        $branchPermission1 = Permission::create(['guard_name' => 'admin', 'name' => 'create: branch']);
-        $branchPermission2 = Permission::create(['guard_name' => 'admin', 'name' => 'read: branch']);
-        $branchPermission3 = Permission::create(['guard_name' => 'admin', 'name' => 'update: branch']);
-        $branchPermission4 = Permission::create(['guard_name' => 'admin', 'name' => 'delete: branch']);
+        $create_branch = Permission::create(['guard_name' => 'admin', 'name' => 'create: branch']);
+        $read_branch = Permission::create(['guard_name' => 'admin', 'name' => 'read: branch']);
+        $update_branch = Permission::create(['guard_name' => 'admin', 'name' => 'update: branch']);
+        $delete_branch = Permission::create(['guard_name' => 'admin', 'name' => 'delete: branch']);
 
         // CUSTOMER PAGE MODEL
-        $unitPermission1 = Permission::create(['guard_name' => 'admin', 'name' => 'create: page']);
-        $unitPermission2 = Permission::create(['guard_name' => 'admin', 'name' => 'read: page']);
-        $unitPermission3 = Permission::create(['guard_name' => 'admin', 'name' => 'update: page']);
-        $unitPermission4 = Permission::create(['guard_name' => 'admin', 'name' => 'delete: page']);
+        $create_page = Permission::create(['guard_name' => 'admin', 'name' => 'create: page']);
+        $read_page = Permission::create(['guard_name' => 'admin', 'name' => 'read: page']);
+        $update_page = Permission::create(['guard_name' => 'admin', 'name' => 'update: page']);
+        $delete_page = Permission::create(['guard_name' => 'admin', 'name' => 'delete: page']);
 
         // UNITMODEL MODEL
-        $unitModelPermission1 = Permission::create(['guard_name' => 'admin', 'name' => 'create: unit-model']);
-        $unitModelPermission2 = Permission::create(['guard_name' => 'admin', 'name' => 'read: unit-model']);
-        $unitModelPermission3 = Permission::create(['guard_name' => 'admin', 'name' => 'update: unit-model']);
-        $unitModelPermission4 = Permission::create(['guard_name' => 'admin', 'name' => 'delete: unit-model']);
+        $create_unit_model = Permission::create(['guard_name' => 'admin', 'name' => 'create: unit-model']);
+        $read_unit_model = Permission::create(['guard_name' => 'admin', 'name' => 'read: unit-model']);
+        $update_unit_model = Permission::create(['guard_name' => 'admin', 'name' => 'update: unit-model']);
+        $delete_unit_model = Permission::create(['guard_name' => 'admin', 'name' => 'delete: unit-model']);
 
         // UNIT MODEL
-        $unitPermission1 = Permission::create(['guard_name' => 'admin', 'name' => 'create: unit']);
-        $unitPermission2 = Permission::create(['guard_name' => 'admin', 'name' => 'read: unit']);
-        $unitPermission3 = Permission::create(['guard_name' => 'admin', 'name' => 'update: unit']);
-        $unitPermission4 = Permission::create(['guard_name' => 'admin', 'name' => 'delete: unit']);
+        $create_unit = Permission::create(['guard_name' => 'admin', 'name' => 'create: unit']);
+        $read_unit = Permission::create(['guard_name' => 'admin', 'name' => 'read: unit']);
+        $update_unit = Permission::create(['guard_name' => 'admin', 'name' => 'update: unit']);
+        $delete_unit = Permission::create(['guard_name' => 'admin', 'name' => 'delete: unit']);
 
         // CUSTOMER APPLICATION
-        $customerAppPermission1 = Permission::create(['guard_name' => 'admin', 'name' => 'create: customer-application']);
-        $customerAppPermission2 = Permission::create(['guard_name' => 'admin', 'name' => 'read: customer-application']);
-        $customerAppPermission3 = Permission::create(['guard_name' => 'admin', 'name' => 'update: customer-application']);
-        $customerAppPermission4 = Permission::create(['guard_name' => 'admin', 'name' => 'delete: customer-application']);
+        $create_customer_application = Permission::create(['guard_name' => 'admin', 'name' => 'create: customer-application']);
+        $read_customer_application = Permission::create(['guard_name' => 'admin', 'name' => 'read: customer-application']);
+        $update_customer_application = Permission::create(['guard_name' => 'admin', 'name' => 'update: customer-application']);
+        $delete_customer_application = Permission::create(['guard_name' => 'admin', 'name' => 'delete: customer-application']);
 
         // ROLE MODEL
-        $rolePermission1 = Permission::create(['guard_name' => 'admin', 'name' => 'create: roles']);
-        $rolePermission2 = Permission::create(['guard_name' => 'admin', 'name' => 'read: roles']);
-        $rolePermission3 = Permission::create(['guard_name' => 'admin', 'name' => 'update: roles']);
-        $rolePermission4 = Permission::create(['guard_name' => 'admin', 'name' => 'delete: roles']);
+        $create_roles = Permission::create(['guard_name' => 'admin', 'name' => 'create: roles']);
+        $read_roles = Permission::create(['guard_name' => 'admin', 'name' => 'read: roles']);
+        $update_roles = Permission::create(['guard_name' => 'admin', 'name' => 'update: roles']);
+        $delete_roles = Permission::create(['guard_name' => 'admin', 'name' => 'delete: roles']);
 
         // PERMISSION MODEL
-        $permission1 = Permission::create(['guard_name' => 'admin', 'name' => 'create: permission']);
-        $permission2 = Permission::create(['guard_name' => 'admin', 'name' => 'read: permission']);
-        $permission3 = Permission::create(['guard_name' => 'admin', 'name' => 'update: permission']);
-        $permission4 = Permission::create(['guard_name' => 'admin', 'name' => 'delete: permission']);
+        $create_permission = Permission::create(['guard_name' => 'admin', 'name' => 'create: permission']);
+        $read_permission = Permission::create(['guard_name' => 'admin', 'name' => 'read: permission']);
+        $update_permission = Permission::create(['guard_name' => 'admin', 'name' => 'update: permission']);
+        $delete_permission = Permission::create(['guard_name' => 'admin', 'name' => 'delete: permission']);
+
+        // Example with different resource name
+        // RELEASE MODEL
+        $create_release = Permission::create(['guard_name' => 'admin', 'name' => 'create: release']);
+        $read_release = Permission::create(['guard_name' => 'admin', 'name' => 'read: release']);
+        $update_release = Permission::create(['guard_name' => 'admin', 'name' => 'update: release']);
+        $delete_release = Permission::create(['guard_name' => 'admin', 'name' => 'delete: release']);
+
+        // Example with different resource name
+        // LOGS MODEL
+        $create_logs = Permission::create(['guard_name' => 'admin', 'name' => 'create: logs']);
+        $read_logs = Permission::create(['guard_name' => 'admin', 'name' => 'read: logs']);
+        $update_logs = Permission::create(['guard_name' => 'admin', 'name' => 'update: logs']);
+        $delete_logs = Permission::create(['guard_name' => 'admin', 'name' => 'delete: logs']);
 
         
-        // CREATE ROLES
-        $userRole = Role::create(['name' => 'customer'])->syncPermissions([
-            $miscPermission,
-        ]);
+        // // CREATE ROLES
+        // $userRole = Role::create(['name' => 'customer'])->syncPermissions([
+        //     $miscPermission,
+        // ]);
 
-        $branch_manager = Role::create(['guard_name' => 'admin', 'name' => 'branch-manager'])->syncPermissions([
-            $userPermission1,       //create: user
-            $userPermission2,       //read: user
-            $userPermission3,       //update: user
-            $userPermission4,       //delete: user
-
-            $paymentPermission1,$paymentPermission2,$paymentPermission3,$paymentPermission4,
-
-            $branchPermission1,$branchPermission2,$branchPermission3,$branchPermission4,
-
-            $unitModelPermission1,$unitModelPermission2,$unitModelPermission3,$unitModelPermission4,
-
-            $unitPermission1,$unitPermission2,$unitPermission3,$unitPermission4,
-
-            $customerAppPermission1, $customerAppPermission2, $customerAppPermission3, $customerAppPermission4,
-
-            $rolePermission1,$rolePermission2,$rolePermission3,$rolePermission4,
-
-            $permission1,$permission2,$permission3,$permission4,
+        Role::create(['guard_name' => 'admin', 'name' => 'admin-user'])->syncPermissions([
+            // User Permissions
+            $create_user, $read_user, $update_user, $delete_user,
+        
+            // Payment Permissions
+            $create_payment, $read_payment, $update_payment, $delete_payment,
+        
+            // Branch Permissions
+            $create_branch, $read_branch, $update_branch, $delete_branch,
+        
+            // Customer Page Permissions
+            $create_page, $read_page, $update_page, $delete_page,
+        
+            // UnitModel Permissions
+            $create_unit_model, $read_unit_model, $update_unit_model, $delete_unit_model,
+        
+            // Unit Permissions
+            $create_unit, $read_unit, $update_unit, $delete_unit,
+        
+            // Customer Application Permissions
+            $create_customer_application, $read_customer_application, $update_customer_application, $delete_customer_application,
+        
+            // Role Permissions
+            $create_roles, $read_roles, $update_roles, $delete_roles,
+        
+            // Permission Permissions
+            $create_permission, $read_permission, $update_permission, $delete_permission,
+        
+            // Release Permissions
+            $create_release, $read_release, $update_release, $delete_release,
+        
+            // Logs Permissions
+            $create_logs, $read_logs, $update_logs, $delete_logs,
         ]);
         
-        $adminRole = Role::create(['guard_name' => 'admin',  'name' => 'acount-officer'])->syncPermissions([
 
-            $customerAppPermission1, $customerAppPermission2, $customerAppPermission3, $customerAppPermission4,
+        Role::create(['guard_name' => 'admin', 'name' => 'branch-manager'])->syncPermissions([
+            // User Permissions
+            $create_user, $read_user, $update_user,
+        
+            // Payment Permissions
+            $create_payment, $read_payment, $update_payment, $delete_payment,
+        
+            // Branch Permissions
+            $create_branch, $read_branch, $update_branch, $delete_branch,
+        
+            // UnitModel Permissions
+            $read_unit_model,
+        
+            // Unit Permissions
+            $create_unit, $read_unit, $update_unit, $delete_unit,
+        
+            // Customer Application Permissions
+            $create_customer_application, $read_customer_application, $update_customer_application, $delete_customer_application,
+        
+            // Release Permissions
+            $create_release, $read_release, $update_release, $delete_release,
+        
+            // Logs Permissions
+            $read_logs,
+        ]);
+        
+        Role::create(['guard_name' => 'admin',  'name' => 'account-officer'])->syncPermissions([
+
+            // Customer Application Permissions
+            $create_customer_application, $read_customer_application, $update_customer_application, $delete_customer_application,
+
+            // Logs Permissions
+            $read_logs,
 
         ]);
 
-        $moderatorRole = Role::create(['guard_name' => 'admin',  'name' => 'sales-clerk'])->syncPermissions([
+        Role::create(['guard_name' => 'admin',  'name' => 'sales-clerk'])->syncPermissions([
 
-            $paymentPermission1,$paymentPermission2,$paymentPermission3,$paymentPermission4,
-
-            $customerAppPermission1, $customerAppPermission2, $customerAppPermission3, $customerAppPermission4,
-
-        ]);
-
-        $developerRole = Role::create(['guard_name' => 'admin', 'name' => 'cashier'])->syncPermissions([
-
-            $paymentPermission1,$paymentPermission2,$paymentPermission3,$paymentPermission4,
+            // Customer Application Permissions
+            $create_customer_application, $read_customer_application, $update_customer_application
 
         ]);
 
-        $developerRole = Role::create(['guard_name' => 'admin', 'name' => 'customer'])->syncPermissions([
+        Role::create(['guard_name' => 'admin', 'name' => 'cashier'])->syncPermissions([
 
-            $paymentPermission1, $paymentPermission2, $customerAppPermission1, $customerAppPermission2
+            // Payment Permissions
+            $create_payment, $read_payment,
 
         ]);
 
-        if(User::query()->where('name', 'admin')->first() != null){
-            $user = User::query()->where('name', 'admin')->first();
-            $user->assignRole('branch-manager');
-        }
+        // $developerRole = Role::create(['guard_name' => 'web', 'name' => 'customer'])->syncPermissions([
+        // ]);
+        // if(User::query()->where('name', '')->first() != null){
+        //     $user = User::query()->where('firstname', 'admin')->first();
+        //     $user->assignRole('admin');
+        // }
 
     }
 }

@@ -14,22 +14,19 @@ class CustomerSeeder extends Seeder
     public function run(): void
     {
         $user = Customer::query()->create([
-            "firstname" => "test",
-            "lastname" => "customer",
-            "middlename" => "",
+            "firstname" => "Juan",
+            "lastname" => "Dela Cruz",
+            "middlename" => "M.",
             "gender" => "male",
-            "name" => "",
             "regCode" => "04",
             "provCode" => "0410",
             "citymunCode" => "041034",
             "brgyCode" => "041034018",
-            "birthday" => fake()->date('Y-m-d', 'now'),
+            "birthday" => fake()->date(config("app.date_format"), 'now'),
             "password" => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
             "email" => fake()->unique()->safeEmail(),
+            "email_verified_at" => now(),
         ]);
-
         $user->assignRole('customer');
-
-
     }
 }

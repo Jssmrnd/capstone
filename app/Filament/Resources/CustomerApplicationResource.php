@@ -61,11 +61,7 @@ class CustomerApplicationResource extends Resource
                                         ),
                                 Forms\Components\Select::make('preffered_unit_status')
                                         ->label("Preffered unit status")
-                                        ->options([
-                                                "depo" => "Depo",
-                                                "repo" => "Repo",
-                                                "brand-new" => "New",
-                                        ]),
+                                        ->options(Enums\UnitStatus::class),
                                 Forms\Components\Group::make()
                                         ->columnSpan(4)
                                         ->columns(2)

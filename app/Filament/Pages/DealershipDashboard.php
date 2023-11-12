@@ -27,7 +27,7 @@ class DealershipDashboard extends BasePage
     {
         return [
             AmortizationRevenueSummary::class,
-            Widgets\AccountWidget::class,
+            // Widgets\AccountWidget::class,
             CustomerDues::class,
         ];
     }

@@ -20,11 +20,11 @@ return new class extends Migration
 
             $table->id();
             $table->string("due_date")->nullable();
-            $table->string('application_status')->default(ApplicationStatus::PENDING_STATUS->value);
+            $table->enum('application_status', ApplicationStatus::values())->default(ApplicationStatus::PENDING_STATUS);
             $table->text('reject_note')->default(null)->nullable();
             $table->text('resubmission_note')->default(null)->nullable();
             $table->string('preffered_unit_status')->default(null)->nullable();
-            $table->string('release_status')->default(ReleaseStatus::UN_RELEASED->value);
+            $table->enum('release_status', ReleaseStatus::values())->default(ReleaseStatus::UN_RELEASED);;
 
             $table->foreignId('assumed_by_id')->default(null)->nullable();
 

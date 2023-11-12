@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UnitResource\Pages;
 use App\Models\Branch;
+use App\Enums;
 use App\Models\Unit;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -31,11 +32,7 @@ class UnitResource extends Resource
                     ->required(),
             Forms\Components\Select::make('status')
                     ->columnSpan(1)
-                    ->options([
-                            'brand-new' => 'New',
-                            'depo' => 'Depo',
-                            'repo' => 'Repo',
-                    ])
+                    ->options(Enums\UnitStatus::class)
                     ->required(),
             Forms\Components\TextInput::make('chasis_number')
                     ->numeric()

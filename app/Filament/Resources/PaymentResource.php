@@ -30,12 +30,6 @@ class PaymentResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
 
-    // public static function getDownpaymentInputComponent(): Forms\Components\Component
-    // {
-    //     return Forms\Components\Group::make([
-
-    //     ]);
-    // }
 
     public static function getDownpaymentInputComponent(): Forms\Components\Component
     {

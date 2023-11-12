@@ -79,8 +79,6 @@ class CustomerLogin extends BaseAuth
 
     }
 
-    
-
     protected function getLoginFormComponent(): Component 
     {
         return TextInput::make('email')

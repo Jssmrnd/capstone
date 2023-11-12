@@ -40,6 +40,17 @@ class Customer extends Authenticatable implements FilamentUser, HasName, MustVer
         return "{$this->firstname} {$this->lastname}";
     }
 
+    public function getNameAttribute()
+    {
+    return $this->first_name.' '.$this->last_name;
+    }
+
+    
+    protected function getUserName(): string
+    {
+        return "{$this->firstname} {$this->lastname}";
+    }
+
     protected $fillable = [
         "firstname",
         "middlename",

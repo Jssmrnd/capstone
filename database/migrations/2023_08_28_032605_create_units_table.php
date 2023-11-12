@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Branch;
+use App\Enums\UnitStatus;
 use App\Models\CustomerApplication;
 use App\Models\UnitModel;
 use Illuminate\Database\Migrations\Migration;
@@ -25,7 +26,7 @@ return new class extends Migration
                     ->unique();
             $table->foreignIdFor(CustomerApplication::class)
                     ->nullable();
-            $table->enum('status',['depo', 'repo', 'brand-new']);
+            $table->enum('status', UnitStatus::values());
             $table->string('notes')
                     ->nullable();
             $table->softDeletes();

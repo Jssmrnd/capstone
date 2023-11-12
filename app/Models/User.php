@@ -30,7 +30,8 @@ class User extends Authenticatable implements FilamentUser
 
     public static $filamentUserColumn = 'is_filament_user';
     protected $fillable = [
-        'name',
+        'firstname',
+        'lastname',
         'is_admin',
         'branch_id',
         'gender',
@@ -39,6 +40,22 @@ class User extends Authenticatable implements FilamentUser
         'email',
         'password',
     ];
+
+    public function getFilamentName(): string
+    {
+        return "{$this->firstname} {$this->lastname}";
+    }
+
+    public function getNameAttribute()
+    {
+    return $this->first_name.' '.$this->last_name;
+    }
+
+    
+    protected function getUserName(): string
+    {
+        return "{$this->firstname} {$this->lastname}";
+    }
 
     /**
      * The attributes that should be hidden for serialization.

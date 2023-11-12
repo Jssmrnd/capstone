@@ -6,7 +6,7 @@ use Illuminate\Support\ServiceProvider;
 return [
 
     'date_format' => 'd/m/Y',
-
+    'auth_pay' => 'c2tfdGVzdF90WjdNdUFUOVllWThvUzFTTlE5VmJRVlI6',
     /*
     |--------------------------------------------------------------------------
     | Application Name

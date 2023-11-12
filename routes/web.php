@@ -33,8 +33,8 @@ Route::get('/', function(){
 
 
 
-Route::get('pay/{customerApplicationId}', [PaymongoController::class, 'pay'])->name('paymongo');
-Route::get('payment-success/{customerApplicationId}', [PaymongoController::class, 'success'])->name('payment-success');
+Route::get('pay/', [PaymongoController::class, 'pay'])->name('paymongo');
+Route::get('payment-success/', [PaymongoController::class, 'success'])->name('payment-success');
 
 
 Route::prefix('/products')->group(function () {
@@ -70,8 +70,8 @@ Route::prefix('/products')->group(function () {
     });
 });
 
-Route::get('customer/login')
-->name('login');
+Route::redirect('/customer/login', '/login')->name('login');
+
 // Route::post('/login', [CustomerLogin::class, 'authenticate']);
 
 // Route::get('/register', [CustomerController::class, 'create'])

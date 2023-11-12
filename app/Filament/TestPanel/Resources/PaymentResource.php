@@ -7,6 +7,7 @@ use App\Models\CustomerApplication;
 use App\Filament\TestPanel\Resources\PaymentResource\RelationManagers;
 use App\Models\Payment;
 use App\Models;
+use App\Enums;
 use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -32,7 +33,7 @@ class PaymentResource extends Resource
             ->relationship(
                 name: 'customerApplication',
                 titleAttribute: 'applicant_lastname',
-                modifyQueryUsing: fn (Builder $query) => $query->where("application_status", "active"),
+                modifyQueryUsing: fn (Builder $query) => $query->where("application_status", Enums\ApplicationStatus::ACTIVE_STATUS),
             )
             ->label('For Applicant:')
             ->preload()

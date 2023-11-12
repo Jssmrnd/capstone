@@ -60,6 +60,9 @@ class CustomerApplicationResource extends Resource
                                                         $set('unit_srp', $unit_price);
                                                 }
                                         ),
+                                Forms\Components\Select::make('preffered_unit_status')
+                                        ->label("Preffered unit status")
+                                        ->options(Enums\UnitStatus::class),
                                 Forms\Components\Group::make()
                                         ->columnSpan(4)
                                         ->columns(2)
@@ -775,9 +778,9 @@ class CustomerApplicationResource extends Resource
                                         ->schema([
                                                 CustomerApplicationResource::getUnitToBeFinanced()
                                                         ->disabled(
-                                                                function(string $operation){
-                                                                    if($operation == "edit"){
-                                                                        return true;
+                                                                function(?Model $record){
+                                                                    if($record->application_status == Enums\ApplicationStatus::RESUBMISSION_STATUS){
+                                                                        return false;
                                                         }}),
                                         ]),
                                 Forms\Components\Wizard\Step::make('Applicant Information')
@@ -828,7 +831,6 @@ class CustomerApplicationResource extends Resource
                         ->summarize(Average::make())->money('php'),
                 Tables\Columns\TextColumn::make('created_at')
                         ->label("Date Created:")
-                        ->dateTime('d-M-Y'),
             ])
             ->filters([
                 //
@@ -870,11 +872,9 @@ class CustomerApplicationResource extends Resource
                                                             ->label("Relase status")
                                                             ->badge(),
                                                     InfoLists\Components\TextEntry::make('created_at')
-                                                            ->dateTime('M d Y')
                                                             ->label('Date Created')
                                                             ->badge(),
                                                     InfoLists\Components\TextEntry::make('due_date')
-                                                            ->dateTime('M d Y')
                                                             ->label('Upcoming Due')
                                                             ->badge()
                                                             ->color('danger'),

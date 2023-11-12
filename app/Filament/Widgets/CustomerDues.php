@@ -28,8 +28,7 @@ class CustomerDues extends BaseWidget
             ->columns([
                 Tables\Columns\TextColumn::make("id")
                         ->label("Application ID"),
-                Tables\Columns\TextColumn::make("due_date")
-                        ->dateTime('M d Y'),
+                Tables\Columns\TextColumn::make("due_date"),
                 Tables\Columns\TextColumn::make("applicant_lastname"),
                 Tables\Columns\TextColumn::make("unit_amort_fin")
                         ->label("Monthly Amort.")
