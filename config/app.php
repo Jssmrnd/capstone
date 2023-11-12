@@ -5,6 +5,8 @@ use Illuminate\Support\ServiceProvider;
 
 return [
 
+    'date_format' => 'd/m/Y',
+
     /*
     |--------------------------------------------------------------------------
     | Application Name

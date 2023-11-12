@@ -856,7 +856,6 @@ class CustomerApplicationResource extends Resource
     {
         return $infolist
             ->schema([
-
                 InfoLists\Components\Tabs::make('Label')
                             ->tabs([
                                 InfoLists\Components\Tabs\Tab::make("Application's Information")

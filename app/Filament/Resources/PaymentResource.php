@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\ApplicationStatus;
+use App\Enums\ReleaseStatus;
 use App\Filament\Resources\PaymentResource\Pages;
 use App\Models\CustomerApplication;
 use App\Models\Unit;
@@ -28,71 +30,113 @@ class PaymentResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
 
+    // public static function getDownpaymentInputComponent(): Forms\Components\Component
+    // {
+    //     return Forms\Components\Group::make([
+
+    //     ]);
+    // }
+
+    public static function getDownpaymentInputComponent(): Forms\Components\Component
+    {
+        return Forms\Components\Group::make([
+            Forms\Components\TextInput::make('payment_amount')
+                    ->label('Down Payment'),
+        ]);
+    }
+
+    public static function getPaymentDetails(): Forms\Components\Component
+    {
+        return Forms\Components\Group::make([
+
+        ]);
+    }
+
+    public static function getPaymentInput(): Forms\Components\Component
+    {
+        return Forms\Components\Group::make([
+            Forms\Components\TextInput::make('payment_amount')
+                    ->label('Amount'),
+        ]);
+    }
+
+    public static function getApplicationDetails(): Forms\Components\Component
+    {
+        return Forms\Components\Group::make([
+                Forms\Components\Select::make('customer_application_id')
+                ->relationship(
+                        name: 'customerApplication',
+                        titleAttribute: 'applicant_lastname',
+                        modifyQueryUsing: fn (Builder $query) => $query->where("application_status", "Active")
+                                                                                ->orwhere("application_status", "Approved"),
+                )
+                ->label('For Applicant:')
+                ->preload()
+                ->searchable()
+                ->required()
+                ->live()
+                ->afterStateUpdated(
+                    function($state, Forms\Set $set){
+                        $application = CustomerApplication::query()
+                                ->where("id", $state)
+                                ->first();
+                        if($application != null){
+                            if($application->application_status == ApplicationStatus::APPROVED_STATUS 
+                                    && $application->release_status == ReleaseStatus::UN_RELEASED->value)
+                            {
+                                // dd("Down Payment");
+                            }else if($application->application_status == ApplicationStatus::ACTIVE_STATUS){
+                                // dd("Amort. Payment");
+                            }
+                        }
+                        $due_date = $application->due_date;
+
+                        $today = Carbon::parse(Carbon::today()->format(config('app.date_format')));
+                        $amort_fin = $application->unit_monthly_amort;
+                        $set('due_date', $due_date);
+                        $set('payment_amount', $amort_fin);
+
+                        $delinquent = Carbon::parse(Carbon::createFromFormat(config('app.date_format'), $due_date)->addDays(30));
+
+                        $parsed_date = Carbon::parse(Carbon::createFromFormat(config('app.date_format'), $due_date));
+
+                        $is_advance = $today->lessThan($parsed_date);
+                        $is_current = $today->equalTo($parsed_date);
+                        $is_overdue = $today->greaterThan($parsed_date) && $today->lessThan($delinquent);
+                        $is_delinquent = $today->greaterThan($delinquent);
+
+                        if($today->lessThan($parsed_date)){
+                            $set('payment_status', 'advance');
+                        }
+                        elseif($today->equalTo($parsed_date)){
+                            $set('payment_status', 'current');
+                        }
+                        elseif($today->greaterThan($parsed_date) && $today->lessThan($delinquent)){
+                            $set('payment_status', 'overdue');
+                        }
+                        elseif($today->greaterThan($delinquent)){
+                            $set('payment_status', 'delinquent');
+                        }
+                    }
+                ),
+        ]);
+    }
+
+
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('customer_application_id')
-                        ->relationship(
-                            name: 'customerApplication',
-                            titleAttribute: 'applicant_lastname',
-                            modifyQueryUsing: fn (Builder $query) => $query->where("application_status", "active"),
-                        )
-                        ->label('For Applicant:')
-                        ->preload()
-                        ->searchable()
-                        ->required()
-                        ->live()
-                        ->afterStateUpdated(
-                            function($state, Forms\Set $set){
-                                $application = CustomerApplication::query()
-                                        ->where("id", $state)
-                                        ->first();
-
-                                $due_date = $application->due_date;
-                                $today = Carbon::parse(Carbon::today()->format('Y-m-d'));
-                                $amort_fin = $application->unit_amort_fin;
-                                $set('due_date', $due_date);
-                                $set('payment_amount', $amort_fin);
-
-                                //Y-m-d
-
-                                $delinquent = Carbon::parse(Carbon::createFromFormat('Y-m-d', $due_date)->addDays(30));
-
-                                $is_advance = $today->lessThan($due_date);
-                                $is_current = $today->equalTo($due_date);
-                                $is_overdue = $today->greaterThan($due_date) && $today->lessThan($delinquent);
-                                $is_delinquent = $today->greaterThan($delinquent);
-
-                                if($today->lessThan($due_date)){
-                                    $set('payment_status', 'advance');
-                                }
-                                elseif($today->equalTo($due_date)){
-                                    $set('payment_status', 'current');
-                                }
-                                elseif($today->greaterThan($due_date) && $today->lessThan($delinquent)){
-                                    $set('payment_status', 'overdue');
-                                }
-                                elseif($today->greaterThan($delinquent)){
-                                    $set('payment_status', 'delinquent');
-                                }
-                            }
-                ),
-                // Forms\Components\Select::make('current'),
-                // Forms\Components\Select::make('overdue'),
-                // Forms\Components\Select::make('delinquent'),
-                // Forms\Components\Select::make('penalty'),
-                // Forms\Components\Select::make('total'),
-                // Forms\Components\Select::make('m_a'),
-                // Forms\Components\Select::make('credit'),
-                // Forms\Components\Select::make('penalty'),
-                // Forms\Components\Select::make('customer_application_id'),
-
+                PaymentResource::getPaymentInput(),
+                PaymentResource::getDownpaymentInputComponent(),
+                PaymentResource::getApplicationDetails(),
                 Forms\Components\TextInput::make('due_date')
                         ->hidden(function(string $operation){
                             if($operation == "edit"){
                                 return true;
                             }
+
                         }),
                 Forms\Components\TextInput::make('payment_amount'),
                 Forms\Components\TextInput::make('penalty'),

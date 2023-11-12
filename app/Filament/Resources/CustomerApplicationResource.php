@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Support\Enums\Alignment;
+use Filament\Infolists\Components\TextEntry;
 
 use Filament\Infolists\Components\SpatieMediaLibraryImageEntry;
 
@@ -58,6 +59,13 @@ class CustomerApplicationResource extends Resource
                                                         $set('unit_srp', $unit_price);
                                                 }
                                         ),
+                                Forms\Components\Select::make('preffered_unit_status')
+                                        ->label("Preffered unit status")
+                                        ->options([
+                                                "depo" => "Depo",
+                                                "repo" => "Repo",
+                                                "brand-new" => "New",
+                                        ]),
                                 Forms\Components\Group::make()
                                         ->columnSpan(4)
                                         ->columns(2)
@@ -793,95 +801,174 @@ class CustomerApplicationResource extends Resource
     {
         return $infolist
             ->schema([
-                InfoLists\Components\Section::make('Customer Application')->schema([
-                        InfoLists\Components\FieldSet::make('Applicant Information')
-                                ->schema([
-                                        InfoLists\Components\TextEntry::make('application_status.value')
-                                                ->label('Application Status')
-                                                ->badge(),
-                                        InfoLists\Components\TextEntry::make('payment_method')
-                                                ->hidden(fn(?Model $record): bool => $record->payment_method == null)
-                                                ->label('Payment method')
-                                                ->badge(),
-                                        InfoLists\Components\TextEntry::make('created_at')
-                                                ->dateTime('M d Y')
-                                                ->label('Date Created')
-                                                ->badge(),
-                                        InfoLists\Components\TextEntry::make('due_date')
-                                                ->hidden(fn(?Model $record): bool => $record->due_date == null)
-                                                ->dateTime('M d Y')
-                                                ->label('Upcoming Due')
-                                                ->badge()
-                                                ->color('danger'),
-                                ]),
+                InfoLists\Components\Tabs::make('Label')
+                            ->tabs([
+                                InfoLists\Components\Tabs\Tab::make("Application's Information")
+                                    ->schema([
+                                            InfoLists\Components\Section::make("Application's Information")
+                                                ->schema([
 
-                        InfoLists\Components\FieldSet::make('Unit Information')
-                                ->columns(4)
-                                ->columnSpan(2)
-                                ->schema([
+                                                    InfoLists\Components\TextEntry::make('application_status')
+                                                            ->label("Application's status")
+                                                            ->badge(),
+                                                    InfoLists\Components\TextEntry::make('release_status')
+                                                            ->label("Relase status")
+                                                            ->badge(),
+                                                    InfoLists\Components\TextEntry::make('created_at')
+                                                            ->dateTime('M d Y')
+                                                            ->label('Date Created')
+                                                            ->badge(),
+                                                    InfoLists\Components\TextEntry::make('preffered_unit_status')
+                                                            ->label("Preffered unit status"),
+                                                    InfoLists\Components\TextEntry::make('due_date')
+                                                            ->label('Upcoming Due')
+                                                            ->badge()
+                                                            ->color('danger'),
+                                            ])
+                                            ->columns(6),
+                                            InfoLists\Components\Section::make("Branch Information")
+                                                ->schema([
+                                                    InfoLists\Components\TextEntry::make('branches.full_address')
+                                                            ->size(TextEntry\TextEntrySize::Small)
+                                                            ->columnSpan(6)
+                                                            ->label("Branch"),
+                                                    InfoLists\Components\TextEntry::make('contact')
+                                                            ->size(TextEntry\TextEntrySize::Small)
+                                                            ->columnSpan(6)
+                                                            ->label("Contact No."),
+                                            ]),
+                                    ])->columns(6),
+                                InfoLists\Components\Tabs\Tab::make('Unit Information')
+                                    ->schema([
+                                            InfoLists\Components\Section::make("Motorcycle's Image")
+                                                    ->schema([
+                                                            InfoLists\Components\ImageEntry::make('unitModel.image_file')
+                                                                    ->label("")
+                                                                    ->height(200)
+                                                                    ->width(200),
+                                                    ])->columnSpan(2),
+                                            InfoLists\Components\Section::make("Motorcycle's Information")
+                                                    ->schema([
+                                                            InfoLists\Components\TextEntry::make('unitModel.model_name')
+                                                            ->label('Unit Model'),
+                                                    ])->columnSpan(4),
+                                            InfoLists\Components\TextEntry::make('unitModel.model_name')
+                                                    ->label('Unit Model'),
+                                            InfoLists\Components\TextEntry::make('units.chasis_number')
+                                                    ->label('Chasis number')
+                                                    ->badge(),   
+                                            InfoLists\Components\TextEntry::make('unit_term')
+                                                    ->label('Unit Term'),
+                                            InfoLists\Components\TextEntry::make('unit_ttl_dp')
+                                                    ->label('Down Payment')
+                                                    ->money('php'),   
+                                            InfoLists\Components\TextEntry::make('unit_amort_fin')
+                                                    ->label('Monthly Amortization')
+                                                    ->money('php'),                     
+                                            InfoLists\Components\TextEntry::make('unit_srp')
+                                                    ->label('Unit Price')
+                                                    ->money('php'),
+                                    ])
+                                    ->columns(6),
+                                InfoLists\Components\Tabs\Tab::make("Customer's Information")
+                                    ->schema([
+                                            InfoLists\Components\Section::make([
+                                                    InfoLists\Components\TextEntry::make('applicant_firstname')->label('First Name')->columnSpan(2),
+                                                    InfoLists\Components\TextEntry::make('applicant_lastname')->label('Last Name')->columnSpan(2),
+                                                    InfoLists\Components\TextEntry::make('applicant_birthday')->label('Birthday')->columnSpan(2),
+                                            ])
+                                            ->columns(6)
+                                            ->columnSpan(3),
+                                            InfoLists\Components\Section::make([
+                                                    InfoLists\Components\TextEntry::make('applicant_telephone')->label('Contact Number:')
+                                                            ->columnSpan(3),
 
-                                        InfoLists\Components\ImageEntry::make('unitModel.image_file')
-                                                ->height(100)
-                                                ->width(100),
+                                            ])
+                                            ->columns(6)
+                                            ->columnSpan(3),
 
-                                        InfoLists\Components\TextEntry::make('unitModel.model_name')
-                                                ->label('Unit Model')
-                                                ->hidden(fn(?Model $record): bool => $record->unit_model_id == null),
-                                        InfoLists\Components\TextEntry::make('units.chasis_number')
-                                                ->label('Chasis number')
-                                                ->hidden(fn(?Model $record): bool => $record->units_id == null)
-                                                ->badge(),
-                                        InfoLists\Components\TextEntry::make('unit_term')
-                                                ->label('Unit Term')
-                                                ->hidden(fn(?Model $record): bool => $record->unit_term == 0),
-                                        InfoLists\Components\TextEntry::make('unit_ttl_dp')  
-                                                ->label('Down Payment')
-                                                ->money('php')
-                                                ->hidden(fn(?Model $record): bool => $record->unit_ttl_dp == 0),
-                                        InfoLists\Components\TextEntry::make('unit_amort_fin')
-                                                ->hidden(fn(?Model $record): bool => $record->unit_amort_fin == 0)
-                                                ->label('Monthly Amortization')
-                                                ->money('php'),                     
-                                        InfoLists\Components\TextEntry::make('unit_srp')
-                                                ->label('Unit Price')
-                                                ->money('php'),
-                        ]),
+                                            InfoLists\Components\Section::make([
+                                                    InfoLists\Components\TextEntry::make('applicant_house')
+                                                            ->label('House:')
+                                                            ->columnSpan(3),
+                                                    InfoLists\Components\TextEntry::make('applicant_present_address')
+                                                            ->label('Present Address:')
+                                                            ->columnSpan(3),
+                                            ])
+                                            ->columns(6)
+                                            ->columnSpan(6),
+                                            InfoLists\Components\Section::make([
+                                                InfoLists\Components\ImageEntry::make('applicant_valid_id')
+                                                            ->columnSpan(6)
+                                                            ->width(400)
+                                                            ->height(400)
+                                                            ->label("Provided ID(s)"),
+                                        ]),
+                                    ]),
+                                InfoLists\Components\Tabs\Tab::make('Co-maker Information')
+                                    ->schema([
+                                        // ...
+                                    ]),
+                                InfoLists\Components\Tabs\Tab::make('Statement of Monthly Income')
+                                    ->schema([
+                                        // ...
+                                    ]),
+                    ])
+                    ->columns(6)
+                    ->columnSpan(6),
 
-                    InfoLists\Components\FieldSet::make('Applicant Information')
-                            ->columns(6)
-                            ->columnSpan(4)
-                            ->schema([
-                                InfoLists\Components\TextEntry::make('applicant_firstname')->label('First Name:'),
-                                InfoLists\Components\TextEntry::make('applicant_lastname')->label('Last Name:'),
-                                InfoLists\Components\ImageEntry::make('applicant_valid_id')->label('Provided ID:')
-                                ->width(200)
-                                ->height(200),
-                                InfoLists\Components\TextEntry::make('applicant_house')->label('House:'),  
-                                InfoLists\Components\TextEntry::make('applicant_present_address')->label('Present Address:'),
-                                InfoLists\Components\TextEntry::make('applicant_telephone')->label('Contacts:'),        
-                    ]),
+                // InfoLists\Components\Section::make('Customer Application')->schema([
 
-                    InfoLists\Components\FieldSet::make("Applicant's Income")->schema([
-                            InfoLists\Components\TextEntry::make('gross_monthly_income')
-                                    ->label("Gross Monthly Income:")
-                                    ->color('success')
-                                    ->money('php'),
-                            InfoLists\Components\TextEntry::make('total_expenses')
-                                    ->label("Total Expenses:")
-                                    ->color('danger')
-                                    ->money('php'),
-                            InfoLists\Components\TextEntry::make('net_monthly_income')
-                                    ->label("Net Monthly Income:")
-                                    ->color('success')
-                                    ->money('php'),
-                    ])->columns(3)->columnSpan(4),
+                //         InfoLists\Components\FieldSet::make('Unit Information')
+                //                 ->columns(4)
+                //                 ->columnSpan(2)
+                //                 ->schema([
+                //                         InfoLists\Components\TextEntry::make('unitModel.model_name')
+                //                                 ->label('Unit Model'),
+                //                         InfoLists\Components\TextEntry::make('units.chasis_number')
+                //                                 ->label('Chasis number')
+                //                                 ->badge(),   
+                //                         InfoLists\Components\TextEntry::make('unit_term')
+                //                                 ->label('Unit Term'),
+                //                         InfoLists\Components\TextEntry::make('unit_ttl_dp')
+                //                                 ->label('Down Payment')
+                //                                 ->money('php'),   
+                //                         InfoLists\Components\TextEntry::make('unit_amort_fin')
+                //                                 ->label('Monthly Amortization')
+                //                                 ->money('php'),                     
+                //                         InfoLists\Components\TextEntry::make('unit_srp')
+                //                                 ->label('Unit Price')
+                //                                 ->money('php'),
+                //         ]),
 
-                ]),
+                //     InfoLists\Components\FieldSet::make('Applicant Information')
+                //             ->columns(6)
+                //             ->columnSpan(4)
+                //             ->schema([
+                //                 InfoLists\Components\TextEntry::make('applicant_firstname')->label('First Name:'),
+                //                 InfoLists\Components\TextEntry::make('applicant_lastname')->label('Last Name:'),
+                //                 InfoLists\Components\ImageEntry::make('applicant_valid_id')->label('Provided ID:'),
+                //                 InfoLists\Components\TextEntry::make('applicant_house')->label('House:'),  
+                //                 InfoLists\Components\TextEntry::make('applicant_present_address')->label('Present Address:'),
+                //                 InfoLists\Components\TextEntry::make('applicant_telephone')->label('Contacts:'),       
+                //     ]),
 
-                Infolists\Components\Actions::make([
-                        Infolists\Components\Actions\Action::make("export_pdf")
-                                ->label('Export PDF'),
-                ]),
+                //     InfoLists\Components\FieldSet::make("Applicant's Statement of Monthly Income")->schema([
+                //             InfoLists\Components\TextEntry::make('gross_monthly_income')
+                //                     ->label("Gross Monthly Income:")
+                //                     ->color('success')
+                //                     ->money('php'),
+                //             InfoLists\Components\TextEntry::make('total_expenses')
+                //                     ->label("Total Expenses:")
+                //                     ->color('danger')
+                //                     ->money('php'),
+                //             InfoLists\Components\TextEntry::make('net_monthly_income')
+                //                     ->label("Net Monthly Income:")
+                //                     ->color('success')
+                //                     ->money('php'),
+                //     ])->columns(3)->columnSpan(4),
+
+                // ]),
 
             ])->columns(4);
     }

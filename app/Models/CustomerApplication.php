@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ApplicationStatus;
+use App\Enums\ReleaseStatus;
 use App\Models\Scopes\CustomerApplicationScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,8 +11,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Carbon;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+
 
 class CustomerApplication extends Model implements HasMedia
 {
@@ -25,6 +28,9 @@ class CustomerApplication extends Model implements HasMedia
         'reject_note',
         'resubmission_note',
         'release_status',
+        
+        'preffered_unit_status',
+        'assumed_by_id',
 
         //mutate data here
         'branch_id', 
@@ -59,6 +65,15 @@ class CustomerApplication extends Model implements HasMedia
         'applicant_telephone',
 
         //Applicant Employment
+        'applicant_present_business_employer',
+        'applicant_position',
+        'applicant_how_long_job_or_business',
+        'applicant_business_address',
+        'applicant_nature_of_business',
+        'applicant_previous_employer',
+        'applicant_previous_employer_position',
+        'applicant_how_long_prev_job_or_business',
+
         'applicant_present_business_employer',
         'applicant_position',
         'applicant_how_long_job_or_business',
@@ -170,9 +185,43 @@ class CustomerApplication extends Model implements HasMedia
         'dependents'                => 'json',
     ];
 
+
     protected static function booted(): void
     {
         static::addGlobalScope(new CustomerApplicationScope);
+    }
+
+    public function releasesApplication(array $data = null): array
+    {
+        $this->due_date = $this->calculateDueDate(Carbon::now ());
+        $data["application_status"] = ApplicationStatus::ACTIVE_STATUS->value;
+        $data["release_status"] = ReleaseStatus::RELEASED->value;
+        $this->release();
+        dd($this->attributes);
+    }
+
+    public function calculateDueDate($releaseDate)
+    {
+        // Convert the input release date to a Carbon instance
+        $releaseDate = Carbon::parse($releaseDate);
+
+        // Set the initial due date to 31 (maximum possible date)
+        $dueDate = Carbon::createFromDate(null, null, 31);
+
+        // Check the release date range and update the due date accordingly
+        if ($releaseDate->day >= 1 && $releaseDate->day <= 9) {
+            $dueDate->day(9);
+        } elseif ($releaseDate->day > 9 && $releaseDate->day <= 16) {
+            $dueDate->day(16);
+        } elseif ($releaseDate->day > 16) {
+            // If the release date is after the 16th, set due date to 30 (or 28)
+            $dueDate->day($dueDate->daysInMonth);
+        }
+
+        // Format the due date as 'd-m-Y'
+        $dueDateFormatted = $dueDate->format(config('app.date_format'));
+        return $dueDateFormatted;
+
     }
 
     public function setStatusTo(ApplicationStatus $status): void
@@ -190,11 +239,6 @@ class CustomerApplication extends Model implements HasMedia
         return null;
     }
 
-    // public function changeAttribute(string $attribute, $value): bool
-    // {
-    //     $this->attributes['attribute'] = $value;
-    // } 
-
     public function release()
     {
         //gets the associated unit and marks it as owned.
@@ -207,9 +251,18 @@ class CustomerApplication extends Model implements HasMedia
         return $this->belongsTo(Branch::class, 'branch_id');
     }
 
-    public function calculateTotalPayments(): float
+    public function customerApplication(): BelongsTo{
+        return $this->belongsTo(CustomerApplication::class,'assumed_by_id');
+    }
+
+    public function calculateTotalPayment(): int
     {
-        return $this->payments()->sum('payment_amount');
+        return $this->payments()->count();
+    }
+
+    public function calculateTotalAmountOfPayment(): float
+    {
+        return $this->payments()->sum();
     }
 
     public function payments():HasMany{

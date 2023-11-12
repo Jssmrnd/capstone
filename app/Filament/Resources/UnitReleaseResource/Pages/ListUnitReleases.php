@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\UnitReleaseResource\Pages;
 
+use App\Enums\ApplicationStatus;
 use App\Enums\ReleaseStatus;
 use App\Filament\Resources\UnitReleaseResource;
 use Filament\Actions;
@@ -10,8 +11,6 @@ use Filament\Resources\Pages\ListRecords;
 class ListUnitReleases extends ListRecords
 {
     protected static string $resource = UnitReleaseResource::class;
-
-    
 
     protected function getHeaderActions(): array
     {
@@ -26,8 +25,8 @@ class ListUnitReleases extends ListRecords
     public function getTabs(): array
     {
         return [
-            ReleaseStatus::RELEASED->value => ListRecords\Tab::make()->query(fn ($query) => $query->where('release_status', ReleaseStatus::RELEASED->value)),
-            ReleaseStatus::UN_RELEASED->value => ListRecords\Tab::make()->query(fn ($query) => $query->where('release_status', ReleaseStatus::UN_RELEASED->value)),
+            ReleaseStatus::UN_RELEASED->value => ListRecords\Tab::make()->query(fn ($query) => $query->where('release_status', ReleaseStatus::UN_RELEASED->value)
+                                                                                                        ->orwhere('application_status', ApplicationStatus::APPROVED_STATUS->value)),
         ];
     }
 }

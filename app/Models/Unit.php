@@ -16,17 +16,23 @@ class Unit extends Model
     [
         'branch_id',
         'unit_model_id',
+        'customer_application_id',
         'engine_number',
         'chasis_number',
         'status',
         'notes',
     ];
 
+    public function assignToCustomerApplication(int $customerApplicationId): void
+    {
+        $this->attributes['customer_application_id'] = $customerApplicationId;
+        $this->save();
+    }
+
     public function getStock():int {
         $count = Unit::where('model_name', 'ducati')->count();
         return $count;
     }
-
 
     public function unitModel():BelongsTo{
         return $this->belongsTo(UnitModel::class);

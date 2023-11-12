@@ -6,19 +6,24 @@ use Filament\Support\Contracts\HasLabel;
 
 enum ApplicationStatus:string implements HasLabel
 {
-    case PENDING_STATUS          = "pending";
-    case ACTIVE_STATUS          = "active";
-    case REJECTED_STATUS        = "reject";
-    case CLOSED_STATUS          = "closed";
-    case RESUBMISSION_STATUS    = "resubmission";
+    case PENDING_STATUS          = "Pending";
+    case ACTIVE_STATUS          = "Active";
+    case APPROVED_STATUS          = "Approved";
+    case REJECTED_STATUS        = "Reject";
+    case CLOSED_STATUS          = "Closed";
+    case RESUBMISSION_STATUS    = "Resubmission";
+    case REPO_STATUS    =  "Reposition";
 
     public function getLabel(): ?string
     {
         return match ($this) {
-            self::PENDING_STATUS => 'pending',
-            self::ACTIVE_STATUS => 'active',
-            self::REJECTED_STATUS => 'rejected',
-            self::RESUBMISSION_STATUS => 'resubmission',
+
+            self::PENDING_STATUS => 'Pending',
+            self::ACTIVE_STATUS => 'Active',
+            self::APPROVED_STATUS => 'Approved',
+            self::REJECTED_STATUS => 'Rejected',
+            self::RESUBMISSION_STATUS => 'Resubmission',
+            self::REPO_STATUS => "Reposition"
         };
     }
 }

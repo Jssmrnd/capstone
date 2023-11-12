@@ -11,8 +11,6 @@ class EditCustomerApplication extends EditRecord
 {
     protected static string $resource = CustomerApplicationResource::class;
 
-
-
     protected function mutateFormDataBeforeSave(array $data): array
     {
         $data['application_is_new'] = false;

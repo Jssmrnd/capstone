@@ -42,6 +42,14 @@ class UnitReleaseResource extends Resource
         return false;
     }
 
+    public static function getApplicationDetails(): Forms\Components\Component
+    {
+        return Forms\Components\Group::make([
+                Forms\Components\PlaceHolder::make("Preffered unit status")
+                ->content(fn(?Model $record): string => $record->preffered_unit_status)
+        ]);
+    }
+
     public static function getUnitInofrmationComponent(): Forms\Components\Component
     {
         return Forms\Components\Group::make([
@@ -58,6 +66,19 @@ class UnitReleaseResource extends Resource
                                     ->searchable(['model_name', 'id'])
                                     ->preload()
                                     ->live(),
+
+                            Forms\Components\Select::make('unit_status')
+                                    ->hint("Ex. Mio soul i")
+                                    ->label('Unit Model')
+                                    ->disabled()
+                                    ->relationship(
+                                            'unitModel',
+                                            'model_name'
+                                    )
+                                    ->searchable(['model_name', 'id'])
+                                    ->preload()
+                                    ->live(),
+                                    
                             Forms\Components\TextInput::make('unit_srp')
                                     ->disabled(),
                             Forms\Components\TextInput::make('unit_status')
@@ -66,11 +87,17 @@ class UnitReleaseResource extends Resource
                             Forms\Components\Select::make('units_id')
                                     ->live()
                                     ->options(
-                                            fn (Forms\Get $get): array => Models\Unit::where('customer_application_id', null)
-                                                    ->where('unit_model_id', $get('unit_model_id'))         
-                                                    ->limit(20)
-                                                    ->pluck('chasis_number', 'id')
-                                                    ->toArray()
+                                            function (Forms\Get $get): array {
+                                                $units_query = Models\Unit::where('unit_model_id', $get('unit_model_id'))
+                                                                            ->where('status', $get('preffered_unit_status'));
+                                                if($get('preffered_unit_status') == 'repo'){
+                                                    $units_query->where('customer_application_id', '!=', null);
+                                                }else if($get('preffered_unit_status') == 'brand_new')
+                                                {
+                                                    $units_query->where('customer_application_id', null);
+                                                }
+                                                return $units_query->pluck('chasis_number', 'id')->toArray();
+                                            }
                                     )
                                     ->afterStateUpdated(
                                         function(Forms\Get $get, Forms\Set $set)
@@ -129,6 +156,7 @@ class UnitReleaseResource extends Resource
     {
         return $form
             ->schema([
+                    UnitReleaseResource::getApplicationDetails(),
                     UnitReleaseResource::getUnitInofrmationComponent()
                             ->columnSpan(2),
                     UnitReleaseResource::getReleaseDetailsComponent()

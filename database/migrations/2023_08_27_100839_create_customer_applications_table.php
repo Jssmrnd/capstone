@@ -23,7 +23,10 @@ return new class extends Migration
             $table->string('application_status')->default(ApplicationStatus::PENDING_STATUS->value);
             $table->text('reject_note')->default(null)->nullable();
             $table->text('resubmission_note')->default(null)->nullable();
+            $table->string('preffered_unit_status')->default(null)->nullable();
             $table->string('release_status')->default(ReleaseStatus::UN_RELEASED->value);
+
+            $table->foreignId('assumed_by_id')->default(null)->nullable();
 
             $table->foreignIdFor(Branch::class)->nullable()->onDelete('set null');
             $table->string('author_id')->nullable();
