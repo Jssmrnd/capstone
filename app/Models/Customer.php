@@ -34,7 +34,6 @@ class Customer extends Authenticatable implements FilamentUser, HasName, MustVer
      * @var array<int, string>
      */
 
-    public static $filamentUserColumn = 'is_filament_user';
     public function getFilamentName(): string
     {
         return "{$this->firstname} {$this->lastname}";
