@@ -80,7 +80,6 @@ class Login extends BaseAuth
 
     }
 
-    
 
     protected function getLoginFormComponent(): Component 
     {

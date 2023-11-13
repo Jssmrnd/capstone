@@ -122,8 +122,6 @@ class PaymentResource extends Resource
     {
         return $form
             ->schema([
-                PaymentResource::getPaymentInput(),
-                PaymentResource::getDownpaymentInputComponent(),
                 PaymentResource::getApplicationDetails(),
                 Forms\Components\TextInput::make('due_date')
                         ->hidden(function(string $operation){
