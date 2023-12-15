@@ -25,8 +25,7 @@ class ListUnitReleases extends ListRecords
     public function getTabs(): array
     {
         return [
-            ReleaseStatus::UN_RELEASED->value => ListRecords\Tab::make()->query(fn ($query) => $query->where('release_status', ReleaseStatus::UN_RELEASED->value)
-                                                                                                        ->orwhere('application_status', ApplicationStatus::APPROVED_STATUS->value)),
+            ReleaseStatus::UN_RELEASED->value => ListRecords\Tab::make()->query(fn ($query) => $query->where('release_status', ReleaseStatus::UN_RELEASED->value)->orwhere('application_status', ApplicationStatus::ACTIVE_STATUS->value)),
         ];
     }
 }

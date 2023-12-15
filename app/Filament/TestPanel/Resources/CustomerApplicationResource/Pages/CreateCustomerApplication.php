@@ -11,6 +11,13 @@ class CreateCustomerApplication extends CreateRecord
 {
     protected static string $resource = CustomerApplicationResource::class;
 
+    protected function getFormActions(): array
+    {
+        return [
+            $this->getCancelFormAction(),
+        ];
+    }
+
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['applicaton_status'] = ApplicationStatus::PENDING_STATUS->value;

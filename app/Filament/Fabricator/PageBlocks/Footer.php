@@ -18,7 +18,6 @@ class Footer extends PageBlock
     public static function mutateData(array $data): array
     {
         $brand_name = Page::query();
-        dd(Page::all());
         return $data;
     }
 }

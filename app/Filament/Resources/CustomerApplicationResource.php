@@ -21,6 +21,9 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Support\Enums\Alignment;
 use Filament\Infolists\Components\TextEntry;
+use Illuminate\Support\HtmlString;
+use Filament\Forms\Components\Wizard;
+use Illuminate\Support\Facades\Blade;
 
 use Filament\Infolists\Components\SpatieMediaLibraryImageEntry;
 
@@ -37,50 +40,102 @@ class CustomerApplicationResource extends Resource
 
     public static function getUnitToBeFinanced(): Forms\Components\Component
     {
-                return Forms\Components\Group::make([
-                        Forms\Components\Fieldset::make("Unit to be Financed")
-                        ->columns(4)
-                        ->columnSpan(2)
-                        ->schema([
-                                Forms\Components\Select::make('unit_model_id')
-                                        ->hint("Ex. Mio soul i")
-                                        ->columnSpan(2)
-                                        ->label('Unit Model')
-                                        ->relationship(
-                                                        'unitModel',
-                                                        'model_name'
-                                                        )
-                                        ->searchable(['model_name', 'id'])
-                                        ->preload()
-                                        ->live()
-                                        ->afterStateUpdated(
-                                                function(Forms\Get $get, Forms\Set $set){
-                                                        $unit_price = Models\UnitModel::find($get("unit_model_id"))->price;
-                                                        $set('unit_srp', $unit_price);
-                                                }
-                                        ),
-                                Forms\Components\Select::make('preffered_unit_status')
-                                        ->label("Preffered unit status")
-                                        ->options(Enums\UnitStatus::class),
-                                Forms\Components\Group::make()
-                                        ->columnSpan(4)
-                                        ->columns(2)
-                                        ->live()
-                                        ->disabled(fn (Forms\Get $get): bool => ! $get('unit_model_id'))
-                                        ->schema([
-                                                Forms\Components\TextInput::make('unit_srp')
-                                                        ->columnSpan(1)
-                                                        ->required(true)
-                                                        ->label('Selling Retail Price:')
-                                                        ->numeric(),
-                                ]),
-                ]),
-                ]);
+            return Forms\Components\Group::make([
+                    Forms\Components\Fieldset::make("Unit to be Financed")
+                    ->columns(4)
+                    ->columnSpan(2)
+                    ->schema([
+                            Forms\Components\Select::make('unit_model_id')
+                                    ->columnSpan(2)
+                                    ->label('Unit Model')
+                                    ->relationship(
+                                                    'unitModel',
+                                                    'model_name'
+                                                    )
+                                    ->searchable(['model_name', 'id'])
+                                    ->preload()
+                                    ->live()
+                                    ->afterStateUpdated(
+                                            function(Forms\Get $get, Forms\Set $set){
+                                                    $unit_model = Models\UnitModel::find($get("unit_model_id"));
+                                                    $unit_monthly_amort_fin = Models\Payment::calculateAmountMonthlyPayment(
+                                                        $unit_model->price,
+                                                        $unit_model->down_payment_amount,
+                                                        $get('unit_term'),
+                                                        0.05,
+                                                    );
+                                                    $set('unit_srp', $unit_model->price);
+                                                    $set('unit_monthly_amort_fin', $unit_monthly_amort_fin);
+                                                    $set('unit_ttl_dp', $unit_model->down_payment_amount);
+                                            }
+                                    ),
+                            Forms\Components\Select::make('unit_term')
+                                    ->columnSpan(2)
+                                    ->live()
+                                    ->label("Term/Months")
+                                    ->default(36)
+                                    ->options([
+                                        36 => 'Thirty six (36)',
+                                        30 => 'Thirty (30)',
+                                        24 => 'Twenty four (24)',
+                                        18 => 'Eighteen (18)',
+                                        12 => 'Twelve (12)',
+                                    ])
+                                    ->afterStateUpdated(
+                                        function(Forms\Get $get, Forms\Set $set){
+                                                $unit_model = Models\UnitModel::find($get("unit_model_id"));
+                                                $unit_monthly_amort_fin = Models\Payment::calculateAmountMonthlyPayment(
+                                                    $unit_model->price,
+                                                    $unit_model->down_payment_amount,
+                                                    $get('unit_term'),
+                                                    0.05,
+                                                );
+                                                $set('unit_srp', $unit_model->price);
+                                                $set('unit_monthly_amort_fin', $unit_monthly_amort_fin);
+                                                $set('unit_ttl_dp', $unit_model->down_payment_amount);
+                                        }
+                                ),
+                            Forms\Components\TextInput::make('unit_ttl_dp')
+                                    ->columnSpan(2)
+                                    ->readOnly()
+                                    ->required(true)
+                                    ->label('Down payment'),
+                            Forms\Components\TextInput::make('unit_monthly_amort_fin')
+                                    ->columnSpan(2)
+                                    ->readOnly()
+                                    ->required(true)
+                                    ->label('Monthly amortization'),
+                            Forms\Components\Select::make('preffered_unit_status')
+                                    ->columnSpan(2)
+                                    ->label("Preffered unit status")
+                                    ->options(Enums\UnitStatus::class),
+                            Forms\Components\Select::make('plan')
+                                    ->columnSpan(1)
+                                    ->label("Plan")
+                                    ->options([
+                                        'cash' => 'Cash',
+                                        'installment' => 'Installment',
+                                    ]),
+                            Forms\Components\Group::make()
+                                    ->columnSpan(4)
+                                    ->columns(2)
+                                    ->live()
+                                    ->disabled(fn (Forms\Get $get): bool => ! $get('unit_model_id'))
+                                    ->schema([
+                                            Forms\Components\TextInput::make('unit_srp')
+                                                    ->columnSpan(2)
+                                                    ->readOnly()
+                                                    ->required(true)
+                                                    ->label('Selling Retail Price:')
+                            
+                                    ]),
+                    ]),
+            ]);
     }
 
     public static function getCoOwnerInformation(): Forms\Components\Component
     {
-        return Forms\Components\Section::make("Co-owner")
+        return Forms\Components\Section::make("Co-Maker")
                 ->schema([
                         Forms\Components\Group::make([
                                 Forms\Components\Group::make([
@@ -163,9 +218,11 @@ class CustomerApplicationResource extends Resource
                             ->schema([
                                 Forms\Components\TextInput::make('applicant_telephone')
                                         ->columnSpan(3)
-                                        ->label('Telephone:'),
+                                        ->label('Telephone:')
+                                        ->required(),
                                 Forms\Components\TextInput::make('email')
                                         ->columnSpan(3)
+                                        ->required()
                                         ->label('Email:'),
                             ])
                         ->columnSpan(3)
@@ -749,12 +806,9 @@ class CustomerApplicationResource extends Resource
     {
         return $form
         ->schema([
-                Forms\Components\Select::make("branch_id")
-                ->options([
-                    Models\Branch::query()->where("id", auth()->user()->branch_id)->first()->id => 
-                    Models\Branch::query()->where("id", auth()->user()->branch_id)->first()->full_address,
-                ])
-                ->preload(),
+
+                Forms\Components\Placeholder::make('Branch')
+                ->content(Models\Branch::query()->where("id", auth()->user()->branch_id)->first()->full_address),
                 Forms\Components\Wizard::make([
                         Forms\Components\Wizard\Step::make('Unit')
                                 ->schema([
@@ -789,7 +843,15 @@ class CustomerApplicationResource extends Resource
                                         CustomerApplicationResource::getStatementOfMonthlyIncome()
                                 ]),
                 ])
-                ->columnSpan(6),   
+                ->columnSpan(6)
+                ->submitAction(new HtmlString(Blade::render(<<<BLADE
+                <x-filament::button
+                    type="submit"
+                    size="sm"
+                >
+                    Submit
+                </x-filament::button>
+            BLADE))),
         ]);
     }
 
@@ -845,25 +907,23 @@ class CustomerApplicationResource extends Resource
                                                     ])->columnSpan(2),
                                             InfoLists\Components\Section::make("Motorcycle's Information")
                                                     ->schema([
-                                                            InfoLists\Components\TextEntry::make('unitModel.model_name')
+                                                        InfoLists\Components\TextEntry::make('unitModel.model_name')
                                                             ->label('Unit Model'),
+                                                        InfoLists\Components\TextEntry::make('units.chasis_number')
+                                                                ->label('Chasis number')
+                                                                ->badge(),   
+                                                        InfoLists\Components\TextEntry::make('unit_term')
+                                                                ->label('Unit Term'),
+                                                        InfoLists\Components\TextEntry::make('unit_ttl_dp')
+                                                                ->label('Down Payment')
+                                                                ->money('php'),   
+                                                        InfoLists\Components\TextEntry::make('unit_monthly_amort_fin')
+                                                                ->label('Monthly Amortization')
+                                                                ->money('php'),                     
+                                                        InfoLists\Components\TextEntry::make('unit_srp')
+                                                                ->label('Unit Price')
+                                                                ->money('php'),
                                                     ])->columnSpan(4),
-                                            InfoLists\Components\TextEntry::make('unitModel.model_name')
-                                                    ->label('Unit Model'),
-                                            InfoLists\Components\TextEntry::make('units.chasis_number')
-                                                    ->label('Chasis number')
-                                                    ->badge(),   
-                                            InfoLists\Components\TextEntry::make('unit_term')
-                                                    ->label('Unit Term'),
-                                            InfoLists\Components\TextEntry::make('unit_ttl_dp')
-                                                    ->label('Down Payment')
-                                                    ->money('php'),   
-                                            InfoLists\Components\TextEntry::make('unit_amort_fin')
-                                                    ->label('Monthly Amortization')
-                                                    ->money('php'),                     
-                                            InfoLists\Components\TextEntry::make('unit_srp')
-                                                    ->label('Unit Price')
-                                                    ->money('php'),
                                     ])
                                     ->columns(6),
                                 InfoLists\Components\Tabs\Tab::make("Customer's Information")
@@ -901,7 +961,7 @@ class CustomerApplicationResource extends Resource
                                                             ->label("Provided ID(s)"),
                                         ]),
                                     ]),
-                                InfoLists\Components\Tabs\Tab::make('Co-maker Information')
+                                InfoLists\Components\Tabs\Tab::make("Co-maker's Information")
                                     ->schema([
                                         // ...
                                     ]),
@@ -912,59 +972,6 @@ class CustomerApplicationResource extends Resource
                     ])
                     ->columns(6)
                     ->columnSpan(6),
-
-                // InfoLists\Components\Section::make('Customer Application')->schema([
-
-                //         InfoLists\Components\FieldSet::make('Unit Information')
-                //                 ->columns(4)
-                //                 ->columnSpan(2)
-                //                 ->schema([
-                //                         InfoLists\Components\TextEntry::make('unitModel.model_name')
-                //                                 ->label('Unit Model'),
-                //                         InfoLists\Components\TextEntry::make('units.chasis_number')
-                //                                 ->label('Chasis number')
-                //                                 ->badge(),   
-                //                         InfoLists\Components\TextEntry::make('unit_term')
-                //                                 ->label('Unit Term'),
-                //                         InfoLists\Components\TextEntry::make('unit_ttl_dp')
-                //                                 ->label('Down Payment')
-                //                                 ->money('php'),   
-                //                         InfoLists\Components\TextEntry::make('unit_amort_fin')
-                //                                 ->label('Monthly Amortization')
-                //                                 ->money('php'),                     
-                //                         InfoLists\Components\TextEntry::make('unit_srp')
-                //                                 ->label('Unit Price')
-                //                                 ->money('php'),
-                //         ]),
-
-                //     InfoLists\Components\FieldSet::make('Applicant Information')
-                //             ->columns(6)
-                //             ->columnSpan(4)
-                //             ->schema([
-                //                 InfoLists\Components\TextEntry::make('applicant_firstname')->label('First Name:'),
-                //                 InfoLists\Components\TextEntry::make('applicant_lastname')->label('Last Name:'),
-                //                 InfoLists\Components\ImageEntry::make('applicant_valid_id')->label('Provided ID:'),
-                //                 InfoLists\Components\TextEntry::make('applicant_house')->label('House:'),  
-                //                 InfoLists\Components\TextEntry::make('applicant_present_address')->label('Present Address:'),
-                //                 InfoLists\Components\TextEntry::make('applicant_telephone')->label('Contacts:'),       
-                //     ]),
-
-                //     InfoLists\Components\FieldSet::make("Applicant's Statement of Monthly Income")->schema([
-                //             InfoLists\Components\TextEntry::make('gross_monthly_income')
-                //                     ->label("Gross Monthly Income:")
-                //                     ->color('success')
-                //                     ->money('php'),
-                //             InfoLists\Components\TextEntry::make('total_expenses')
-                //                     ->label("Total Expenses:")
-                //                     ->color('danger')
-                //                     ->money('php'),
-                //             InfoLists\Components\TextEntry::make('net_monthly_income')
-                //                     ->label("Net Monthly Income:")
-                //                     ->color('success')
-                //                     ->money('php'),
-                //     ])->columns(3)->columnSpan(4),
-
-                // ]),
 
             ])->columns(4);
     }
@@ -983,8 +990,8 @@ class CustomerApplicationResource extends Resource
                 Tables\Columns\TextColumn::make('application_status')
                         ->label("Status:")
                         ->badge(),
-                Tables\Columns\TextColumn::make('units.chasis_number')
-                        ->label("unit chasis:")
+                Tables\Columns\TextColumn::make('units.engine_number')
+                        ->label("Engine No.")
                         ->badge(),
                 Tables\Columns\TextColumn::make('applicant_firstname')
                         ->label("First Name:")
@@ -994,8 +1001,6 @@ class CustomerApplicationResource extends Resource
                         ->searchable(),
                 Tables\Columns\TextColumn::make('unitModel.model_name')
                         ->label("Unit Model:"),
-                Tables\Columns\TextColumn::make('unit_srp')->label("Price:")
-                        ->summarize(Average::make())->money('php'),
                 Tables\Columns\TextColumn::make('created_at')
                         ->label("Date Created:")
                         ->dateTime('d-M-Y'),

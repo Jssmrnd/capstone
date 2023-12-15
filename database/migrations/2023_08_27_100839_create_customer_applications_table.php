@@ -19,12 +19,19 @@ return new class extends Migration
         Schema::create('customer_applications', function (Blueprint $table) {
 
             $table->id();
-            $table->string("due_date")->nullable();
+            $table->string("due_date")->nullable(); // account?
+
+            // Account ID
+            $table->foreignId('account_id')->nullable();
+
+            // Application related information
             $table->enum('application_status', ApplicationStatus::values())->default(ApplicationStatus::PENDING_STATUS);
             $table->text('reject_note')->default(null)->nullable();
             $table->text('resubmission_note')->default(null)->nullable();
             $table->string('preffered_unit_status')->default(null)->nullable();
-            $table->enum('release_status', ReleaseStatus::values())->default(ReleaseStatus::UN_RELEASED);;
+            $table->enum('release_status', ReleaseStatus::values())->default(ReleaseStatus::UN_RELEASED);
+
+            $table->string('plan')->nullable();
 
             $table->foreignId('assumed_by_id')->default(null)->nullable();
 
@@ -34,14 +41,10 @@ return new class extends Migration
 
             // Unit Information
             $table->foreignIdFor(UnitModel::class)->onDelete('set null');
-            $table->foreignId('units_id')->onDelete('set null')->nullable();
-            $table->string('unit_term')->nullable();
-            $table->decimal('unit_monthly_amort', 10, 2)->nullable();
-            $table->decimal('unit_ttl_dp')->nullable();
-            $table->decimal('unit_srp', 10, 2)->nullable();
-            $table->string('unit_type')->nullable();
-            $table->decimal('unit_amort_fin', 10, 2)->nullable();
-            $table->string('unit_mode_of_payment')->nullable();
+            $table->integer('unit_term')->nullable();
+            $table->float('unit_ttl_dp')->nullable();
+            $table->float('unit_srp')->nullable();
+            $table->float('unit_monthly_amort_fin')->nullable();
 
             //Applicant Information
             $table->string('applicant_firstname')->nullable();
@@ -56,6 +59,8 @@ return new class extends Migration
             $table->string('applicant_house')->nullable();
             $table->json('applicant_valid_id')->nullable();
             $table->string('applicant_telephone')->nullable();
+            $table->string("applicant_full_name")->virtualAs('concat(applicant_firstname, \' \', applicant_lastname)');
+            $table->string("applicant_full_name_with_iw")->virtualAs('concat(id, \' \', applicant_firstname, \' \', applicant_lastname)');
 
             //Applcant Employment
             $table->string('applicant_present_business_employer')->nullable();

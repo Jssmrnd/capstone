@@ -35,12 +35,14 @@ class Settings extends Page
     protected static ?string $navigationGroup = 'Utilities';
 
     public ?array $data = [];
+
     protected static string $view = 'filament.pages.settings';
+
 
 
     public static function shouldRegisterNavigation(): bool
     {
-        return True;
+        return false;
     }
 
     public function mount(): void 

@@ -14,11 +14,13 @@ class Unit extends Model
 
     protected $fillable = 
     [
+        'id',
         'branch_id',
         'unit_model_id',
         'customer_application_id',
         'engine_number',
-        'chasis_number',
+        'frame_number',
+        'chassis_number',
         'status',
         'notes',
     ];

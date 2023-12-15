@@ -49,7 +49,7 @@ class TestPanelPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/TestPanel/Widgets'), for: 'App\\Filament\\TestPanel\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
+                // Widgets\AccountWidget::class,
                 // Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([

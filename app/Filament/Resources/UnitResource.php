@@ -14,6 +14,8 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Support\RawJs;
+use Illuminate\Support\Str;
 
 class UnitResource extends Resource
 {
@@ -34,13 +36,23 @@ class UnitResource extends Resource
                     ->columnSpan(1)
                     ->options(Enums\UnitStatus::class)
                     ->required(),
-            Forms\Components\TextInput::make('chasis_number')
-                    ->numeric()
+            Forms\Components\TextInput::make('frame_number')
+                    ->mask(Rawjs::make(<<<'JS'
+                        'aaaaaaaa9aa999999'
+                    JS))
+                    ->unique(table: Unit::class)
+                    ->minLength(17)
+                    ->maxLength(17)
                     ->columnSpan(1)
                     ->required(),
             Forms\Components\TextInput::make('engine_number')
+                    ->mask(Rawjs::make(<<<'JS'
+                        '999aaa99a99999'
+                    JS))
+                    ->unique(table: Unit::class)
+                    ->minLength(14)
+                    ->maxLength(14)
                     ->columnSpan(1)
-                    ->numeric()
                     ->required(),
             Forms\Components\Textarea::make('notes')
                     ->columnSpan(2),      
@@ -59,7 +71,7 @@ class UnitResource extends Resource
                             ->columnSpan(2)
                             ->label('Current Branch')
                             ->content(fn ():string => Branch::query()
-                                                        ->where('id', auth()->user()->branch_id)->first()->full_address)
+                                    ->where('id', auth()->user()->branch_id)->first()->full_address)
                         ])
                         ->columnSpan(1),
             ])

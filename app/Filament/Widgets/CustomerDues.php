@@ -30,7 +30,7 @@ class CustomerDues extends BaseWidget
                         ->label("Application ID"),
                 Tables\Columns\TextColumn::make("due_date"),
                 Tables\Columns\TextColumn::make("applicant_lastname"),
-                Tables\Columns\TextColumn::make("unit_amort_fin")
+                Tables\Columns\TextColumn::make("unit_monthly_amort")
                         ->label("Monthly Amort.")
                         ->money("php")
                         ->color("success"),

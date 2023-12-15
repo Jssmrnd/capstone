@@ -10,12 +10,13 @@ class PagePolicy
 {
     /**
      * Determine whether the user can view any models.
+     * Test
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasAnyRole(
-                                    'branch-manager',
-                                );
+        return $user->hasAnyPermission(
+            "read: page"
+        );
     }
 
     /**
@@ -23,9 +24,9 @@ class PagePolicy
      */
     public function view(User $user, Page $page): bool
     {
-                return $user->hasAnyRole(
-                                    'branch-manager',
-                                );
+        return $user->hasAnyPermission(
+            "view: page"
+        );
     }
 
     /**
@@ -33,9 +34,9 @@ class PagePolicy
      */
     public function create(User $user): bool
     {
-                return $user->hasAnyRole(
-                                    'branch-manager',
-                                );
+        return $user->hasAnyPermission(
+            "create: page"
+        );
     }
 
 }

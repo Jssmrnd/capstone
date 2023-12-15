@@ -70,7 +70,8 @@ class CustomerApplicationResource extends Resource
                                         ->disabled(fn (Forms\Get $get): bool => ! $get('unit_model_id'))
                                         ->schema([
                                                 Forms\Components\TextInput::make('unit_srp')
-                                                        ->columnSpan(1)
+                                                        ->columnSpan(2)
+                                                        ->readOnly()
                                                         ->required(true)
                                                         ->label('Selling Retail Price:')
                                                         ->numeric(),
@@ -81,7 +82,7 @@ class CustomerApplicationResource extends Resource
 
     public static function getCoOwnerInformation(): Forms\Components\Component
     {
-        return Forms\Components\Section::make("Co-owner")
+        return Forms\Components\Section::make("Co-maker")
                 ->schema([
                         Forms\Components\Group::make([
                                 Forms\Components\Group::make([
@@ -722,7 +723,7 @@ class CustomerApplicationResource extends Resource
     public static function getResubmissionNotes(): Forms\Components\Component
     {
         return Forms\Components\Group::make([
-                Forms\Components\TextArea::make('resubmission_note')
+                Forms\Components\Textarea::make('resubmission_note')
                         ->columnSpan(1)
                         ->label('Resubmission Note')
                         ->disabled(true)
@@ -779,8 +780,11 @@ class CustomerApplicationResource extends Resource
                                                 CustomerApplicationResource::getUnitToBeFinanced()
                                                         ->disabled(
                                                                 function(?Model $record){
-                                                                    if($record->application_status == Enums\ApplicationStatus::RESUBMISSION_STATUS){
-                                                                        return false;
+                                                                if($record != null){
+                                                                        if($record->application_status == Enums\ApplicationStatus::RESUBMISSION_STATUS){
+                                                                                return false;
+                                                                }
+                                                                return true;
                                                         }}),
                                         ]),
                                 Forms\Components\Wizard\Step::make('Applicant Information')
@@ -807,7 +811,15 @@ class CustomerApplicationResource extends Resource
                                                 CustomerApplicationResource::getStatementOfMonthlyIncome()
                                         ]),
                         ])
-                        ->columnSpan(6),   
+                        ->columnSpan(6)
+                        ->submitAction(new HtmlString(Blade::render(<<<BLADE
+                        <x-filament::button
+                            type="submit"
+                            size="sm"
+                        >
+                            Submit
+                        </x-filament::button>
+                    BLADE))),
         ]);
     }
 
@@ -906,25 +918,25 @@ class CustomerApplicationResource extends Resource
                                                     ])->columnSpan(2),
                                             InfoLists\Components\Section::make("Motorcycle's Information")
                                                     ->schema([
-                                                            InfoLists\Components\TextEntry::make('unitModel.model_name')
-                                                            ->label('Unit Model'),
+                                                                InfoLists\Components\TextEntry::make('unitModel.model_name')
+                                                                        ->label('Unit Model'),
+                                                                InfoLists\Components\TextEntry::make('unitModel.model_name')
+                                                                        ->label('Unit Model'),
+                                                                InfoLists\Components\TextEntry::make('units.chasis_number')
+                                                                        ->label('Chasis number')
+                                                                        ->badge(),   
+                                                                InfoLists\Components\TextEntry::make('unit_term')
+                                                                        ->label('Unit Term'),
+                                                                InfoLists\Components\TextEntry::make('unit_ttl_dp')
+                                                                        ->label('Down Payment')
+                                                                        ->money('php'),   
+                                                                InfoLists\Components\TextEntry::make('unit_amort_fin')
+                                                                        ->label('Monthly Amortization')
+                                                                        ->money('php'),                     
+                                                                InfoLists\Components\TextEntry::make('unit_srp')
+                                                                        ->label('Unit Price')
+                                                                        ->money('php'),
                                                     ])->columnSpan(4),
-                                            InfoLists\Components\TextEntry::make('unitModel.model_name')
-                                                    ->label('Unit Model'),
-                                            InfoLists\Components\TextEntry::make('units.chasis_number')
-                                                    ->label('Chasis number')
-                                                    ->badge(),   
-                                            InfoLists\Components\TextEntry::make('unit_term')
-                                                    ->label('Unit Term'),
-                                            InfoLists\Components\TextEntry::make('unit_ttl_dp')
-                                                    ->label('Down Payment')
-                                                    ->money('php'),   
-                                            InfoLists\Components\TextEntry::make('unit_amort_fin')
-                                                    ->label('Monthly Amortization')
-                                                    ->money('php'),                     
-                                            InfoLists\Components\TextEntry::make('unit_srp')
-                                                    ->label('Unit Price')
-                                                    ->money('php'),
                                     ])
                                     ->columns(6),
                                 InfoLists\Components\Tabs\Tab::make("Your Information")
@@ -976,7 +988,7 @@ class CustomerApplicationResource extends Resource
 
                 InfoLists\Components\Section::make('Customer Application')->schema([
 
-                        InfoLists\Components\FieldSet::make('Unit Information')
+                        InfoLists\Components\Fieldset::make('Unit Information')
                                 ->columns(4)
                                 ->columnSpan(2)
                                 ->schema([

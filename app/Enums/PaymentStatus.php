@@ -14,10 +14,10 @@ enum UnitStatus:string implements HasLabel
     public function getLabel(): ?string
     {
         return match ($this) {
-            self::CURRENT = "Current",
-            self::DELINQUENT = "Delinquent",
-            self::ADVANCED = "Advanced",
-            self::OVERDUE = "Overdue",
+            self::CURRENT => "Current",
+            self::DELINQUENT => "Delinquent",
+            self::ADVANCED => "Advanced",
+            self::OVERDUE => "Overdue",
         };
     }
     public static function values(): array

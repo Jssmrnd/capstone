@@ -19,7 +19,7 @@ class CustomerLogin extends Controller
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
-        
+
         if (Auth::guard()->attempt($credentials)) {
             $request->session()->regenerate();
             return redirect('/home');

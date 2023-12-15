@@ -25,7 +25,7 @@ class CustomerApplicationObserver
                 "record_id" => $customerApplication->id,
         ]);
 
-        // Mail::to('antugaevasco@gmail.com')->send(new CustomerApplicationMail("Application Has been created"));
+        Mail::to('antugaevasco@gmail.com')->send(new CustomerApplicationMail("Application Has been created"));
     }
 
     /**
@@ -59,7 +59,7 @@ class CustomerApplicationObserver
         $to_email = "antugaevasco@gmail.com";
         $to_name = "Carlo";
 
-        // Mail::to('antugaevasco@gmail.com')->send(new CustomerApplicationMail("Application Has been Been reviewed"));
+        Mail::to('antugaevasco@gmail.com')->send(new CustomerApplicationMail("Application Has been Been reviewed"));
     }
 
     /**

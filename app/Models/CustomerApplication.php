@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\ApplicationStatus;
 use App\Enums\ReleaseStatus;
 use App\Models\Scopes\CustomerApplicationScope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -28,8 +29,11 @@ class CustomerApplication extends Model implements HasMedia
         'reject_note',
         'resubmission_note',
         'release_status',
+
+        "account_id",
         
         'preffered_unit_status',
+        'plan',
         'assumed_by_id',
 
         //mutate data here
@@ -39,15 +43,10 @@ class CustomerApplication extends Model implements HasMedia
 
         //Unit
         'unit_model_id',
-        'units_id',
         'unit_term',
-        'unit_monthly_amort',
         'unit_ttl_dp',
         'unit_srp',
-        'unit_type',
-        'unit_amort_fin',
-        'unit_mode_of_payment',
-        'due_date',
+        'unit_monthly_amort_fin',
 
         //Applicant Information
         'applicant_firstname',
@@ -63,6 +62,8 @@ class CustomerApplication extends Model implements HasMedia
         'applicant_house',
         'applicant_valid_id',
         'applicant_telephone',
+        'applicant_fullname',
+        'applicant_fullname_with_id',
 
         //Applicant Employment
         'applicant_present_business_employer',
@@ -185,10 +186,102 @@ class CustomerApplication extends Model implements HasMedia
         'dependents'                => 'json',
     ];
 
-
     protected static function booted(): void
     {
         static::addGlobalScope(new CustomerApplicationScope);
+    }
+
+    public function assignAccount(): void
+    {
+        //assigns an account to the customer application.
+        $payment_status = null;
+        if($this->plan == 'cash'){
+            $payment_status = "cash-payment";
+        }
+        else if($this->plan == 'installment'){
+            $payment_status = "downpayment";
+        }
+        else{
+            $payment_status = 'uni-payment';
+        }
+        $new_account = CustomerPaymentAccount::create([
+            $this->unit_srp,                            // remaining_balance
+            $this->plan,                                // plan_type
+            0.00,                                       // monthly_interest
+
+            $this->unit_monthly_amort,                  // monthly_payment
+            $this->term,                                // term
+            $this->term,                                // term_left
+
+            $this->application_status,                  // account status
+            $payment_status,                            // payment_status
+            $this->unit_srp,                            // remaining_balance                                            // original_amount
+
+            null                                        // unit_release_id
+        ]);
+        $new_account->save();
+        $this->acount_id = $new_account->id;
+    }
+
+    public static function getSearchApplicationsReadyForPayment(string $search): Builder
+    {
+        //returns a query builder for getting all the un-released applications.
+        //Criteria:
+        // If the application is Released.
+        // If the applicaton is approved.
+        return static::query()
+                    ->where('application_status', ApplicationStatus::APPROVED_STATUS->value)
+                    ->where(function ($query) use ($search) {
+                        $query->where('applicant_firstname', 'like', '%' . $search . '%')
+                            ->orWhere('applicant_lastname', 'like', '%' . $search . '%')
+                            ->orWhere('id', 'like', '%' . $search . '%');
+                    });
+    }
+
+    public static function searchApprovedApplicationsWithNoAccounts(string $search): Builder
+    {
+        //returns a query builder for getting all the un-released applications.
+        //Criteria:
+        // If the application is Released.
+        // If the applicaton is approved.
+        return static::query()
+                    ->where('application_status', ApplicationStatus::APPROVED_STATUS->value)
+                    ->where('account_id', null)
+                    ->where(function ($query) use ($search) {
+                        $query->where('applicant_firstname', 'like', '%' . $search . '%')
+                            ->orWhere('applicant_lastname', 'like', '%' . $search . '%')
+                            ->orWhere('id', 'like', '%' . $search . '%');
+                    });
+    }
+
+    public static function getSearchApplicationsWithAccounts(string $search): Builder
+    {
+        //returns a query builder for getting all the un-released applications.
+        //Criteria:
+        // If the application is Released.
+        // If the applicaton is approved.
+        return static::query()
+                    ->whereNotNull('account_id')
+                    ->where(function ($query) use ($search) {
+                        $query->where('applicant_firstname', 'like', '%' . $search . '%')
+                            ->orWhere('applicant_lastname', 'like', '%' . $search . '%')
+                            ->orWhere('id', 'like', '%' . $search . '%');
+                    });
+    }
+
+    public static function getApplicationsReadyForRelease(): Builder
+    {
+        return static::query()
+                    ->where('application_status', ApplicationStatus::ACTIVE_STATUS->value)
+                    ->where('released_status', ReleaseStatus::UN_RELEASED->value);
+    }
+
+    public function hasMonthlyPayment(): bool
+    {
+        if($this->unit_amort_fin == null || $this->unit_amort_fin <= 0.00){
+            return false;
+        }
+        return true;
     }
 
     public function releasesApplication(array $data = null): array
@@ -232,7 +325,8 @@ class CustomerApplication extends Model implements HasMedia
 
     public function getStatus(): ApplicationStatus|null
     {
-        if($this->application_status != null){
+        if($this->application_status != null)
+        {
 
             return $this->application_status;
         }
@@ -247,11 +341,13 @@ class CustomerApplication extends Model implements HasMedia
         $unit->save();
     }
     
-    public function branches():BelongsTo{
+    public function branches():BelongsTo
+    {
         return $this->belongsTo(Branch::class, 'branch_id');
     }
 
-    public function customerApplication(): BelongsTo{
+    public function customerApplication(): BelongsTo
+    {
         return $this->belongsTo(CustomerApplication::class,'assumed_by_id');
     }
 
@@ -265,16 +361,24 @@ class CustomerApplication extends Model implements HasMedia
         return $this->payments()->sum();
     }
 
-    public function payments():HasMany{
+    public function payments():HasMany
+    {
         return $this->hasMany(Payment::class);
     }
 
-    public function unitModel():BelongsTo{
+    public function unitModel():BelongsTo
+    {
         return $this->belongsTo(UnitModel::class);
     }
 
-    public function units():BelongsTo{
+    public function units():BelongsTo
+    {
         return $this->belongsTo(Unit::class, 'units_id');
+    }
+
+    public function customerPaymentAccount(): HasOne
+    {
+        return $this->hasOne(CustomerApplication::class, 'account_id');
     }
 
 }

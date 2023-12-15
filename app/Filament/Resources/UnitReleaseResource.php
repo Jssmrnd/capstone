@@ -42,10 +42,57 @@ class UnitReleaseResource extends Resource
         return false;
     }
 
+
+    public static function getAvailableUnit(): Forms\Components\Component
+    {
+        return Forms\Components\Group::make([
+            Forms\Components\Select::make('search_by')
+            ->options([
+                'engine_number' => "Engine No.",
+                'frame_number' => "Frame No.",
+            ])
+            ->live(),
+            Forms\Components\Select::make('units_id')
+                    ->live()
+                    ->options(
+                            function (Forms\Get $get, ?Model $record): array {
+                                $preffered_unit_model = $record->unit_model_id;
+                                $preffered_unit_status = $record->preffered_unit_status;
+                                $search_by = $get('search_by');
+
+                                //check if there is no selected value in search by.
+                                if($search_by == null){return [];}
+
+                                $units_query = Models\Unit::query()
+                                        ->where([
+                                                'unit_model_id' => $preffered_unit_model,
+                                                'status' => $preffered_unit_status
+                                ]);
+                                return $units_query->pluck($search_by, 'id')->toArray();
+                            }
+                    )
+                    ->afterStateUpdated(
+                        function(Forms\Get $get, Forms\Set $set)
+                        {
+                            if($get('units_id') != ""){
+                                $set('unit_status', Models\Unit::find($get('units_id'))->status);
+                            }
+                            else if($get('units_id') == ""){
+                                $set('unit_status', "");
+                            }
+                        }
+                    )
+                    ->prefix('#')
+                    ->label('Chasis Number')
+                    ->required(true)
+                    ->label('Chassis number'),
+        ]);
+    }
+
     public static function getApplicationDetails(): Forms\Components\Component
     {
         return Forms\Components\Group::make([
-                Forms\Components\PlaceHolder::make("Preffered unit status")
+                Forms\Components\Placeholder::make("preffered_unit_status")
                 ->content(fn(?Model $record): string => $record->preffered_unit_status)
         ]);
     }
@@ -66,54 +113,11 @@ class UnitReleaseResource extends Resource
                                     ->searchable(['model_name', 'id'])
                                     ->preload()
                                     ->live(),
-
-                            Forms\Components\Select::make('unit_status')
-                                    ->hint("Ex. Mio soul i")
-                                    ->label('Unit Model')
-                                    ->disabled()
-                                    ->relationship(
-                                            'unitModel',
-                                            'model_name'
-                                    )
-                                    ->searchable(['model_name', 'id'])
-                                    ->preload()
-                                    ->live(),
-                                    
                             Forms\Components\TextInput::make('unit_srp')
                                     ->disabled(),
                             Forms\Components\TextInput::make('unit_status')
                                     ->live(500)
                                     ->disabled(),
-                            Forms\Components\Select::make('units_id')
-                                    ->live()
-                                    ->options(
-                                            function (Forms\Get $get): array {
-                                                $units_query = Models\Unit::where('unit_model_id', $get('unit_model_id'))
-                                                                            ->where('status', $get('preffered_unit_status'));
-                                                if($get('preffered_unit_status') == 'repo'){
-                                                    $units_query->where('customer_application_id', '!=', null);
-                                                }else if($get('preffered_unit_status') == 'brand_new')
-                                                {
-                                                    $units_query->where('customer_application_id', null);
-                                                }
-                                                return $units_query->pluck('chasis_number', 'id')->toArray();
-                                            }
-                                    )
-                                    ->afterStateUpdated(
-                                        function(Forms\Get $get, Forms\Set $set)
-                                        {
-                                            if($get('units_id') != ""){
-                                                $set('unit_status', Models\Unit::find($get('units_id'))->status);
-                                            }
-                                            else if($get('units_id') == ""){
-                                                $set('unit_status', "");
-                                            }
-                                        }
-                                    )
-                                    ->prefix('#')
-                                    ->label('Chasis Number')
-                                    ->required(true)
-                                    ->label('Chassis number'),
                     ]),
         ]);
     }
@@ -162,6 +166,7 @@ class UnitReleaseResource extends Resource
                     UnitReleaseResource::getReleaseDetailsComponent()
                             ->columns(3)
                             ->columnSpan(2),
+                            UnitReleaseResource::getAvailableUnit(),
                     Forms\Components\SpatieMediaLibraryFileUpload::make('media')
                             ->label('Stencil')
                             ->columnSpan(2),

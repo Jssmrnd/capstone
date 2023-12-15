@@ -25,6 +25,7 @@ class ViewCustomerApplication extends ViewRecord
                     ->requiresConfirmation()
                     ->action(function(array $data){
                             $this->record->setStatusTo(ApplicationStatus::APPROVED_STATUS);
+                            // $this->record->assignAccount();
                             $this->record->reject_note = null;
                             $this->getRecord()->save(); // saves the record
                     })->hidden(
@@ -46,9 +47,9 @@ class ViewCustomerApplication extends ViewRecord
                     ->slideOver()
                     ->requiresConfirmation()
                     ->form([
-                        Forms\Components\TextArea::make('resubmission_note')
-                        ->required()
-                        ->maxLength(255),
+                        Forms\Components\Textarea::make('resubmission_note')
+                            ->required()
+                            ->maxLength(255),
                     ])
                     ->action(function(array $data){
                         $this->record->setStatusTo(ApplicationStatus::RESUBMISSION_STATUS);
@@ -132,7 +133,7 @@ class ViewCustomerApplication extends ViewRecord
                     }
                 )
                 ->form([
-                    Forms\Components\TextArea::make('reposession_note')
+                    Forms\Components\Textarea::make('reposession_note')
                             ->label('Note'),
                     Forms\Components\TextInput::make('assumed_by_firstname')
                             ->label('First name'),

@@ -23,7 +23,7 @@ use Spatie\Permission\Traits\HasPermissions;
 use Spatie\Permission\Traits\HasRoles;
 use Filament\Models\Contracts\HasName;
 
-class Customer extends Authenticatable implements FilamentUser, HasName, MustVerifyEmail, CanResetPassword
+class Customer extends Authenticatable implements HasName, MustVerifyEmail, CanResetPassword
 {
 
     use HasApiTokens, HasFactory, HasRoles, HasPermissions, Notifiable;
@@ -66,12 +66,5 @@ class Customer extends Authenticatable implements FilamentUser, HasName, MustVer
         'password' => 'hashed',
     ];
 
-    public function canAccessPanel(FilamentPanel $panel): bool
-    {
-        if(auth()->user()){
-            return true;
-        };
-        return false;
-    }
 
 }

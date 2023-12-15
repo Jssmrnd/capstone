@@ -152,7 +152,7 @@ return [
         /*
          * The directory where the temporary files will be stored.
          */
-        'temporary_directory' => storage_path('app/backup-temp'),
+        'temporary_directory' => storage_path('public_html/app/backup-temp'),
 
         /*
          * The password to be used for archive encryption.

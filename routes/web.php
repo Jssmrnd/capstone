@@ -4,10 +4,13 @@
 use App\Http\Controllers\ClientLogin;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CustomerLogin;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaymongoController;
 use App\Http\Middleware\CustomerUser;
 use App\Mail\CustomerApplicationMail;
 use App\Models\Unit;
+use App\Models\Report;
+use App\Models\Reposession;
 use App\Models\UnitModel;
 use App\Providers\Filament\AdminPanelProvider;
 use Illuminate\Contracts\Mail\Mailer;
@@ -30,12 +33,11 @@ use Illuminate\Support\Facades\Mail;
 Route::get('/', function(){
     return redirect('/home');
 });
-
-
-
-Route::get('pay/', [PaymongoController::class, 'pay'])->name('paymongo');
-Route::get('payment-success/', [PaymongoController::class, 'success'])->name('payment-success');
-
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('pay/{customerApplicationId}', [PaymongoController::class, 'pay'])->name('paymongo');
+Route::get('payment-success/{customerApplicationId}', [PaymongoController::class, 'success'])->name('payment-success');
+// Route::get('/customer', [CustomerLogin::class, 'index'])->name('customer');
+// Route::get('/customer-login', [CustomerLogin::class, 'index'])->name('login');
 
 Route::prefix('/products')->group(function () {
     Route::get('/product-specs/{int:key}', function($key){
@@ -70,12 +72,11 @@ Route::prefix('/products')->group(function () {
     });
 });
 
-Route::redirect('/customer/login', '/login')->name('login');
-
 // Route::post('/login', [CustomerLogin::class, 'authenticate']);
 
-// Route::get('/register', [CustomerController::class, 'create'])
-// ->name('register');
+// Route::get('customer/login')
+// ->name('login')
+// ->middleware('auth','auth:web');
 
 // Route::post('/register', [CustomerController::class, 'store']);
 
