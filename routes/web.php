@@ -33,6 +33,11 @@ use Illuminate\Support\Facades\Mail;
 Route::get('/', function(){
     return redirect('/home');
 });
+
+// resources\views\components\filament-fabricator\page-blocks\about-page.blade.php
+
+Route::view('/about', 'components.filament-fabricator.page-blocks.about-page');
+
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('pay/{customerApplicationId}', [PaymongoController::class, 'pay'])->name('paymongo');
 Route::get('payment-success/{customerApplicationId}', [PaymongoController::class, 'success'])->name('payment-success');

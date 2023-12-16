@@ -15,7 +15,7 @@ class CustomerApplicationObserver
      */
     public function created(CustomerApplication $customerApplication): void
     {
-        //
+        // dd($customerApplication->customer);
         AuditLog::query()->create([
                 "user_id" => auth()->id(),
                 "operation" => "create",

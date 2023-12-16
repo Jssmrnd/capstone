@@ -1,5 +1,6 @@
 /.phpunit.cache
 /node_modules
+.gitignore
 /public/build
 /public/hot
 /public/storage
@@ -18,4 +19,7 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+.gitignore
+.log
+storage/logs/laravel.log
 .gitignore

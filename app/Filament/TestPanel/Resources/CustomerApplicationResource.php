@@ -720,6 +720,20 @@ class CustomerApplicationResource extends Resource
         ]);
     }
 
+    public static function getImageStatementMonthlyIncome(): Forms\Components\Component
+    {
+        return Forms\Components\Group::make([
+                Forms\Components\Fileupload::make('statement_of_monthly_income_image')
+                ->image()
+                ->multiple(true)
+                ->minFiles(1)
+                ->maxFiles(2)
+                ->label('Statement of Monthly Income:')
+                ->required(true)
+                ->columnSpan(3),
+        ]);
+    }
+
     public static function getResubmissionNotes(): Forms\Components\Component
     {
         return Forms\Components\Group::make([
@@ -757,6 +771,7 @@ class CustomerApplicationResource extends Resource
             CustomerApplicationResource::getIncome()->columnSpan(2),
             CustomerApplicationResource::getExpenses()->columnSpan(1),
             CustomerApplicationResource::getNetIncome()->columnSpan(3),
+            CustomerApplicationResource::getImageStatementMonthlyIncome()->columnSpan(3),
         ])
         ->columns(3);
 
@@ -808,7 +823,8 @@ class CustomerApplicationResource extends Resource
                                 Forms\Components\Wizard\Step::make('Statement of Month. income')
                                         ->schema([
                                                 CustomerApplicationResource::getProperties(),
-                                                CustomerApplicationResource::getStatementOfMonthlyIncome()
+                                                CustomerApplicationResource::getStatementOfMonthlyIncome(),
+                                                CustomerApplicationResource::getImageStatementMonthlyIncome()
                                         ]),
                         ])
                         ->columnSpan(6)
@@ -979,16 +995,35 @@ class CustomerApplicationResource extends Resource
                                         // ...
                                     ]),
                                 InfoLists\Components\Tabs\Tab::make('Statement of Monthly Income')
-                                    ->schema([
-                                        // ...
-                                    ]),
-                    ])
-                    ->columns(6)
-                    ->columnSpan(6),
+                                    ->schema([        
+                                                InfoLists\Components\FieldSet::make("Applicant's Statement of Monthly Income")->schema([
+                                                        InfoLists\Components\TextEntry::make('gross_monthly_income')
+                                                                ->label("Gross Monthly Income:")
+                                                                ->color('success')
+                                                                ->money('php'),
+                                                        InfoLists\Components\TextEntry::make('total_expenses')
+                                                                ->label("Total Expenses:")
+                                                                ->color('danger')
+                                                                ->money('php'),
+                                                        InfoLists\Components\TextEntry::make('net_monthly_income')
+                                                                ->label("Net Monthly Income:")
+                                                                ->color('success')
+                                                                ->money('php'),
+                                                        InfoLists\Components\TextEntry::make('net_monthly_income')
+                                                                ->label("Net Monthly Income:")
+                                                                ->color('success')
+                                                                ->money('php'),
+                                                        InfoLists\Components\ImageEntry::make('statement_of_monthly_income_image')
+                                                                ->label("Statement of monthly income")
+                                                ])->columns(3)->columnSpan(4),
+                                        ]),
+                                ])
+                                ->columns(6)
+                                ->columnSpan(6),
 
                 InfoLists\Components\Section::make('Customer Application')->schema([
 
-                        InfoLists\Components\Fieldset::make('Unit Information')
+                        InfoLists\Components\Fieldset::make('Unit Information')  
                                 ->columns(4)
                                 ->columnSpan(2)
                                 ->schema([
@@ -1008,6 +1043,7 @@ class CustomerApplicationResource extends Resource
                                         InfoLists\Components\TextEntry::make('unit_srp')
                                                 ->label('Unit Price')
                                                 ->money('php'),
+                                        
                         ]),
 
                     InfoLists\Components\FieldSet::make('Applicant Information')
@@ -1022,20 +1058,6 @@ class CustomerApplicationResource extends Resource
                                 InfoLists\Components\TextEntry::make('applicant_telephone')->label('Contacts:'),       
                     ]),
 
-                    InfoLists\Components\FieldSet::make("Applicant's Statement of Monthly Income")->schema([
-                            InfoLists\Components\TextEntry::make('gross_monthly_income')
-                                    ->label("Gross Monthly Income:")
-                                    ->color('success')
-                                    ->money('php'),
-                            InfoLists\Components\TextEntry::make('total_expenses')
-                                    ->label("Total Expenses:")
-                                    ->color('danger')
-                                    ->money('php'),
-                            InfoLists\Components\TextEntry::make('net_monthly_income')
-                                    ->label("Net Monthly Income:")
-                                    ->color('success')
-                                    ->money('php'),
-                    ])->columns(3)->columnSpan(4),
 
                 ]),
 

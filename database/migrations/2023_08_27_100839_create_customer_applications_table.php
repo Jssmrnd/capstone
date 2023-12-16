@@ -67,6 +67,7 @@ return new class extends Migration
             $table->string('applicant_position')->nullable();
             $table->string('applicant_how_long_job_or_business')->nullable();
             $table->text('applicant_business_address')->nullable();
+            $table->string('applicant_email')->nullable();
             $table->string('applicant_nature_of_business')->nullable();
             $table->string('applicant_previous_employer')->nullable();
             $table->string('applicant_previous_employer_position')->nullable();

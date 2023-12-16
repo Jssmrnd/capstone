@@ -90,17 +90,21 @@ class Payment extends Model
         // Check if the monthly interest rate is 0
         if ($monthlyInterestRate == 0) {
             // If there is no interest, return the total amount divided by the total number of payments
-            return ($unitPrice - $downpayment) / $termInMonths;
+            return round(($unitPrice - $downpayment) / $termInMonths, 2);
         }
-
+    
         // Calculate the present value of the loan (PV)
         $presentValue = $unitPrice - $downpayment;
-
+    
         // Calculate the monthly payment using the corrected formula
         $monthlyPayment = ($monthlyInterestRate * $presentValue) / (1 - pow(1 + $monthlyInterestRate, -$termInMonths));
-
+    
+        // Round the result to two decimal places
+        $monthlyPayment = round($monthlyPayment, 2);
+    
         return $monthlyPayment;
     }
+    
 
     public static function calculateCashPayment(float $unitPrice, float $rate): float
     {

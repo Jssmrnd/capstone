@@ -59,6 +59,7 @@ class CustomerApplication extends Model implements HasMedia
         'applicant_previous_address',
         'applicant_provincial_address',
         'applicant_lived_there',
+        'applicant_email',
         'applicant_house',
         'applicant_valid_id',
         'applicant_telephone',
